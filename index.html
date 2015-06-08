@@ -9,8 +9,9 @@
     <meta name="author" content="Sam serrels">
     <title>Dynamic Data</title>
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-slider.min.css" rel="stylesheet">
+    <link href="css/bootstrap-select.min.css" rel="stylesheet">
     <link href="css/game.css" rel="stylesheet">
     <style>
       body {
@@ -21,10 +22,9 @@
   </head>
   
   <body>
-    <!-- Navigation -->
+    <!-- NavBar -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
-        <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
             <span class="sr-only">Toggle navigation</span>
@@ -34,7 +34,6 @@
           </button>
           <a class="navbar-brand" href="#">Dynamic Data</a>
         </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li>
@@ -42,11 +41,9 @@
             </li>
           </ul>
         </div>
-        <!-- /.navbar-collapse -->
       </div>
-      <!-- /.container -->
     </nav>
-    <!-- Page Content -->
+    <!-- main content -->
     <div class="container" id="canvcont">
       <div class='box'>
         <div class='sbncontent' id="chart"></div>
@@ -56,16 +53,15 @@
       <div class="row">
         <div class="col-lg-12 text-center">
           <p>
-            <input id="ex13" data-slider-id='ex13Slider' type="text"/>
+            <input id="ex13" data-slider-id='ex13Slider' type="text" />
           </p>
         </div>
       </div>
-      <!-- /.row -->
     </div>
+    <!-- option collumns -->
     <div class="container">
-      <!-- Example row of columns -->
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-sm-3">
           <h2>Info</h2>
           <h3>
             <span class="label label-primary" id="MousePoslabel">Primary</span>
@@ -80,21 +76,27 @@
             <span class="label label-info" id="doorslabel">Doors</span>
           </h3>
         </div>
-        <div class="col-md-3">
-          <h2>Heading</h2>
+        <div class="col-sm-3">
+          <h2>Control</h2>
           <h3>
             <button type="button" class="btn btn-lg btn-warning" id="regBtn">Regenerate</button>
           </h3>
+          Mode Select:
+          <select class="selectpicker" data-width="75%">
+            <option>Simple</option>
+            <option>Mad</option>
+            <option>Crazy</option>
+          </select>
         </div>
-        <div class="col-md-3">
-          <h2>Heading</h2>
+        <div class="col-sm-3">
+          <h2>Parameters</h2>
           <p>Year</p>
           <p>
             <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="2010" data-slider-max="2015" data-slider-step="1"
             data-slider-value="2010" />
           </p>
         </div>
-        <div class="col-md-3">
+        <div class="col-sm-3">
           <h2>Heading</h2>
           <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in,</p>
           <p>
@@ -102,10 +104,39 @@
           </p>
         </div>
       </div>
-      <!-- /.container -->
+      <!-- Footer -->
+      <div class="container">
+        <hr>
+        <footer>
+          <div class="row">
+            <div class="col-lg-12">
+              <p>D3 Dynamic Data demo - Sam Serrels, Natalie Kerracher - 2015</p>This Project makes use of the following libraries:
+              <ul class="list-inline">
+                <li>
+                  <a href="http://d3js.org/">d3js</a>
+                </li>
+                <li>
+                  <a href="http://getbootstrap.com/">Bootstrap</a>
+                </li>
+                <li>
+                  <a href="http://jquery.com/">jQuery</a>
+                </li>
+                <li>
+                  <a href="http://github.com/seiyria/bootstrap-slider">Bootstrap-Slider</a>
+                </li>
+                <li>
+                  <a href="http://github.com/silviomoreto/bootstrap-select">Bootstrap-Select</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </footer>
+      </div>
+      <!-------- Page End ----------->
       <script src="js/jquery-2.1.4.min.js"></script>
       <script src="js/bootstrap.min.js"></script>
       <script src="js/bootstrap-slider.min.js"></script>
+      <script src="js/bootstrap-select.min.js"></script>
       <script src="js/d3.min.js" charset="utf-8"></script>
       <script src="code/custom.js"></script>
       <script src="code/main.js"></script>
