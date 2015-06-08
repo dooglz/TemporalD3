@@ -355,7 +355,7 @@ function d3_layout_forceAccumulate(quad, alpha, charges) {
 var d3_layout_forceLinkDistance = 20,
   d3_layout_forceLinkStrength = 1,
   d3_layout_forceChargeDistance2 = Infinity;
-  
+
 function Identity(d) {
-    return d;
-  }
+  return d;
+}
