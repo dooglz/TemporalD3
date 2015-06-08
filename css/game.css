@@ -1,0 +1,58 @@
+
+.fillcont { 
+    background: #f9ffcf;
+}
+.container {
+  max-width: 2560px; /* or 950px */
+}
+
+.box{
+	position: relative;
+	width: 100%;		/* desired width */
+}
+.box:before{
+	content: "";
+	display: block;
+	padding-top: 56.25%;
+}
+.sbncontent{
+	position:  absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+   border-style: solid;
+    border-width: 2px;
+}
+
+circle {
+  stroke-width: 1.5px;
+}
+
+line {
+  stroke: #999;
+}
+
+#ex1Slider .slider-track {
+	background: #FFCC99;
+}
+
+#ex1Slider .slider-selection {
+	background: red;
+}
+
+#ex13Slider{
+  width: 75% !important;
+}
+
+#ex13Slider .slider-track {
+	background: #FFDDAA;
+}
+
+#ex13Slider .slider-tick {
+	background: #FF9933;
+}
+
+#ex13Slider .slider-tick.in-selection {
+	background: #009933;
+}
