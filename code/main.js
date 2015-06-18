@@ -43,7 +43,6 @@ var dateSlider = $("#ex13").slider({
 }).on('slide', slided).data('slider');
 dateSlider.setValue(48);
 Update();
-//------------------------------------------
 
 function Update() {
   selectedDate = new Date(startDate.toUTCString());
@@ -127,4 +126,134 @@ function tick() {
     .attr("y1", function (d) { return d.source.y; })
     .attr("x2", function (d) { return d.target.x; })
     .attr("y2", function (d) { return d.target.y; });
+}
+
+
+//######################################################################
+//########    Method Picking, Validating, Loading
+//######################################################################
+var methods = []
+var m_simple = new method_simple();
+methods.push(m_simple);
+var selected_method;
+changeMethod(m_simple);
+
+//dropdown selector ------------
+$("#methodpicker").html("");
+for (i = 0; i < methods.length; i++) {
+  $("#methodpicker").append("<option>" + methods[i].name + "</option>");
+}
+$("#methodpicker").on('change', function () {
+  changeMethod($("#methodpicker").val());
+});
+
+function VerifyMethodParmeters(method) {
+  var mustHaveParams = ["name", "ptype", "pval"];
+  var acceptedParams = ["slider", "checkbox", "textbox"];
+
+  for (var i in method.parameters) {
+    var param = method.parameters[i];
+    for (var j in mustHaveParams) {
+      var str = mustHaveParams[j];
+      if (!param.hasOwnProperty(str)) {
+        console.error("Method '" + method.name + "', parameter '" + param.name + "', must have a '" + str + "' member!");
+        return false;
+      }
+    }
+
+    if ($.inArray(param.ptype, acceptedParams) == -1) {
+      console.error("Method '" + method.name + "', Unkown parameter type : " + param.name + " - " + param.ptype);
+    }
+
+  }
+  return true;
+}
+
+function changeMethod(methodName) {
+  if(typeof(methodName) === "string"){
+    var find = $.grep(methods, function (e) { return e.name == methodName });
+    if (find.length == 1) {
+      selected_method = find[0];
+    } else if (find.length > 1) {
+      console.error("Multiple methods registered with the name:" + methodName);
+      return;
+    } else {
+      console.error("Can't find method with name: " + methodName);
+      return;
+    }
+  }else{
+    if(!methodName.hasOwnProperty("name")){
+      console.error("Unkown object type passed to changeMethod");
+      return;
+    }
+    selected_method = methodName;
+  }
+  
+  //clear param div
+  var pdiv = $('#paramDiv');
+  pdiv.html("");
+  
+  console.log("Loading Method: " + selected_method.name);
+  if (!selected_method.hasOwnProperty("parameters")) {
+    console.log("Method: " + selected_method.name + " has no parameters");
+    return;
+  }
+  
+  //verify parameters
+  if (!VerifyMethodParmeters(selected_method)) { return; }
+
+  for (var i in selected_method.parameters) {
+    var param = selected_method.parameters[i];
+    var newdiv = $("<div class='methodParam'/>");
+    switch (param.ptype) {
+
+      case "slider":
+        newdiv.append("<p>" + param.name + "</p>");
+        var sliderDiv = $("<input id=" + param.name + " data-slider-id='ex1Slider' type='text' data-slider-min=" + param.minval + " data-slider-max=" + param.maxval + " data-slider-step=" + param.step + " data-slider-value=" + param.pval + " />");
+        newdiv.append(sliderDiv);
+        sliderDiv.slider();
+        //register calback using some legit hax
+        !function outer(pp) {
+          sliderDiv.change('slide', function inner(e) {
+            pp.pval = e.value.newValue;
+            selected_method.paramChanged();
+          });
+        } (param);
+        break;
+
+      case "checkbox":
+        var boxDiv = $("<input  id=" + param.name + " type='checkbox' " + (param.pval ? "checked" : "") + ">");
+        newdiv.append(boxDiv).append("  " + param.name);
+        !function outer(pp, bb) {
+          boxDiv.change(function inner() {
+            pp.pval = bb.is(":checked");
+            selected_method.paramChanged();
+          });
+        } (param, boxDiv);
+        break;
+
+      case "textbox":
+        newdiv.append("<p>" + param.name + "</p>");
+        var igroup = $("<div class='input-group'></div>");
+        var input = $("<input type='text class='form-control'>");
+        igroup.append(input);
+        var span = $("<span class=input-group-btn'/>");
+        var btn = $("<button class='btn btn-default btn-sm' type='button'>Go!</button>");
+        newdiv.append(igroup.append(span.append(btn)));
+        !function outer(pp, bb) {
+          btn.click(function inner() {
+            pp.pval = bb.val();
+            selected_method.paramChanged();
+          });
+        } (param, input);
+        break;
+
+      default:
+        console.error("Unkown method parameter type : " + param.name + " - " + param.ptype);
+        break;
+    }
+    pdiv.append(newdiv);
+  }
+  pdiv.hide().show(0);
+
 }

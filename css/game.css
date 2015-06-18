@@ -56,3 +56,7 @@ line {
 #ex13Slider .slider-tick.in-selection {
 	background: #009933;
 }
+
+.methodParam{
+	border-bottom: 1px dotted #000;
+}

@@ -81,20 +81,22 @@
           <h3>
             <button type="button" class="btn btn-lg btn-warning" id="regBtn">Regenerate</button>
           </h3>
-          Mode Select:
-          <select class="selectpicker" data-width="75%">
-            <option>Simple</option>
+          Method Select:
+          <select id= "methodpicker" class="selectpicker" data-width="75%">
+            <option>Simpleee</option>
             <option>Mad</option>
             <option>Crazy</option>
           </select>
         </div>
         <div class="col-sm-3">
           <h2>Parameters</h2>
+          <div id="paramDiv">
           <p>Year</p>
           <p>
             <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="2010" data-slider-max="2015" data-slider-step="1"
             data-slider-value="2010" />
           </p>
+          </div>
         </div>
         <div class="col-sm-3">
           <h2>Heading</h2>
@@ -139,6 +141,7 @@
       <script src="js/bootstrap-select.min.js"></script>
       <script src="js/d3.min.js" charset="utf-8"></script>
       <script src="code/custom.js"></script>
+      <script src="code/method_simple.js"></script>
       <script src="code/main.js"></script>
   </body>
 
