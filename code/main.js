@@ -49,30 +49,17 @@ dateSlider.setValue(48);
 //########    Main Update functions
 //######################################################################
 
-Update();
-var graphdata;
-
 function Update() {
-    selectedDate = new Date(startDate.toUTCString());
-    selectedDate.setMonth(selectedDate.getMonth() + dateSlider.getValue());
     //Do we have data?
     if (graphdata === undefined) {
-        console.log("Loading Data");
-        //No, load it and bail out
-        d3.json("graph-byyear.json", function(error, graph) {
-            graphdata = graph;
-            if (error) {
-                console.error(error);
-            } else {
-                console.log("Loaded");
-                Update();
-            }
-        });
         return;
     }
+    
+    selectedDate = new Date(startDate.toUTCString());
+    selectedDate.setMonth(selectedDate.getMonth() + dateSlider.getValue());
     selected_method.SetData(graphdata);
     selected_method.SetDate(selectedDate);
-    //we have data
+
     selected_method.Update();
 }
 
@@ -85,9 +72,65 @@ function resize() {
 }
 
 //######################################################################
+//########    Data Picking, Validating, Loading
+//######################################################################
+var graphdata;
+var stockData = [{name:"Les Miserables",url:"graph-byyear.json"},{name:"data2",url:"graph-byyear.json"}];
+var loadedData = [];
+ChangeData("Les Miserables");
+//dropdown selector ------------
+$("#datapicker").html("");
+for (i = 0; i < stockData.length; i++) {
+    $("#datapicker").append("<option>" + stockData[i].name + "</option>");
+}
+
+$("#datapicker").on('change', function() {
+    ChangeData($("#datapicker").val());
+    Update();
+});
+
+function ChangeData(dataName) {
+    //loaded?
+    console.log("changing Data to: "+dataName);
+    for (i = 0; i < loadedData.length; i++) {
+        if(loadedData[i].name == dataName){
+            //yep, set and bail.
+            graphdata = loadedData[i].data;
+            return;
+        }
+    }
+    //no, load it
+    var url = "";
+    for (i = 0; i < stockData.length; i++) {
+        if(stockData[i].name == dataName){
+            url = stockData[i].url;
+            break;
+        }
+    }
+    if(url == ""){
+        //this isn't stock data
+        console.error("Can't load custom url data yet :(");
+        return;
+    }
+    
+      console.log("Loading Data");
+        d3.json(url, function(error, graph) {
+               graphdata = graph;
+            if (error) {
+                console.error(error);
+            } else {
+                console.log("Loaded");
+                loadedData.push({name:dataName,data:graph,url:url});
+                graphdata = graph;
+                Update();
+            }
+        });
+}
+
+//######################################################################
 //########    Method Picking, Validating, Loading
 //######################################################################
-var methods = []
+var methods = [];
 var m_simple = new method_simple();
 methods.push(m_simple);
 var selected_method;
