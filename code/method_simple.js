@@ -14,11 +14,44 @@ method_simple.prototype.get = function () {
   alert("Howdy, my name is" + this.name);
 };
 
-//   if (this.parameters.hasOwnProperty(param)) {
+//the page has been resized or some other event that requires a redraw
+method_simple.prototype.redraw = function () {
+  alert("Howdy, my name is" + this.name);
+};
 
-method_simple.prototype.paramChanged = function () {
-  for (var i in this.parameters) {
-    var param = selected_method.parameters[i];
-    console.log("Parameter: " + param.name + " is: " + param.pval);
+//called when the user changes any of the Parameters
+method_simple.prototype.paramChanged = function (param) {
+  if (param !== undefined) {
+    var i = this.parameters.indexOf(param);
+    if (i != -1) {
+      console.log("Parameter: " + this.parameters[i].name + " is now: " + this.parameters[i].pval);
+    } else {
+      console.error("Unkown parameter changed!");
+      console.error(param);
+    }
+  } else {
+    //We don't know what parmeter changed, could be more than one, poll all of them
+    for (var i in this.parameters) {
+      param = this.parameters[i];
+      console.log("Parameter: " + param.name + " is: " + param.pval);
+    }
   }
+};
+
+method_simple.prototype.minDate;
+method_simple.prototype.maxDate;
+method_simple.prototype.currentDateMin;
+method_simple.prototype.currentDateMax;
+
+method_simple.prototype.setDateBounds = function (min, max) {
+  this.minDate = min;
+  this.maxDate = max;
+};
+
+method_simple.prototype.setDate = function (lower, higher) {
+  this.currentDateMin = lower;
+  if(higher === undefined){
+    higher = lower;
+  }
+  this.currentDateMax = higher;
 };

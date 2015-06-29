@@ -1,3 +1,5 @@
+/// <reference path="../typings/d3/d3.d.ts"/>
+/// <reference path="../typings/jquery/jquery.d.ts"/>
 var startDate = new Date("2007");
 var endDate = new Date("2016");
 var selectedDate = new Date("2011");
@@ -190,8 +192,9 @@ function changeMethod(methodName) {
   }
   
   //clear param div
-  var pdiv = $('#paramDiv');
-  pdiv.html("");
+  var pdiv1 = $('#paramDiv1').html("");
+  var pdiv2 = $('#paramDiv2').html("");
+  var pdiv;
   
   console.log("Loading Method: " + selected_method.name);
   if (!selected_method.hasOwnProperty("parameters")) {
@@ -203,6 +206,8 @@ function changeMethod(methodName) {
   if (!VerifyMethodParmeters(selected_method)) { return; }
 
   for (var i in selected_method.parameters) {
+    //toggle placement div
+    if(pdiv == pdiv1){pdiv = pdiv2;}else{pdiv = pdiv1;}
     var param = selected_method.parameters[i];
     var newdiv = $("<div class='methodParam'/>");
     switch (param.ptype) {
@@ -216,7 +221,7 @@ function changeMethod(methodName) {
         !function outer(pp) {
           sliderDiv.change('slide', function inner(e) {
             pp.pval = e.value.newValue;
-            selected_method.paramChanged();
+            selected_method.paramChanged(pp);
           });
         } (param);
         break;
@@ -227,7 +232,7 @@ function changeMethod(methodName) {
         !function outer(pp, bb) {
           boxDiv.change(function inner() {
             pp.pval = bb.is(":checked");
-            selected_method.paramChanged();
+            selected_method.paramChanged(pp);
           });
         } (param, boxDiv);
         break;
@@ -243,7 +248,7 @@ function changeMethod(methodName) {
         !function outer(pp, bb) {
           btn.click(function inner() {
             pp.pval = bb.val();
-            selected_method.paramChanged();
+            selected_method.paramChanged(pp);
           });
         } (param, input);
         break;
