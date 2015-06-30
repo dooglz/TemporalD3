@@ -1,3 +1,4 @@
+/// <reference path="../typings/jquery/jquery.d.ts"/>
 /// <reference path="../typings/d3/d3.d.ts"/>
 /// <reference path="../typings/jquery/jquery.d.ts"/>
 //######################################################################
@@ -20,7 +21,7 @@ for (var i = 0; i < diffY; i++) {
 }
 
 $('#ex1').slider({
-    formatter: function(value) {
+    formatter: function (value) {
         return 'Current value: ' + value;
     }
 });
@@ -37,7 +38,7 @@ var dateSlider = $("#ex13").slider({
     max: diffY * 12,
     step: 1,
     value: 2,
-    formatter: function(value) {
+    formatter: function (value) {
         var dd = new Date(startDate.toUTCString());
         dd.setMonth(dd.getMonth() + value);
         return dd.toDateString().slice(4);
@@ -54,7 +55,7 @@ function Update() {
     if (graphdata === undefined) {
         return;
     }
-    
+
     selectedDate = new Date(startDate.toUTCString());
     selectedDate.setMonth(selectedDate.getMonth() + dateSlider.getValue());
     selected_method.SetData(graphdata);
@@ -75,7 +76,7 @@ function resize() {
 //########    Data Picking, Validating, Loading
 //######################################################################
 var graphdata;
-var stockData = [{name:"Les Miserables",url:"graph-byyear.json"},{name:"data2",url:"graph-byyear.json"},{name:"Napier Publications",url:"../data/napierPublications.json"}];
+var stockData = [{ name: "Les Miserables", url: "graph-byyear.json" }, { name: "data2", url: "graph-byyear.json" }, { name: "Napier Publications", url: "../data/napierPublications.json" }];
 var loadedData = [];
 ChangeData("Les Miserables");
 //dropdown selector ------------
@@ -84,49 +85,80 @@ for (i = 0; i < stockData.length; i++) {
     $("#datapicker").append("<option>" + stockData[i].name + "</option>");
 }
 
-$("#datapicker").on('change', function() {
+$("#datapicker").on('change', function () {
     ChangeData($("#datapicker").val());
     Update();
 });
 
 function ChangeData(dataName) {
     //loaded?
-    console.log("changing Data to: "+dataName);
+    console.log("changing Data to: " + dataName);
     for (i = 0; i < loadedData.length; i++) {
-        if(loadedData[i].name == dataName){
+        if (loadedData[i].name == dataName) {
             //yep, set and bail.
+            InitChannelMixer(loadedData[i]);
             graphdata = loadedData[i].data;
+            //channelPanel
+            Update();
             return;
         }
     }
     //no, load it
     var url = "";
     for (i = 0; i < stockData.length; i++) {
-        if(stockData[i].name == dataName){
+        if (stockData[i].name == dataName) {
             url = stockData[i].url;
             break;
         }
     }
-    if(url == ""){
+    if (url == "") {
         //this isn't stock data
         console.error("Can't load custom url data yet :(");
         return;
     }
-    
-      console.log("Loading Data");
-        d3.json(url, function(error, graph) {
-               graphdata = graph;
-            if (error) {
-                console.error(error);
-            } else {
-                console.log("Loaded");
-                loadedData.push({name:dataName,data:graph,url:url});
-                graphdata = graph;
-                Update();
-            }
-        });
-}
 
+    console.log("Loading Data");
+    d3.json(url, function (error, graph) {
+        if (error) {
+            console.error(error);
+        } else {
+            console.log("Loaded");
+            var nodekeys = Object.keys(graph.nodes[0]);
+            var linkkeys = Object.keys(graph.links[0]);
+            loadedData.push({ name: dataName, data: graph, url: url,nodekeys:nodekeys,linkkeys:linkkeys });
+            ChangeData(dataName);
+        }
+    });
+}
+function InitChannelMixer(data) {
+    var cp = $("#channelPanel");
+    cp.html("");
+    $("#channelPanelHeadder").html(
+        "<strong>DataSet:</strong> " + data.name +
+        ", <strong>Nodes / Links:</strong> " + data.data.nodes.length + " / " + data.data.links.length
+        );
+    $('<div>', { 'class': 'row' }).html(
+        "<strong>Node Attributes:</strong> " + data.nodekeys +
+        ", <strong>Link Attributes:</strong> " + data.linkkeys
+        ).appendTo(cp);
+
+    var lkeydiv = $('<div>', { 'class': 'col-sm-6' })
+        .text("hello worl4d")
+        .appendTo(cp);
+    var nkeydiv = $('<div>', { 'class': 'col-sm-6' })
+        .text("hello worl4d")
+        .appendTo(cp);
+     var linkDropdown = $();
+     /*
+     for (var key in data.nodekeys) {
+           $("div", { 'class': 'methodParam' }).html(key)
+           .append( $("div", { 'class': 'selectpicker','data-width':'75%' }).html(key)
+               
+               
+           )
+     }*/
+    // dropdowns
+}
 //######################################################################
 //########    Method Picking, Validating, Loading
 //######################################################################
@@ -141,7 +173,7 @@ $("#methodpicker").html("");
 for (i = 0; i < methods.length; i++) {
     $("#methodpicker").append("<option>" + methods[i].name + "</option>");
 }
-$("#methodpicker").on('change', function() {
+$("#methodpicker").on('change', function () {
     changeMethod($("#methodpicker").val());
 });
 
@@ -168,8 +200,8 @@ function VerifyMethodParmeters(method) {
 }
 
 function changeMethod(methodName) {
-    if (typeof(methodName) === "string") {
-        var find = $.grep(methods, function(e) {
+    if (typeof (methodName) === "string") {
+        var find = $.grep(methods, function (e) {
             return e.name == methodName
         });
         if (find.length == 1) {
@@ -229,7 +261,7 @@ function changeMethod(methodName) {
                         pp.pval = e.value.newValue;
                         selected_method.ParamChanged(pp);
                     });
-                }(param);
+                } (param);
                 break;
 
             case "checkbox":
@@ -240,7 +272,7 @@ function changeMethod(methodName) {
                         pp.pval = bb.is(":checked");
                         selected_method.ParamChanged(pp);
                     });
-                }(param, boxDiv);
+                } (param, boxDiv);
                 break;
 
             case "textbox":
@@ -256,7 +288,7 @@ function changeMethod(methodName) {
                         pp.pval = bb.val();
                         selected_method.ParamChanged(pp);
                     });
-                }(param, input);
+                } (param, input);
                 break;
 
             default:

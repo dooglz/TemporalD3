@@ -69,7 +69,7 @@ method_simple.prototype.Redraw = function (w, h) {
     var zoom = d3.behavior.zoom()
         .scaleExtent([0.5, 10])
         .on("zoom", zoomed);
-    
+
     m_simple_svg = d3.select("#chart").append("svg")
         .attr("width", this.width)
         .attr("height", this.height)
@@ -94,6 +94,7 @@ method_simple.prototype.ParamChanged = function (param) {
             console.log("Parameter: " + param.name + " is: " + param.pval);
         }
     }
+    this.Update();
 };
 
 method_simple.prototype.SetDateBounds = function (min, max) {
@@ -127,7 +128,8 @@ function getScreenCoords(x, y) {
 //used as callback, needs reference to 'this'
 method_simple.prototype.Tick = function () {
     if (selected_method.getParam("Disable rest").pval) {
-        m_simple_force.resume();
+        //m_simple_force.resume();
+        m_simple_force.alpha(Math.max(m_simple_force.alpha(),0.1));
     }
     m_simple_circle.attr("cx", function (d) {
         if (selected_method.getParam("Clamp within Canvas").pval) {
@@ -135,7 +137,7 @@ method_simple.prototype.Tick = function () {
         } else {
             return d.x;
         }
-        })
+    })
         .attr("cy", function (d) {
         if (selected_method.getParam("Clamp within Canvas").pval) {
             return d.y = Math.max(m_simple_radius, Math.min(canvasHeight - m_simple_radius, d.y));
@@ -158,22 +160,26 @@ method_simple.prototype.Tick = function () {
     });
 };
 
+var m_simple_prev_currentDateMin, m_simple_prev_currentDateMax;
+var m_simple_filteredLinks;
 
 method_simple.prototype.Update = function () {
-
-    //filter data by date
-    var filteredLinks = this.data.links.filter(
-        function (d) {
-            return (m_simple_currentDateMax >= new Date(d.date) && m_simple_currentDateMin <= new Date(d.date));
-        });
+    if (m_simple_filteredLinks === undefined || m_simple_prev_currentDateMin != m_simple_currentDateMin || m_simple_prev_currentDateMax != m_simple_currentDateMax) {
+        //filter data by date
+        m_simple_filteredLinks = this.data.links.filter(
+            function (d) {
+                return (m_simple_currentDateMax >= new Date(d.date) && m_simple_currentDateMin <= new Date(d.date));
+            });
+        m_simple_prev_currentDateMin = m_simple_currentDateMin;
+        m_simple_prev_currentDateMax = m_simple_currentDateMax;
+    }
     var fill = d3.scale.category20();
 
     //Create Links
-    m_simple_link = m_simple_container.selectAll("line").data(filteredLinks);
+    m_simple_link = m_simple_container.selectAll("line").data(m_simple_filteredLinks);
     m_simple_link.enter().append("line")
         .style("stroke", function (d) {
-        //will break if  > 20 years in scale
-        return d3.rgb(fill(parseInt(d.date.slice(0, 4)) - startDate.getFullYear())).darker();
+        return d3.rgb(fill(parseInt(d.date.slice(0, 4)) - startDate.getFullYear())).darker();//will break if  > 20 years in scale
     });
     //when a link is no longer in the set, remove it from the graph.
     m_simple_link.exit().remove();
@@ -189,13 +195,14 @@ method_simple.prototype.Update = function () {
     //  .call(m_simple_force.drag);
     m_simple_circle.exit().remove();
 
+    //force a tick
+    m_simple_force.resume();
     //restart simulation
     //force.stop();
-    m_simple_force.nodes(this.data.nodes).links(filteredLinks).on("tick", method_simple.prototype.Tick).start();
+    m_simple_force.nodes(this.data.nodes).links(m_simple_filteredLinks).on("tick", method_simple.prototype.Tick).start();
 };
 
 function zoomed() {
-    a = true;
     m_simple_translation = d3.event.translate;
     m_simple_scalefactor = d3.event.scale;
     m_simple_container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");

@@ -78,21 +78,19 @@
           <h3>
             <button type="button" class="btn btn-lg btn-warning" id="regBtn">Regenerate</button>
           </h3>
-          <div class="methodParam">
-          Method Select:
-          <select id="methodpicker" class="selectpicker" data-width="75%">
-            <option>Simple</option>
-            <option>Mad</option>
-          </select>
-                  </div>
-           <div class="methodParam">
-          Data Select:
-          <select id="datapicker" class="selectpicker" data-width="75%">
-            <option>Simple</option>
-            <option>Mad</option>
-          </select>
-        </div>
+          <div class="methodParam">Method Select:
+            <select id="methodpicker" class="selectpicker" data-width="75%">
+              <option>Simple</option>
+              <option>Mad</option>
+            </select>
           </div>
+          <div class="methodParam">Data Select:
+            <select id="datapicker" class="selectpicker" data-width="75%">
+              <option>Simple</option>
+              <option>Mad</option>
+            </select>
+          </div>
+        </div>
         <div class="col-sm-6">
           <h2>Parameters</h2>
         </div>
@@ -103,70 +101,85 @@
           <div id="paramDiv2"></div>
         </div>
       </div>
-      <!-- Footer -->
       <div class="container">
         <hr>
-        <footer>
-          <div class="row">
-            <div class="col-lg-12">
-              <p>D3 Dynamic Data demo - Sam Serrels, Natalie Kerracher - 2015</p>This Project makes use of the following libraries:
-              <ul class="list-inline">
-                <li>
-                  <a href="http://d3js.org/">d3js</a>
-                </li>
-                <li>
-                  <a href="http://getbootstrap.com/">Bootstrap</a>
-                </li>
-                <li>
-                  <a href="http://jquery.com/">jQuery</a>
-                </li>
-                <li>
-                  <a href="http://github.com/seiyria/bootstrap-slider">Bootstrap-Slider</a>
-                </li>
-                <li>
-                  <a href="http://github.com/silviomoreto/bootstrap-select">Bootstrap-Select</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </footer>
-      </div>
-      <!-- Modal -->
-      <div class="modal fade" id="myModal" role="dialog">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">Commit Log</h4>
-            </div>
-            <div class="modal-body" style="overflow:auto; max-height:500px;">
-              <div id="commitHistory" style="width:100%;"></div>
+        <div class="row col-lg-12">
+          <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+              <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#collapse1">
+                <span class="glyphicon glyphicon-collapse-down"></span>Show Channel Mixer</button>
+                   <span  id="channelPanelHeadder">hello world</span>
+              <div id="collapse1" class="panel-collapse collapse">
+                <div class="panel-body" id="channelPanel">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <!-------- Page End ----------->
-      <script src="js/jquery-2.1.4.min.js"></script>
-      <script src="js/bootstrap.min.js"></script>
-      <script src="js/bootstrap-slider.min.js"></script>
-      <script src="js/bootstrap-select.min.js"></script>
-      <script src="js/jquery.md5.js"></script>
-      <script src="js/github-commit-history.js"></script>
-      <script src="js/mustache.js"></script>
-      <script src="js/d3.min.js" charset="utf-8"></script>
-      <script src="code/custom.js"></script>
-      <script src="code/method_simple.js"></script>
-      <script src="code/main.js"></script>
-      <script type="text/javascript">
-        $( document ).ready(function() {
-        		$('#commitHistory').GithubCommitHistory( {
-        			username: "dooglz",
-        			repo: "TemporalD3",
-        			limit: 10, 
-        			offset: 0
-        		})
-        	});
-      </script>
+        <!-- Footer -->
+        <div class="container">
+          <hr>
+          <footer>
+            <div class="row">
+              <div class="col-lg-12">
+                <p>D3 Dynamic Data demo - Sam Serrels, Natalie Kerracher - 2015</p>This Project makes use of the following libraries:
+                <ul class="list-inline">
+                  <li>
+                    <a href="http://d3js.org/">d3js</a>
+                  </li>
+                  <li>
+                    <a href="http://getbootstrap.com/">Bootstrap</a>
+                  </li>
+                  <li>
+                    <a href="http://jquery.com/">jQuery</a>
+                  </li>
+                  <li>
+                    <a href="http://github.com/seiyria/bootstrap-slider">Bootstrap-Slider</a>
+                  </li>
+                  <li>
+                    <a href="http://github.com/silviomoreto/bootstrap-select">Bootstrap-Select</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </footer>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Commit Log</h4>
+              </div>
+              <div class="modal-body" style="overflow:auto; max-height:500px;">
+                <div id="commitHistory" style="width:100%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-------- Page End ----------->
+        <script src="js/jquery-2.1.4.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/bootstrap-slider.min.js"></script>
+        <script src="js/bootstrap-select.min.js"></script>
+        <script src="js/jquery.md5.js"></script>
+        <script src="js/github-commit-history.js"></script>
+        <script src="js/mustache.js"></script>
+        <script src="js/d3.min.js" charset="utf-8"></script>
+        <script src="code/custom.js"></script>
+        <script src="code/method_simple.js"></script>
+        <script src="code/main.js"></script>
+        <script type="text/javascript">
+          $( document ).ready(function() {
+          		$('#commitHistory').GithubCommitHistory( {
+          			username: "dooglz",
+          			repo: "TemporalD3",
+          			limit: 10, 
+          			offset: 0
+          		})
+          	});
+        </script>
   </body>
 
 </html>
