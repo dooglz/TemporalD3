@@ -1,3 +1,4 @@
+/// <reference path="../typings/d3/d3.d.ts"/>
 //######################################################################
 //########  Interface code, All methods should have this
 /*######################################################################
@@ -11,18 +12,16 @@ method_simple.prototype.name = "";
 method_simple.prototype.SetData = function (d) {};
 //######################################################################*/
 
-method_simple.prototype.force;
-method_simple.prototype.svg;
-method_simple.prototype.radius = 6;
-method_simple.prototype.link;
-method_simple.prototype.node;
+
+
 method_simple.prototype.width = 0;
 method_simple.prototype.height = 0;
 
-method_simple.prototype.minDate;
-method_simple.prototype.maxDate;
-method_simple.prototype.currentDateMin;
-method_simple.prototype.currentDateMax;
+var method_simple_radius = 6;
+var method_simple_minDate,
+method_simple_maxDate,
+method_simple_currentDateMin,
+method_simple_currentDateMax;
 
 function method_simple() {
   // Add object properties like this
@@ -31,30 +30,42 @@ function method_simple() {
     { name: "Test Slider", ptype: "slider", minval: 0, maxval: 10, step: 1, pval: 0 },
     { name: "Test Checkbox", ptype: "checkbox", pval: false },
     { name: "Test TextBox", ptype: "textbox", pval: "" },
-    { name: "Test Checkbox2", ptype: "checkbox", pval: true }
+    { name: "Clamp within Canvas", ptype: "checkbox", pval: true }
   ];
 }
-method_simple.prototype.get = function() {
-    alert("Howdy, my name is" + this.name);
+method_simple.prototype.getParam = function(name) {
+   for (var i=0; i<this.parameters.length; i++) {
+        if(this.parameters[i].name == name){
+            return this.parameters[i];
+        }
+    }
 };
+
+var method_simple_svg;
+var method_simple_force;
+var method_simple_container;
+var m_simple_width = 960,m_simple_height = 500;
 
 // The page has been resized or some other event that requires a redraw
 method_simple.prototype.Redraw = function(w, h) {
     if (w !== undefined && h !== undefined) {
         this.width = w;
         this.height = h;
+        m_simple_width = w;
+        m_simple_height = h;
     }
-    //Hate how these are here, move them.
     // force = customLayout()
-    this.force = d3.layout.force()
+    method_simple_force = d3.layout.force()
         .gravity(.28)
         .charge(-640)
-        .linkDistance(50)
+        .linkDistance(10)
         .size([this.width, this.height]);
-
-   this.svg = d3.select("#chart").append("svg")
+        
+   method_simple_svg = d3.select("#chart").append("svg")
         .attr("width", this.width)
-        .attr("height", this.height);
+        .attr("height", this.height)
+        
+   method_simple_container = method_simple_svg.append("g");
 };
 
 // Called when the user changes any of the Parameters
@@ -77,16 +88,16 @@ method_simple.prototype.ParamChanged = function(param) {
 };
 
 method_simple.prototype.SetDateBounds = function(min, max) {
-    this.minDate = min;
-    this.maxDate = max;
+   method_simple_minDate = min;
+   method_simple_maxDate = max;
 };
 
 method_simple.prototype.SetDate = function(higher, lower) {
     if (lower === undefined) {
-        lower = this.minDate;
+        lower = method_simple_minDate;
     }
-    this.currentDateMin = lower;
-    this.currentDateMax = higher;
+    method_simple_currentDateMin = lower;
+    method_simple_currentDateMax = higher;
 };
 
 method_simple.prototype.SetData = function(d) {
@@ -99,14 +110,24 @@ method_simple.prototype.SetData = function(d) {
 
 //used as callback, needs reference to 'this'
 method_simple.prototype.Tick = function() {
-        selected_method.node.attr("cx", function(d) {
-            return d.x = Math.max(selected_method.radius, Math.min(canvasWidth - selected_method.radius, d.x));
+   method_simple_force.resume();
+
+        method_simple_circle.attr("cx", function(d) {
+           if(selected_method.getParam("Clamp within Canvas").pval){
+                return d.x = Math.max(method_simple_radius, Math.min(canvasWidth - method_simple_radius, d.x));
+           }else{
+                return d.x;
+           }
         })
         .attr("cy", function(d) {
-            return d.y = Math.max(selected_method.radius, Math.min(canvasHeight - selected_method.radius, d.y));
+            if(selected_method.getParam("Clamp within Canvas").pval){
+                return d.y = Math.max(method_simple_radius, Math.min(canvasHeight - method_simple_radius, d.y));
+            }else{
+                return d.y;
+            }
         });
 
-        selected_method.link.attr("x1", function(d) {
+       method_simple_link.attr("x1", function(d) {
             return d.source.x;
         })
         .attr("y1", function(d) {
@@ -120,41 +141,37 @@ method_simple.prototype.Tick = function() {
         });
 };
 
+var method_simple_circle;
+var method_simple_link;
 method_simple.prototype.Update = function() {
 
     //filter data by date
-    var instance = this; //callback nonsence
     var filteredLinks = this.data.links.filter(
         function(d) {
-            return (instance.currentDateMax >= new Date(d.date) && instance.currentDateMin <= new Date(d.date));
+            return (method_simple_currentDateMax >= new Date(d.date) && method_simple_currentDateMin <= new Date(d.date));
         });
-
     var fill = d3.scale.category20();
 
     //Create Links
-    this.link = this.svg.selectAll("line").data(filteredLinks);
-    this.link.enter().append("line")
+    method_simple_link = method_simple_container.selectAll("line").data(filteredLinks);
+    method_simple_link.enter().append("line")
         .style("stroke", function(d) {
             //will break if  > 20 years in scale
             return d3.rgb(fill(parseInt(d.date.slice(0, 4)) - startDate.getFullYear())).darker();
         });
     //when a link is no longer in the set, remove it from the graph.
-    this.link.exit().remove();
+    method_simple_link.exit().remove();
 
     //Create nodes
-    this.node = this.svg.selectAll("circle").data(this.data.nodes);
-    this.node.enter().append("circle")
-        .attr("r", this.radius - .75)
-        .style("fill", function(d) {
-            return fill(d.group);
-        })
-        .style("stroke", function(d) {
-            return d3.rgb(fill(d.group)).darker();
-        })
-        .call(this.force.drag);
-    this.node.exit().remove();
+    method_simple_circle = method_simple_container.selectAll("circle").data(this.data.nodes);
+    method_simple_circle.enter().append("circle")
+        .attr("r", method_simple_radius - .75)
+        .style("fill", function (d) {return fill(d.group);})
+        .style("stroke", function (d) {return d3.rgb(fill(d.group)).darker();})
+        .call(method_simple_force.drag);
+    method_simple_circle.exit().remove();
 
     //restart simulation
     //force.stop();
-    this.force.nodes(this.data.nodes).links(filteredLinks).on("tick", method_simple.prototype.Tick).start();
+    method_simple_force.nodes(this.data.nodes).links(filteredLinks).on("tick", method_simple.prototype.Tick).start();
 };

@@ -1,0 +1,5406 @@
+{
+	"nodes": [
+		{
+			"name": "Jessie Kennedy",
+			"id": "41",
+			"group": "CAVES",
+			"start_date": "1986-08-14"
+		},
+		{
+			"name": "Martin Graham",
+			"id": "145",
+			"group": "CAVES",
+			"start_date": "1998-10-01"
+		},
+		{
+			"name": "Kenny Mitchell",
+			"id": "131",
+			"group": "CAVES",
+			"start_date": "1994-02-10"
+		},
+		{
+			"name": "David Benyon",
+			"id": "24",
+			"group": "CID",
+			"start_date": "1996-09-01"
+		},
+		{
+			"name": "Ben Paechter",
+			"id": "22",
+			"group": "CAVES",
+			"start_date": "1997-07-11"
+		},
+		{
+			"name": "Neil Urquhart",
+			"id": "154",
+			"group": "CAVES",
+			"start_date": "1999-10-01"
+		},
+		{
+			"name": "Jon Kerridge",
+			"id": "51",
+			"group": "CAVES",
+			"start_date": "1996-02-01"
+		},
+		{
+			"name": "Robert Kukla",
+			"id": "168",
+			"group": "CAVES",
+			"start_date": "1996-03-01"
+		},
+		{
+			"name": "Phil Turner",
+			"id": "14",
+			"group": "CID",
+			"start_date": "1999-10-01"
+		},
+		{
+			"name": "Susan Turner",
+			"id": "28",
+			"group": "CID",
+			"start_date": "1999-10-01"
+		},
+		{
+			"name": "Gordon Russell",
+			"id": "5",
+			"group": "CNS",
+			"start_date": "1995-08-28"
+		},
+		{
+			"name": "Andrew Cumming",
+			"id": "19",
+			"group": "CAVES",
+			"start_date": "2002-03-01"
+		},
+		{
+			"name": "Michael Smyth",
+			"id": "149",
+			"group": "CID",
+			"start_date": "2000-01-01"
+		},
+		{
+			"name": "Alison Varey",
+			"id": "25",
+			"group": "CCER",
+			"start_date": "2003-01-01"
+		},
+		{
+			"name": "Tom McEwan",
+			"id": "39",
+			"group": "CID",
+			"start_date": "2000-10-01"
+		},
+		{
+			"name": "Xiaodong Liu",
+			"id": "199",
+			"group": "CAVES",
+			"start_date": "1999-10-25"
+		},
+		{
+			"name": "Alistair Armitage",
+			"id": "11",
+			"group": "CAVES",
+			"start_date": "1986-09-15"
+		},
+		{
+			"name": "Taoxin Peng",
+			"id": "50",
+			"group": "CAVES",
+			"start_date": "2000-01-01"
+		},
+		{
+			"name": "Alan Cannon",
+			"id": "69",
+			"group": "CAVES",
+			"start_date": "2001-03-01"
+		},
+		{
+			"name": "Richard Hetherington",
+			"id": "482888",
+			"group": "IIDI",
+			"start_date": "2001-04-01"
+		},
+		{
+			"name": "Kevin Chalmers",
+			"id": "8348832",
+			"group": "CAVES",
+			"start_date": "2005-10-01"
+		},
+		{
+			"name": "Imed Romdhani",
+			"id": "8211296",
+			"group": "CNS",
+			"start_date": "2005-05-27"
+		},
+		{
+			"name": "Sarah Clayton",
+			"id": "8348828",
+			"group": "CAVES",
+			"start_date": "2005-10-01"
+		},
+		{
+			"name": "Hazel Hall",
+			"id": "113",
+			"group": "CSI",
+			"start_date": "1999-10-06"
+		},
+		{
+			"name": "Brian Davison",
+			"id": "1369357",
+			"group": "CAVES",
+			"start_date": "2002-10-07"
+		},
+		{
+			"name": "Ahmed Al-Dubai",
+			"id": "8818736",
+			"group": "CNS",
+			"start_date": "2005-09-20"
+		},
+		{
+			"name": "Alistair Lawson",
+			"id": "43",
+			"group": "CNS",
+			"start_date": "1999-11-01"
+		},
+		{
+			"name": "Emma Hart",
+			"id": "102",
+			"group": "CAVES",
+			"start_date": "2000-03-27"
+		},
+		{
+			"name": "Sally Smith",
+			"id": "44",
+			"group": "CCER",
+			"start_date": "1999-09-01"
+		},
+		{
+			"name": "William Buchanan",
+			"id": "79",
+			"group": "CNS",
+			"start_date": "1986-09-01"
+		},
+		{
+			"name": "Christoph Thuemmler",
+			"id": "12063718",
+			"group": "CNS",
+			"start_date": "2010-10-01"
+		},
+		{
+			"name": "Ingi Helgason",
+			"id": "10452319",
+			"group": "CID",
+			"start_date": "2006-09-18"
+		},
+		{
+			"name": "Iain McGregor",
+			"id": "116",
+			"group": "CID",
+			"start_date": "2000-02-10"
+		},
+		{
+			"name": "Gregory Leplatre",
+			"id": "1861926",
+			"group": "CID",
+			"start_date": "2003-01-27"
+		},
+		{
+			"name": "Colin F Smith",
+			"id": "1839009",
+			"group": "CSI",
+			"start_date": "2003-01-06"
+		},
+		{
+			"name": "Peter Cruickshank",
+			"id": "9226925",
+			"group": "CSI",
+			"start_date": "2005-11-01"
+		},
+		{
+			"name": "Emilia Sobolewska",
+			"id": "13185199",
+			"group": "CID",
+			"start_date": "2009-09-07"
+		},
+		{
+			"name": "Catherine Scott",
+			"id": "12068829",
+			"group": "CAVES",
+			"start_date": "2008-10-06"
+		},
+		{
+			"name": "Oli Mival",
+			"id": "155",
+			"group": "CID",
+			"start_date": "1999-10-01"
+		},
+		{
+			"name": "Nena Roa-Seiler",
+			"id": "11745343",
+			"group": "CID",
+			"start_date": "2007-10-01"
+		},
+		{
+			"name": "Tom Flint",
+			"id": "12095861",
+			"group": "CID",
+			"start_date": "2008-06-01"
+		},
+		{
+			"name": "Owen Lo",
+			"id": "13280413",
+			"group": "CNS",
+			"start_date": "2010-03-22"
+		},
+		{
+			"name": "Nicole van Deursen (Hazelhoff Roelfze",
+			"id": "13115249",
+			"group": "CSI",
+			"start_date": "2009-03-02"
+		},
+		{
+			"name": "Lu Fan",
+			"id": "13261225",
+			"group": "CNS",
+			"start_date": "2010-02-22"
+		},
+		{
+			"name": "Robert Ludwiniak",
+			"id": "8828024",
+			"group": "CNS",
+			"start_date": "2005-09-20"
+		},
+		{
+			"name": "Richard Macfarlane",
+			"id": "13277237",
+			"group": "CNS",
+			"start_date": "2009-09-07"
+		},
+		{
+			"name": "Elias Ekonomou",
+			"id": "13366959",
+			"group": "CNS",
+			"start_date": "2011-03-24"
+		},
+		{
+			"name": "Callum Egan",
+			"id": "13168746",
+			"group": "CAVES",
+			"start_date": "2008-07-01"
+		},
+		{
+			"name": "Solomon Uwagbole",
+			"id": "8348830",
+			"group": "CNS",
+			"start_date": "2005-10-01"
+		},
+		{
+			"name": "Daren Fang",
+			"id": "13367150",
+			"group": "CAVES",
+			"start_date": "2011-05-18"
+		},
+		{
+			"name": "Christine Irving",
+			"id": "13371661",
+			"group": "CSI",
+			"start_date": "2012-03-19"
+		},
+		{
+			"name": "Kevin Sim",
+			"id": "13366093",
+			"group": "CAVES",
+			"start_date": "2010-10-20"
+		},
+		{
+			"name": "Augoustinos Tsiros",
+			"id": "13180511",
+			"group": "CID",
+			"start_date": "2009-10-05"
+		},
+		{
+			"name": "Serkan Ayan",
+			"id": "13311830",
+			"group": "CID",
+			"start_date": "2010-05-01"
+		},
+		{
+			"name": "Zhe Wang",
+			"id": "13277978",
+			"group": "CAVES",
+			"start_date": "2010-03-15"
+		},
+		{
+			"name": "Alistair Duff",
+			"id": "321835",
+			"group": "CSI",
+			"start_date": "2008-01-01"
+		},
+		{
+			"name": "Philip Penrose",
+			"id": "13376238",
+			"group": "CNS",
+			"start_date": "2013-10-08"
+		},
+		{
+			"name": "Adrian Smales",
+			"id": "13375071",
+			"group": "CNS",
+			"start_date": "2013-05-22"
+		},
+		{
+			"name": "Rob Kemmer",
+			"id": "9",
+			"group": "CAVES",
+			"start_date": "1990-03-14"
+		},
+		{
+			"name": "Richard Greenwell",
+			"id": "13368680",
+			"group": "CAVES",
+			"start_date": "2011-11-24"
+		},
+		{
+			"name": "Rania Molla",
+			"id": "13376117",
+			"group": "CNS",
+			"start_date": "2013-09-25"
+		},
+		{
+			"name": "Mohamed Eshaftri",
+			"id": "13375070",
+			"group": "CNS",
+			"start_date": "2013-05-22"
+		},
+		{
+			"name": "Alsnousi Essa",
+			"id": "13375949",
+			"group": "CNS",
+			"start_date": "2013-09-10"
+		},
+		{
+			"name": "Bruce Ramsay",
+			"id": "13376942",
+			"group": "CNS",
+			"start_date": "2014-01-01"
+		},
+		{
+			"name": "Grzegorz Spyra",
+			"id": "13376188",
+			"group": "CNS",
+			"start_date": "2013-09-17"
+		},
+		{
+			"name": "Natalie Kerracher",
+			"id": "13277950",
+			"group": "CAVES",
+			"start_date": "2010-03-01"
+		},
+		{
+			"name": "Marwa Salayma",
+			"id": "13378710",
+			"group": "CNS",
+			"start_date": "2014-05-01"
+		},
+		{
+			"name": "Samuel Chinenyeze",
+			"id": "13373650",
+			"group": "CAVES",
+			"start_date": "2012-09-06"
+		},
+		{
+			"name": "John Brogan",
+			"id": "13375866",
+			"group": "CID",
+			"start_date": "2013-09-01"
+		},
+		{
+			"name": "Paul Shaw",
+			"id": "13068717",
+			"group": "CAVES",
+			"start_date": "2008-09-01"
+		},
+		{
+			"name": "Bruce Ryan",
+			"id": "13376910",
+			"group": "CSI",
+			"start_date": "2014-01-15"
+		},
+		{
+			"name": "Thomas Farrenkopf",
+			"id": "13375951",
+			"group": "CAVES",
+			"start_date": "2013-09-10"
+		},
+		{
+			"name": "Yann Rimbaud",
+			"id": "13379065",
+			"group": "CCER",
+			"start_date": "2014-02-03"
+		},
+		{
+			"name": "Benjamin Kenwright",
+			"id": "13378037",
+			"group": "CAVES",
+			"start_date": "2014-02-01"
+		},
+		{
+			"name": "Debbie Meharg",
+			"id": "13379311",
+			"group": "CCER",
+			"start_date": "2014-01-13"
+		},
+		{
+			"name": "Stephanie Craighill",
+			"id": "13379312",
+			"group": "CCER",
+			"start_date": "2014-01-13"
+		},
+		{
+			"name": "Jenny Tizard",
+			"id": "13379823",
+			"group": "CCER",
+			"start_date": "2014-09-09"
+		},
+		{
+			"name": "Elochukwu Ukwandu",
+			"id": "13381877",
+			"group": "CNS",
+			"start_date": "2015-01-13"
+		},
+		{
+			"name": "Shancang Li",
+			"id": "13381803",
+			"group": "CNS",
+			"start_date": "2014-12-17"
+		},
+		{
+			"name": "Craig McMillan",
+			"id": "13375356",
+			"group": "CAVES",
+			"start_date": "2014-10-01"
+		},
+		{
+			"name": "Andreas Steyven",
+			"id": "13372876",
+			"group": "CAVES",
+			"start_date": "2013-03-01"
+		}
+	],
+	"links": [
+		{
+			"date": "1999-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "4137",
+			"name": "The Challenge of Visualising Multiple Overlapping Classification"
+		},
+		{
+			"date": "1997-01-01",
+			"source": 0,
+			"target": 2,
+			"value": "4148",
+			"name": "Using Active Constructs in User-Interfaces to Object-Oriented Databases"
+		},
+		{
+			"date": "1997-01-01",
+			"source": 0,
+			"target": 2,
+			"value": "4149",
+			"name": "The Perspective Tunnel: An Inside View on Smoothly Integrating Detail and Context"
+		},
+		{
+			"date": "1996-01-01",
+			"source": 0,
+			"target": 2,
+			"value": "4150",
+			"name": "A Framework for Information Visualisation"
+		},
+		{
+			"date": "1996-01-01",
+			"source": 0,
+			"target": 2,
+			"value": "4151",
+			"name": "DRIVE: An environment for the orgainised construction of user interfaces to data"
+		},
+		{
+			"date": "1996-01-01",
+			"source": 0,
+			"target": 2,
+			"value": "4152",
+			"name": "Describing and Characterising Visualisations"
+		},
+		{
+			"date": "1996-01-01",
+			"source": 0,
+			"target": 2,
+			"value": "4153",
+			"name": "A framework for user-interfaces to databases"
+		},
+		{
+			"date": "1995-01-01",
+			"source": 0,
+			"target": 2,
+			"value": "4155",
+			"name": "3D Information visualisation: Identifying and measuring success"
+		},
+		{
+			"date": "1995-01-01",
+			"source": 0,
+			"target": 2,
+			"value": "4157",
+			"name": "Using a conceptual language to describe a database and its interface"
+		},
+		{
+			"date": "2000-01-01",
+			"source": 3,
+			"target": 0,
+			"value": "230055",
+			"name": "Towards a methodology for developing visualizations"
+		},
+		{
+			"date": "2000-01-01",
+			"source": 3,
+			"target": 1,
+			"value": "230055",
+			"name": "Towards a methodology for developing visualizations"
+		},
+		{
+			"date": "2000-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "230055",
+			"name": "Towards a methodology for developing visualizations"
+		},
+		{
+			"date": "2000-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "230057",
+			"name": "A Comparison of Set-Based and Graph-Based Visualisations of Overlapping Classification Hierarchies"
+		},
+		{
+			"date": "2001-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "278984",
+			"name": "Combining linking &amp; focusing techniques for a multiple hierarchy visualisation"
+		},
+		{
+			"date": "2001-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "278986",
+			"name": "Two Approaches to Representing Multiple Overlapping Classifications: a Comparison"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "278989",
+			"name": "Novel visualisation techniques for working with multiple, overlapping classification hierarchies"
+		},
+		{
+			"date": "2001-01-01",
+			"source": 4,
+			"target": 5,
+			"value": "279210",
+			"name": "Street-based Routing Using an Evolutionary Algorithm"
+		},
+		{
+			"date": "2000-01-01",
+			"source": 4,
+			"target": 5,
+			"value": "279266",
+			"name": "Optimising An Evolutionary Algorithm for Scheduling"
+		},
+		{
+			"date": "1997-01-01",
+			"source": 6,
+			"target": 7,
+			"value": "285925",
+			"name": "Intelligent storage Devices for scalable information systems"
+		},
+		{
+			"date": "1996-01-01",
+			"source": 6,
+			"target": 7,
+			"value": "286055",
+			"name": "A Plug-in Disk-Interface-Process for the W-SQL Data Access Controller"
+		},
+		{
+			"date": "2001-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "286512",
+			"name": "Caught between real and virtual worlds"
+		},
+		{
+			"date": "2001-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "286516",
+			"name": "A web of contradictions"
+		},
+		{
+			"date": "1999-01-01",
+			"source": 10,
+			"target": 11,
+			"value": "286624",
+			"name": "Multiple Traffic Signal Control using a GA"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 6,
+			"target": 7,
+			"value": "289380",
+			"name": "Laying the foundations: the use of video footage to explore pedestrian dynamics in PEDFLOW"
+		},
+		{
+			"date": "2000-01-01",
+			"source": 11,
+			"target": 4,
+			"value": "293830",
+			"name": "Stone Soup"
+		},
+		{
+			"date": "2000-01-01",
+			"source": 11,
+			"target": 4,
+			"value": "293831",
+			"name": "Post-Publication Timetabling"
+		},
+		{
+			"date": "1998-01-01",
+			"source": 11,
+			"target": 4,
+			"value": "293840",
+			"name": "Improving a Lecture Timetabling System for University Wide Use"
+		},
+		{
+			"date": "1994-01-01",
+			"source": 11,
+			"target": 4,
+			"value": "293850",
+			"name": "Two Solutions to the General Timetable Problem Using Evolutionary Algorithms"
+		},
+		{
+			"date": "1996-01-01",
+			"source": 11,
+			"target": 4,
+			"value": "293853",
+			"name": "Extensions to a Memetic Timetabling System"
+		},
+		{
+			"date": "1993-01-01",
+			"source": 11,
+			"target": 4,
+			"value": "293856",
+			"name": "An Evolutionary Approach to the General Timetable Problem"
+		},
+		{
+			"date": "1995-01-01",
+			"source": 11,
+			"target": 4,
+			"value": "293858",
+			"name": "The Use of  Local Search Suggestion Lists for Improving the Solution of Timetable Problems with Evolutionary Algorithms"
+		},
+		{
+			"date": "1998-01-01",
+			"source": 11,
+			"target": 4,
+			"value": "293890",
+			"name": "Timetabling the Classes of an Entire University with an Evolutionary Algorithm"
+		},
+		{
+			"date": "1998-01-01",
+			"source": 0,
+			"target": 12,
+			"value": "294188",
+			"name": "An Open Model-Based Interface Development System: The Teallach Approach"
+		},
+		{
+			"date": "1996-01-01",
+			"source": 11,
+			"target": 13,
+			"value": "294194",
+			"name": "Lessons from experience: making theorm provers more co-operative"
+		},
+		{
+			"date": "1996-01-01",
+			"source": 11,
+			"target": 12,
+			"value": "294194",
+			"name": "Lessons from experience: making theorm provers more co-operative"
+		},
+		{
+			"date": "1996-01-01",
+			"source": 13,
+			"target": 12,
+			"value": "294194",
+			"name": "Lessons from experience: making theorm provers more co-operative"
+		},
+		{
+			"date": "2001-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "303487",
+			"name": "Getting the story straight"
+		},
+		{
+			"date": "2001-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "303488",
+			"name": "Describing Team Work with Activity Theory"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "303490",
+			"name": "Contextual grounding in CVE design"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 4,
+			"target": 5,
+			"value": "426290",
+			"name": "Improving Street Based Routing Using Building Block Mutations"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 4,
+			"target": 5,
+			"value": "942119",
+			"name": "Solving A Real World Routing Problem using Multiple Evolutionary Algorithms"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 11,
+			"target": 0,
+			"value": "983480",
+			"name": "Towards Visualising Temporal Features in Large Scale Microarray Time-series Data"
+		},
+		{
+			"date": "2001-01-01",
+			"source": 6,
+			"target": 7,
+			"value": "1077624",
+			"name": "PEDFLOW: Development of an Autonomous Agent Model of Pedestrian Flow"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 8,
+			"target": 14,
+			"value": "2760341",
+			"name": "Activity theory: another perspective on task analysis"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "2760350",
+			"name": "Using Curves to Enhance Parallel Coordinate Visualisations"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "2760453",
+			"name": "Telling tales"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "2760469",
+			"name": "Beyond relative advantage: Factors in End-User Uptake of Computer Supported Cooperative Working"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "2760474",
+			"name": "Two phenomenological studies of  place"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "2866433",
+			"name": "A Pattern-Based Framework for Database Reusability"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "2866439",
+			"name": "A Generative and Component based Approach to Reuse in Database Applications"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "2866448",
+			"name": "Achieving Flexible Reuse through Scenario-Based Deep Component Adaptation and Generation"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "2866453",
+			"name": "Facilitating Reuse in Database Applications with Scenario-based Component Adaptation and Generation"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 6,
+			"target": 7,
+			"value": "5479139",
+			"name": "Application of context-mediated behavior to a multi-agent pedestrian flow model (PEDFLOW)"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 16,
+			"target": 6,
+			"value": "5480236",
+			"name": "Measuring pedestrian trajectories using a pyroelectric differential infrared detector"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "5489885",
+			"name": "Tackling Deep Adaptation through XML-Based Component Generation"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 16,
+			"target": 6,
+			"value": "5562029",
+			"name": "Measuring Pedestrian Trajectories with Low Cost Infrared Detectors: Preliminary Results"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 17,
+			"target": 6,
+			"value": "5562033",
+			"name": "Best Practice for Implementing a Data Warehouse: A Review for Strategic Alignment"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "5673618",
+			"name": "Where am I? Place as the basis for Presence"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "5673619",
+			"name": "Towards The Wireless Ward: Evaluating A Trial Of Networked PDAs In The National Health Service"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "5858192",
+			"name": "An affordance-based framework for CVE evaluation"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 10,
+			"target": 0,
+			"value": "5941057",
+			"name": "A Universal Character Model and Ontology of Defined Terms for Taxonomic Description"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 10,
+			"target": 18,
+			"value": "5941057",
+			"name": "A Universal Character Model and Ontology of Defined Terms for Taxonomic Description"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 0,
+			"target": 18,
+			"value": "5941057",
+			"name": "A Universal Character Model and Ontology of Defined Terms for Taxonomic Description"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "5946626",
+			"name": "Exploring and Examining Assessment Data via a Matrix Visualisation"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 0,
+			"target": 18,
+			"value": "5947454",
+			"name": "Ontology-Driven Automated Generation Of Data Entry Interfaces"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 16,
+			"target": 6,
+			"value": "5953365",
+			"name": "Monitoring the Movement of Pedestrians Using Low-cost Infrared Detectors: Initial Findings"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 6,
+			"target": 7,
+			"value": "5953372",
+			"name": "Human movement behaviour in urban spaces: Implications for the design and modelling of effective pedestrian environments"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 16,
+			"target": 6,
+			"value": "6060644",
+			"name": "A comparison of Video and Infrared based tracking of pedestrian movements"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 16,
+			"target": 7,
+			"value": "6060644",
+			"name": "A comparison of Video and Infrared based tracking of pedestrian movements"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 6,
+			"target": 7,
+			"value": "6060644",
+			"name": "A comparison of Video and Infrared based tracking of pedestrian movements"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 8,
+			"target": 3,
+			"value": "6061535",
+			"name": "Designing Interactive Systems"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "6061535",
+			"name": "Designing Interactive Systems"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 3,
+			"target": 9,
+			"value": "6061535",
+			"name": "Designing Interactive Systems"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "6889709",
+			"name": "Achieving Seamless Component Composition Through Scenario-Based Deep Adaptation And Generation"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 3,
+			"target": 12,
+			"value": "6984861",
+			"name": "Probing the Sense of Place"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 3,
+			"target": 12,
+			"value": "6984890",
+			"name": "A Method for Designing Virtual Places"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 4,
+			"target": 5,
+			"value": "7207471",
+			"name": "Routing using Evolutionary Agents and Proactive Transitions"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "7219397",
+			"name": "Scenario Based Generative Component Adaptation in .Net Framework"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 10,
+			"target": 11,
+			"value": "7436710",
+			"name": "Improving the Student Learning Experience for SQL using Automatic Marking"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "7565647",
+			"name": "Insideness-Outsideness: Characterizing the experiences of real and virtual places"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "7566695",
+			"name": "The Tourist Gaze: Contextualised Virtual Environments"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 8,
+			"target": 19,
+			"value": "7566700",
+			"name": "Question of Realism"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "7567543",
+			"name": "Care and Involvement: A Classification of User Experience"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "7567550",
+			"name": "Proceedings of the Second Workshop on Space, Spatiality and Technology"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "7567568",
+			"name": "Implementing A Wireless Network of PDAs in a Hospital Setting"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "7890597",
+			"name": "Surfacing issues using Activity Theory"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "7890603",
+			"name": "End-User Perspectives on the Uptake of Computer Supported Cooperative Working"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 3,
+			"target": 12,
+			"value": "7912727",
+			"name": "The Place Probe: Exploring a Sense of Place in Real and Virtual Environments"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 0,
+			"target": 18,
+			"value": "7912749",
+			"name": "The Prometheus Description Model: An examination of the taxonomic description building process and its representation"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "8036573",
+			"name": "Managing Social Capital as Knowledge Management - Some Specification and Representation Issues"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 3,
+			"target": 12,
+			"value": "8165765",
+			"name": "Responsive Environments, Place and Presence"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "8178434",
+			"name": "Extending Taxonomic Visualisation to Incorporate Synonymy and Structural Markers"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "8179241",
+			"name": "Telling Tales: Narratives Of Classification And Control In The Design Of Taxonomic Software"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 8,
+			"target": 0,
+			"value": "8179241",
+			"name": "Telling Tales: Narratives Of Classification And Control In The Design Of Taxonomic Software"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 9,
+			"target": 0,
+			"value": "8179241",
+			"name": "Telling Tales: Narratives Of Classification And Control In The Design Of Taxonomic Software"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 0,
+			"target": 7,
+			"value": "8182971",
+			"name": "Scientific names are ambiguous as identifiers for biological taxa: their context and definition are required for accurate data integration"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 11,
+			"target": 0,
+			"value": "8182973",
+			"name": "Animated Interval Scatter-plot Views for the Exploratory Analysis of Large Scale Microarray Time-course Data"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 11,
+			"target": 0,
+			"value": "8182975",
+			"name": "Coordinated Parallel Views for the Exploratory Analysis of Microarray Time-course Data"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 11,
+			"target": 0,
+			"value": "8831107",
+			"name": "Time-series Explorer: An Animated Information Visualisation for Microarray Time-course Data"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 6,
+			"target": 20,
+			"value": "9097758",
+			"name": "jcsp.mobile: A Package Enabling Mobile Processes and Channels"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "9513639",
+			"name": "Visual Comparison and Exploration of Natural History Collections"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 0,
+			"target": 7,
+			"value": "9514253",
+			"name": "A Standard Data Model Representation for Taxonomic Information"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 6,
+			"target": 21,
+			"value": "10456599",
+			"name": "Performance Evaluation of JCSP Micro Edition: JCSPme"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 6,
+			"target": 20,
+			"value": "10456599",
+			"name": "Performance Evaluation of JCSP Micro Edition: JCSPme"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 21,
+			"target": 20,
+			"value": "10456599",
+			"name": "Performance Evaluation of JCSP Micro Edition: JCSPme"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 22,
+			"target": 20,
+			"value": "10456606",
+			"name": "CSP for .NET Based on JCSP"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 6,
+			"target": 20,
+			"value": "10456608",
+			"name": "Ubiquitous Access to Site Specific Services by Mobile Devices: the Process View"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "10462599",
+			"name": "Scenario-based Generative Component Adaptation in .NET Framework"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "10462600",
+			"name": "Achieving Smooth Component Integration with Generative Aspect and Component Adaptation"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "10462606",
+			"name": "Achieving Dependable Component-Based Systems through Generative Aspect Oriented Component Adaptation"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 3,
+			"target": 14,
+			"value": "10705688",
+			"name": "Preface: The Bigger Picture"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 0,
+			"target": 7,
+			"value": "10779068",
+			"name": "Converting an Existing Taxonomic Data Resource to Employ an Ontology and LSIDs"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 0,
+			"target": 7,
+			"value": "10779077",
+			"name": "Developing a Core Ontology for Taxonomic Data"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 23,
+			"target": 24,
+			"value": "10851510",
+			"name": "Social software as support in hybrid learning environments: the value of the blog as a tool for reflective learning and peer support"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "10880864",
+			"name": "A Performance Study of Path Based Multicast Communication Algorithms"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "10880866",
+			"name": "On High Performance Multicast Algorithms for Interconnection Networks"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "10880868",
+			"name": "On the Design of High Throughput Adaptive Multicast Communication"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "10880869",
+			"name": "Mobile IP Conditional Binding Update"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "10881026",
+			"name": "Design and Analysis of Multicast Communication for Multidimensional Mesh Networks"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "11002883",
+			"name": "Visual Exploration of Alternative Taxonomies through Concepts"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 6,
+			"target": 21,
+			"value": "11005118",
+			"name": "Mobility in JCSP: New Mobile Channel and Mobile Process Models"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 6,
+			"target": 20,
+			"value": "11005118",
+			"name": "Mobility in JCSP: New Mobile Channel and Mobile Process Models"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 21,
+			"target": 20,
+			"value": "11005118",
+			"name": "Mobility in JCSP: New Mobile Channel and Mobile Process Models"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "11005187",
+			"name": "Smooth Quality Oriented Component Integration through Product Line Based Aspect- Oriented Component Adaptation"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "11005192",
+			"name": "An Aspect-Oriented Component-Based Approach to Seamless Web Service Composition"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "11005221",
+			"name": "A product line based aspect-oriented generative unit testing approach to building quality components"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "11007452",
+			"name": "Exploring Multiple Trees through DAG Representations"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 10,
+			"target": 11,
+			"value": "11012348",
+			"name": "Automatic Checking of SQL: Computerised Grading"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 10,
+			"target": 11,
+			"value": "11012350",
+			"name": "Online Assessment and Checking of SQL: Detecting and Preventing Plagiarism"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 26,
+			"target": 27,
+			"value": "11708485",
+			"name": "Requirements for getting a robot to grow-up"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 26,
+			"target": 28,
+			"value": "11709595",
+			"name": "Can Real-time Software Engineering be Taught to Java Programmers?"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 26,
+			"target": 27,
+			"value": "11709601",
+			"name": "Controlling a Simulated Khepera with an XCS Classifier System with Memory"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 4,
+			"target": 27,
+			"value": "11717584",
+			"name": "An Immune Inspired Approach to Speckled Computing"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "12076831",
+			"name": "Multiform Views of Multiple Trees"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 15,
+			"target": 25,
+			"value": "12088326",
+			"name": "A new multicast algorithm for wireless mesh networks"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "12090386",
+			"name": "Visualisation to Aid Biodiversity Studies through Accurate Taxonomic Reconciliation"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "13091303",
+			"name": "Generative Aspect-Oriented Component Adaptation"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 6,
+			"target": 15,
+			"value": "13091308",
+			"name": "Automated Responsive Web Services Evolution through Generative Aspect-Oriented Component Adaptation"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 0,
+			"target": 15,
+			"value": "13091310",
+			"name": "Semantics-Based Component Repository: State of Arts and a Calculation Rating Factor-based Framework"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "13129971",
+			"name": "A Multi-Channel Hybrid MAC Protocol for Wireless Mesh Networks"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13134331",
+			"name": "Setting Safety Standards by Designing a Low-budget and Compatible Patient Identification System based on Passive RFID Technology"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13134343",
+			"name": "Radio frequency identification (RFID) in pervasive healthcare"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 26,
+			"target": 30,
+			"value": "13134343",
+			"name": "Radio frequency identification (RFID) in pervasive healthcare"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13134343",
+			"name": "Radio frequency identification (RFID) in pervasive healthcare"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13134349",
+			"name": "International Journal of Healthcare Technology and Management: Special Issue on Patient-Centric Modelling and Enhanced Security in Distributed Healthcare Systems"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "13134387",
+			"name": "Integrated Many-to-Many Multicast Addressing and Access Control Methods"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "13163550",
+			"name": "A Survey of Multiple Tree Visualisation"
+		},
+		{
+			"date": "1996-01-01",
+			"source": 6,
+			"target": 7,
+			"value": "13168770",
+			"name": "Intelligent Storage Devices for Scalable Information Management Systems"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 3,
+			"target": 12,
+			"value": "13169248",
+			"name": "Presence for Everyone - A short guide to presence research"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 3,
+			"target": 31,
+			"value": "13169248",
+			"name": "Presence for Everyone - A short guide to presence research"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 12,
+			"target": 31,
+			"value": "13169248",
+			"name": "Presence for Everyone - A short guide to presence research"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 3,
+			"target": 12,
+			"value": "13169315",
+			"name": "Fragments of Place"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 3,
+			"target": 31,
+			"value": "13169315",
+			"name": "Fragments of Place"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 12,
+			"target": 31,
+			"value": "13169315",
+			"name": "Fragments of Place"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13170310",
+			"name": "Listening"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 8,
+			"target": 32,
+			"value": "13170310",
+			"name": "Listening"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 9,
+			"target": 32,
+			"value": "13170310",
+			"name": "Listening"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 3,
+			"target": 32,
+			"value": "13170365",
+			"name": "Visualising the Soundfield and Soundscape: extending Macaulay and Crerar’s 1998 Method"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 3,
+			"target": 33,
+			"value": "13170365",
+			"name": "Visualising the Soundfield and Soundscape: extending Macaulay and Crerar’s 1998 Method"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 32,
+			"target": 33,
+			"value": "13170365",
+			"name": "Visualising the Soundfield and Soundscape: extending Macaulay and Crerar’s 1998 Method"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13170372",
+			"name": "Listening, Corporeality and Presence"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 8,
+			"target": 32,
+			"value": "13170372",
+			"name": "Listening, Corporeality and Presence"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 9,
+			"target": 32,
+			"value": "13170372",
+			"name": "Listening, Corporeality and Presence"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 3,
+			"target": 32,
+			"value": "13170373",
+			"name": "Establishing Key Dimensions for Reifying Soundfields and Soundscapes from Auditory Professionals"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 3,
+			"target": 33,
+			"value": "13170373",
+			"name": "Establishing Key Dimensions for Reifying Soundfields and Soundscapes from Auditory Professionals"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 32,
+			"target": 33,
+			"value": "13170373",
+			"name": "Establishing Key Dimensions for Reifying Soundfields and Soundscapes from Auditory Professionals"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 3,
+			"target": 32,
+			"value": "13170375",
+			"name": "Mapping Workplace Soundscapes: Reifying Office Auditory Environments"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 3,
+			"target": 33,
+			"value": "13170375",
+			"name": "Mapping Workplace Soundscapes: Reifying Office Auditory Environments"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 32,
+			"target": 33,
+			"value": "13170375",
+			"name": "Mapping Workplace Soundscapes: Reifying Office Auditory Environments"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 0,
+			"target": 18,
+			"value": "13170376",
+			"name": "Form"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 3,
+			"target": 32,
+			"value": "13170377",
+			"name": "Sound and Soundscape Classification: Establishing Key Auditory Dimensions and their Relative Importance"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 3,
+			"target": 33,
+			"value": "13170377",
+			"name": "Sound and Soundscape Classification: Establishing Key Auditory Dimensions and their Relative Importance"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 32,
+			"target": 33,
+			"value": "13170377",
+			"name": "Sound and Soundscape Classification: Establishing Key Auditory Dimensions and their Relative Importance"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 3,
+			"target": 32,
+			"value": "13170415",
+			"name": "Workplace Soundscape Mapping: A Trial of Macaulay and Crerar’s Method"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 3,
+			"target": 33,
+			"value": "13170415",
+			"name": "Workplace Soundscape Mapping: A Trial of Macaulay and Crerar’s Method"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 32,
+			"target": 33,
+			"value": "13170415",
+			"name": "Workplace Soundscape Mapping: A Trial of Macaulay and Crerar’s Method"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 8,
+			"target": 32,
+			"value": "13170416",
+			"name": "Telling People about Virtual Places: A Qualitative Perspective"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 32,
+			"target": 33,
+			"value": "13170466",
+			"name": "How to tackle auditory interface aesthetics? Discussion and case study"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13170526",
+			"name": "Evaluating Soundscapes as a Means of Creating a Sense of Place"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 8,
+			"target": 32,
+			"value": "13170526",
+			"name": "Evaluating Soundscapes as a Means of Creating a Sense of Place"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 9,
+			"target": 32,
+			"value": "13170526",
+			"name": "Evaluating Soundscapes as a Means of Creating a Sense of Place"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 3,
+			"target": 32,
+			"value": "13170544",
+			"name": "Soundfields and Soundscapes: Reifying Auditory Communities"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 4,
+			"target": 27,
+			"value": "13174700",
+			"name": "Computing the State of Specknets: Further Analysis of an Innate Immune-Inspired Model"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 4,
+			"target": 27,
+			"value": "13174704",
+			"name": "Computing the State of Specknets: An Immune-Inspired Approach"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 34,
+			"target": 35,
+			"value": "13175005",
+			"name": "Self-efficacy as a factor in the evaluation of e-petitions"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 6,
+			"target": 21,
+			"value": "13186461",
+			"name": "A Critique of JCSP Networking"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 6,
+			"target": 20,
+			"value": "13186461",
+			"name": "A Critique of JCSP Networking"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 21,
+			"target": 20,
+			"value": "13186461",
+			"name": "A Critique of JCSP Networking"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 6,
+			"target": 20,
+			"value": "13186463",
+			"name": "Mobile Agents and Processes using Communicating Process Architectures"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 6,
+			"target": 20,
+			"value": "13186471",
+			"name": "An Investigation into Distributed Channel Mobility Support for Communicating Process Architectures"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 28,
+			"target": 15,
+			"value": "13187125",
+			"name": " A Perspective on Middleware-oriented Context-aware Pervasive Systems"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 0,
+			"target": 15,
+			"value": "13187130",
+			"name": "A Multiple Viewed Interrelated Ontology Model for Holistic Component Specification and Retrieval"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 8,
+			"target": 36,
+			"value": "13190986",
+			"name": "Mental Models, Magical Thinking and Individual Differences"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13190989",
+			"name": "Triangulation in Practice"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13191000",
+			"name": "How Older People Account for their Experiences with Interactive Technology"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13191003",
+			"name": "Space, Technology and Spatiality: Interdisciplinary Perspectives"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 8,
+			"target": 36,
+			"value": "13191907",
+			"name": "Familiarity with Mobile Phones"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 13,
+			"target": 12,
+			"value": "13193359",
+			"name": "Experiental Design: Connecting Design to HCI"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 12,
+			"target": 31,
+			"value": "13193391",
+			"name": "Fragments of Place :: Revealing Sense of Place through Shared Phone Images"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 34,
+			"target": 35,
+			"value": "13194191",
+			"name": "Bringing social and technological innovation to the work of national, regional and local elected representatives: The eRepresentative Project"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 16,
+			"target": 6,
+			"value": "13200354",
+			"name": "A Dynamic Connection Capability for Pervasive Adaptive Environments using JCSP"
+		},
+		{
+			"date": "2004-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13204972",
+			"name": "Insideness-Outsideness"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 8,
+			"target": 3,
+			"value": "13205034",
+			"name": "Place and Placelessness in Virtual Environments"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13205034",
+			"name": "Place and Placelessness in Virtual Environments"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 8,
+			"target": 12,
+			"value": "13205034",
+			"name": "Place and Placelessness in Virtual Environments"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 3,
+			"target": 9,
+			"value": "13205034",
+			"name": "Place and Placelessness in Virtual Environments"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 3,
+			"target": 12,
+			"value": "13205034",
+			"name": "Place and Placelessness in Virtual Environments"
+		},
+		{
+			"date": "2003-01-01",
+			"source": 9,
+			"target": 12,
+			"value": "13205034",
+			"name": "Place and Placelessness in Virtual Environments"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 8,
+			"target": 3,
+			"value": "13205039",
+			"name": "An Investigation Into Virtual Representations Of Real Places"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13205039",
+			"name": "An Investigation Into Virtual Representations Of Real Places"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 8,
+			"target": 12,
+			"value": "13205039",
+			"name": "An Investigation Into Virtual Representations Of Real Places"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 3,
+			"target": 9,
+			"value": "13205039",
+			"name": "An Investigation Into Virtual Representations Of Real Places"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 3,
+			"target": 12,
+			"value": "13205039",
+			"name": "An Investigation Into Virtual Representations Of Real Places"
+		},
+		{
+			"date": "2002-01-01",
+			"source": 9,
+			"target": 12,
+			"value": "13205039",
+			"name": "An Investigation Into Virtual Representations Of Real Places"
+		},
+		{
+			"date": "2006-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13205459",
+			"name": "Place, Sense Of Place And Presence"
+		},
+		{
+			"date": "2005-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13205470",
+			"name": "Reliving VE Day with Activated Schemata"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 27,
+			"target": 5,
+			"value": "13246204",
+			"name": "Using an evolutionary algorithm to discover low CO2 tours within a Travelling Salesman Problem"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 27,
+			"target": 37,
+			"value": "13246204",
+			"name": "Using an evolutionary algorithm to discover low CO2 tours within a Travelling Salesman Problem"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 5,
+			"target": 37,
+			"value": "13246204",
+			"name": "Using an evolutionary algorithm to discover low CO2 tours within a Travelling Salesman Problem"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 16,
+			"target": 6,
+			"value": "13258446",
+			"name": "JCSP Agents-Based Service Discovery for Pervasive Computing"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 28,
+			"target": 15,
+			"value": "13259528",
+			"name": "CANDEL: Product Line Based Dynamic Context Management for Pervasive Applications"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13276573",
+			"name": "Evaluating Human-Machine Conversation for Appropriateness"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13277027",
+			"name": "Wizard of Oz Experiments for a Companion Dialogue System: Eliciting Companionable Conversation"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13282819",
+			"name": "Wizard of Oz Experiments for Companions"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13282824",
+			"name": "Human-Centred Design of Interactive Services"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13282828",
+			"name": "Scenarios for Companions"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13282829",
+			"name": "A Novel Architecture for Designing by Wizard of Oz"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13282831",
+			"name": "Landscaping Personification Technologies: from Interactions to Relationships"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13282832",
+			"name": "PhotoPal: Companionship, Sharing and the Digital Echo"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 3,
+			"target": 39,
+			"value": "13282832",
+			"name": "PhotoPal: Companionship, Sharing and the Digital Echo"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 38,
+			"target": 39,
+			"value": "13282832",
+			"name": "PhotoPal: Companionship, Sharing and the Digital Echo"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13282834",
+			"name": "Exploring Companion technologies"
+		},
+		{
+			"date": "2008-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13282838",
+			"name": ") Dialogue, Speech and Images: The Companions Project Data Set"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 27,
+			"target": 5,
+			"value": "13285921",
+			"name": "Building low CO2 solutions to the Vehicle Routing Problem with Time Windows using an Evolutionary Algorithm"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 27,
+			"target": 37,
+			"value": "13285921",
+			"name": "Building low CO2 solutions to the Vehicle Routing Problem with Time Windows using an Evolutionary Algorithm"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 5,
+			"target": 37,
+			"value": "13285921",
+			"name": "Building low CO2 solutions to the Vehicle Routing Problem with Time Windows using an Evolutionary Algorithm"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 8,
+			"target": 32,
+			"value": "13302545",
+			"name": "Soundscape Mapping: a tool for evaluating sounds and auditory environments"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 8,
+			"target": 33,
+			"value": "13302545",
+			"name": "Soundscape Mapping: a tool for evaluating sounds and auditory environments"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 8,
+			"target": 40,
+			"value": "13302545",
+			"name": "Soundscape Mapping: a tool for evaluating sounds and auditory environments"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 32,
+			"target": 33,
+			"value": "13302545",
+			"name": "Soundscape Mapping: a tool for evaluating sounds and auditory environments"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 32,
+			"target": 40,
+			"value": "13302545",
+			"name": "Soundscape Mapping: a tool for evaluating sounds and auditory environments"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 33,
+			"target": 40,
+			"value": "13302545",
+			"name": "Soundscape Mapping: a tool for evaluating sounds and auditory environments"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "13306077",
+			"name": "Novel QoS-Aware Gateway Centrailized Multi-hop Routing for Wireless Mesh Networks"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 27,
+			"target": 5,
+			"value": "13309193",
+			"name": "Influence of Topology and Payload on CO2 Optimised Vehicle Routing"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 27,
+			"target": 37,
+			"value": "13309193",
+			"name": "Influence of Topology and Payload on CO2 Optimised Vehicle Routing"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 5,
+			"target": 37,
+			"value": "13309193",
+			"name": "Influence of Topology and Payload on CO2 Optimised Vehicle Routing"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 29,
+			"target": 41,
+			"value": "13316799",
+			"name": "Towards a framework for the generation of enhanced attack/background network traffic for evaluation of network-based intrusion detection systems"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13316814",
+			"name": "Novel Information Sharing Syntax for Data Sharing between Police and Community Partners, using Role-based Security"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 26,
+			"target": 30,
+			"value": "13316814",
+			"name": "Novel Information Sharing Syntax for Data Sharing between Police and Community Partners, using Role-based Security"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13316814",
+			"name": "Novel Information Sharing Syntax for Data Sharing between Police and Community Partners, using Role-based Security"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 0,
+			"target": 15,
+			"value": "13351076",
+			"name": "Achieve Semantic-based Precise Component Selection via an Ontology Model Interlinking Application Domain and MVICS"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 28,
+			"target": 15,
+			"value": "13351084",
+			"name": "A Model-driven Approach to Flexible Multi-Level Customization of SaaS Applications"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 28,
+			"target": 15,
+			"value": "13351087",
+			"name": "A MDD-based Generic Framework for Context-aware Deeply Adaptive Service-based Processes"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13353783",
+			"name": "Is stereotyping inevitable when designing with personas?"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13353785",
+			"name": "Re-creating Edinburgh: adopting the tourist gaze"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 4,
+			"target": 27,
+			"value": "13361607",
+			"name": "Towards Self-Aware PerAda Systems"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 6,
+			"target": 5,
+			"value": "13362829",
+			"name": "Application of CoSMoS Parallel Design Patterns to a Pedestrian Simulation"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 6,
+			"target": 22,
+			"value": "13362829",
+			"name": "Application of CoSMoS Parallel Design Patterns to a Pedestrian Simulation"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 5,
+			"target": 22,
+			"value": "13362829",
+			"name": "Application of CoSMoS Parallel Design Patterns to a Pedestrian Simulation"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 0,
+			"target": 17,
+			"value": "13364440",
+			"name": "Improving Data Quality in Data Warehousing Applications"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13364480",
+			"name": "Wizard of Oz Experiments and Companion dialogues"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 0,
+			"target": 18,
+			"value": "13364587",
+			"name": "Pattern Browsing and Query Adjustment for the Exploratory Analysis and Cooperative Visualisation of Microarray Time-course Data"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 0,
+			"target": 7,
+			"value": "13364587",
+			"name": "Pattern Browsing and Query Adjustment for the Exploratory Analysis and Cooperative Visualisation of Microarray Time-course Data"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 18,
+			"target": 7,
+			"value": "13364587",
+			"name": "Pattern Browsing and Query Adjustment for the Exploratory Analysis and Cooperative Visualisation of Microarray Time-course Data"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 12,
+			"target": 31,
+			"value": "13364925",
+			"name": "Informing the Design of the Future Urban Landscape"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 34,
+			"target": 35,
+			"value": "13365070",
+			"name": "Signing a an e-petition as a transition from lurking to participation"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 29,
+			"target": 25,
+			"value": "13365109",
+			"name": "A New Adaptive Broadcasting Approach for Mobile Ad hoc Networks"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13365537",
+			"name": "Analysis of Information Governance and Patient Data Protection within Primary Health Care"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 29,
+			"target": 42,
+			"value": "13365537",
+			"name": "Analysis of Information Governance and Patient Data Protection within Primary Health Care"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 30,
+			"target": 42,
+			"value": "13365537",
+			"name": "Analysis of Information Governance and Patient Data Protection within Primary Health Care"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 34,
+			"target": 35,
+			"value": "13365700",
+			"name": "Understanding the 'E-Petitioner'"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 28,
+			"target": 15,
+			"value": "13365780",
+			"name": "Mapping Features to Context Information: Supporting Context Variability for Context-aware Pervasive Applications"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "13365988",
+			"name": "Security and Routing Scoped IP Multicast Addresses"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13366402",
+			"name": "Modelling Infection Spread Using Location Tracking"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13366413",
+			"name": "Modelling infection spread using location tracking"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13366418",
+			"name": "Creating a sense of place with a deliberately constrained virtual environment"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13366480",
+			"name": "Radio frequency identification (RFID) in pervasive healthcare"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 26,
+			"target": 30,
+			"value": "13366480",
+			"name": "Radio frequency identification (RFID) in pervasive healthcare"
+		},
+		{
+			"date": "2009-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13366480",
+			"name": "Radio frequency identification (RFID) in pervasive healthcare"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13366481",
+			"name": "Novel Information Sharing Syntax for Data Sharing Between Police and Community Partners, Using Role-Based Security"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 26,
+			"target": 30,
+			"value": "13366481",
+			"name": "Novel Information Sharing Syntax for Data Sharing Between Police and Community Partners, Using Role-Based Security"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 26,
+			"target": 43,
+			"value": "13366481",
+			"name": "Novel Information Sharing Syntax for Data Sharing Between Police and Community Partners, Using Role-Based Security"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13366481",
+			"name": "Novel Information Sharing Syntax for Data Sharing Between Police and Community Partners, Using Role-Based Security"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13366481",
+			"name": "Novel Information Sharing Syntax for Data Sharing Between Police and Community Partners, Using Role-Based Security"
+		},
+		{
+			"date": "2010-01-01",
+			"source": 30,
+			"target": 43,
+			"value": "13366481",
+			"name": "Novel Information Sharing Syntax for Data Sharing Between Police and Community Partners, Using Role-Based Security"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 24,
+			"value": "13366663",
+			"name": "Performance and Student Perception Evaluation of Cloud-based Virtualised Security and Digital Forensics Labs"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 44,
+			"value": "13366663",
+			"name": "Performance and Student Perception Evaluation of Cloud-based Virtualised Security and Digital Forensics Labs"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 45,
+			"value": "13366663",
+			"name": "Performance and Student Perception Evaluation of Cloud-based Virtualised Security and Digital Forensics Labs"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 24,
+			"target": 44,
+			"value": "13366663",
+			"name": "Performance and Student Perception Evaluation of Cloud-based Virtualised Security and Digital Forensics Labs"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 24,
+			"target": 45,
+			"value": "13366663",
+			"name": "Performance and Student Perception Evaluation of Cloud-based Virtualised Security and Digital Forensics Labs"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 44,
+			"target": 45,
+			"value": "13366663",
+			"name": "Performance and Student Perception Evaluation of Cloud-based Virtualised Security and Digital Forensics Labs"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 28,
+			"target": 15,
+			"value": "13366761",
+			"name": "Recognize contextual situation in pervasive environments using process mining techniques"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13366834",
+			"name": "DACAR Platform for eHealth Services Cloud"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 26,
+			"target": 30,
+			"value": "13366834",
+			"name": "DACAR Platform for eHealth Services Cloud"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 26,
+			"target": 43,
+			"value": "13366834",
+			"name": "DACAR Platform for eHealth Services Cloud"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 26,
+			"target": 41,
+			"value": "13366834",
+			"name": "DACAR Platform for eHealth Services Cloud"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13366834",
+			"name": "DACAR Platform for eHealth Services Cloud"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13366834",
+			"name": "DACAR Platform for eHealth Services Cloud"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 41,
+			"value": "13366834",
+			"name": "DACAR Platform for eHealth Services Cloud"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 30,
+			"target": 43,
+			"value": "13366834",
+			"name": "DACAR Platform for eHealth Services Cloud"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 30,
+			"target": 41,
+			"value": "13366834",
+			"name": "DACAR Platform for eHealth Services Cloud"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 43,
+			"target": 41,
+			"value": "13366834",
+			"name": "DACAR Platform for eHealth Services Cloud"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 46,
+			"value": "13366837",
+			"name": "A Novel Privacy Preserving Method for the Location Tracking of Mobile Devices"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 23,
+			"target": 35,
+			"value": "13366838",
+			"name": "Ontology definition and construction, and epistemological adequacy for systems interoperability: a practitioner analysis"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13366879",
+			"name": "Crime Risk Evaluation within Information Sharing between the Police and Community Partners"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 26,
+			"target": 43,
+			"value": "13366879",
+			"name": "Crime Risk Evaluation within Information Sharing between the Police and Community Partners"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13366879",
+			"name": "Crime Risk Evaluation within Information Sharing between the Police and Community Partners"
+		},
+		{
+			"date": "2007-01-01",
+			"source": 10,
+			"target": 11,
+			"value": "13366881",
+			"name": "SQL Hacks"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "13366947",
+			"name": "Visualising Errors in Animal Pedigree Genotype Data"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 44,
+			"value": "13366963",
+			"name": "Cloud-based Digital Forensics Evaluation Test (D-FET) Platform"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13366963",
+			"name": "Cloud-based Digital Forensics Evaluation Test (D-FET) Platform"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 45,
+			"value": "13366963",
+			"name": "Cloud-based Digital Forensics Evaluation Test (D-FET) Platform"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 46,
+			"value": "13366963",
+			"name": "Cloud-based Digital Forensics Evaluation Test (D-FET) Platform"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 44,
+			"target": 43,
+			"value": "13366963",
+			"name": "Cloud-based Digital Forensics Evaluation Test (D-FET) Platform"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 44,
+			"target": 45,
+			"value": "13366963",
+			"name": "Cloud-based Digital Forensics Evaluation Test (D-FET) Platform"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 44,
+			"target": 46,
+			"value": "13366963",
+			"name": "Cloud-based Digital Forensics Evaluation Test (D-FET) Platform"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 43,
+			"target": 45,
+			"value": "13366963",
+			"name": "Cloud-based Digital Forensics Evaluation Test (D-FET) Platform"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 43,
+			"target": 46,
+			"value": "13366963",
+			"name": "Cloud-based Digital Forensics Evaluation Test (D-FET) Platform"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 45,
+			"target": 46,
+			"value": "13366963",
+			"name": "Cloud-based Digital Forensics Evaluation Test (D-FET) Platform"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13366964",
+			"name": "Review of Security Policy Implementations"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 45,
+			"value": "13366964",
+			"name": "Review of Security Policy Implementations"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 41,
+			"value": "13366964",
+			"name": "Review of Security Policy Implementations"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 46,
+			"value": "13366964",
+			"name": "Review of Security Policy Implementations"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 43,
+			"target": 45,
+			"value": "13366964",
+			"name": "Review of Security Policy Implementations"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 43,
+			"target": 41,
+			"value": "13366964",
+			"name": "Review of Security Policy Implementations"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 43,
+			"target": 46,
+			"value": "13366964",
+			"name": "Review of Security Policy Implementations"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 45,
+			"target": 41,
+			"value": "13366964",
+			"name": "Review of Security Policy Implementations"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 45,
+			"target": 46,
+			"value": "13366964",
+			"name": "Review of Security Policy Implementations"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 41,
+			"target": 46,
+			"value": "13366964",
+			"name": "Review of Security Policy Implementations"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 4,
+			"target": 27,
+			"value": "13366991",
+			"name": "This Pervasive Day: Creative Interactive Methods for Encouraging Public Engagement with FET Research "
+		},
+		{
+			"date": "2011-01-01",
+			"source": 4,
+			"target": 31,
+			"value": "13366991",
+			"name": "This Pervasive Day: Creative Interactive Methods for Encouraging Public Engagement with FET Research "
+		},
+		{
+			"date": "2011-01-01",
+			"source": 4,
+			"target": 47,
+			"value": "13366991",
+			"name": "This Pervasive Day: Creative Interactive Methods for Encouraging Public Engagement with FET Research "
+		},
+		{
+			"date": "2011-01-01",
+			"source": 27,
+			"target": 31,
+			"value": "13366991",
+			"name": "This Pervasive Day: Creative Interactive Methods for Encouraging Public Engagement with FET Research "
+		},
+		{
+			"date": "2011-01-01",
+			"source": 27,
+			"target": 47,
+			"value": "13366991",
+			"name": "This Pervasive Day: Creative Interactive Methods for Encouraging Public Engagement with FET Research "
+		},
+		{
+			"date": "2011-01-01",
+			"source": 31,
+			"target": 47,
+			"value": "13366991",
+			"name": "This Pervasive Day: Creative Interactive Methods for Encouraging Public Engagement with FET Research "
+		},
+		{
+			"date": "2011-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13367001",
+			"name": "Affliate Advertising Fraud and an Investigatory Fraud Framework"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 45,
+			"value": "13367029",
+			"name": "A Methodology to Evaluate Rate-Based Intrusion Prevention System against Distributed Denial-of-Service (DDoS)"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 0,
+			"target": 17,
+			"value": "13367044",
+			"name": "A Rule Based Taxonomy of Dirty Data"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13367135",
+			"name": "Grandfather's iPod"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 8,
+			"target": 32,
+			"value": "13367202",
+			"name": "Evaluating a Vehicle Auditory Display: Comparing a Designer's Expectations with Listeners' Experiences"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "13367230",
+			"name": "Combined vs. Separate Views in Matrix-based Graph Analysis and Comparison"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 28,
+			"target": 15,
+			"value": "13367382",
+			"name": "An Approach to Domain-based Scalable Context Management Architecture in Pervasive Environments"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 12,
+			"target": 31,
+			"value": "13367405",
+			"name": "Imagining urban interactions: strategies for exploring future design landscapes"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 28,
+			"target": 15,
+			"value": "13367419",
+			"name": "Lightweight Software Product Line Based Privacy Protection Scheme  for Pervasive Applications "
+		},
+		{
+			"date": "2011-01-01",
+			"source": 10,
+			"target": 11,
+			"value": "13367722",
+			"name": "Student Behaviour in a Flexible Learning Course Framework"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "13367791",
+			"name": "Evaluating the VIPER pedigree visualisation: detecting inheritance inconsistencies in genotyped pedigrees"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13368097",
+			"name": "An Integrated Cloud-based Healthcare Infrastructure"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13368097",
+			"name": "An Integrated Cloud-based Healthcare Infrastructure"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 46,
+			"value": "13368097",
+			"name": "An Integrated Cloud-based Healthcare Infrastructure"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 30,
+			"target": 43,
+			"value": "13368097",
+			"name": "An Integrated Cloud-based Healthcare Infrastructure"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 30,
+			"target": 46,
+			"value": "13368097",
+			"name": "An Integrated Cloud-based Healthcare Infrastructure"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 43,
+			"target": 46,
+			"value": "13368097",
+			"name": "An Integrated Cloud-based Healthcare Infrastructure"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 12,
+			"target": 31,
+			"value": "13368128",
+			"name": "The City in Cinema: How Popular Culture can Influence Research Agendas"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 30,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 43,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 41,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 46,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 41,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 46,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 30,
+			"target": 43,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 30,
+			"target": 41,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 30,
+			"target": 46,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 43,
+			"target": 41,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 43,
+			"target": 46,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 41,
+			"target": 46,
+			"value": "13368624",
+			"name": "SPoC: Protecting Patient Privacy for e-Health Services in the Cloud"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13368686",
+			"name": "Interaction  Strategies  for  an  Affective  Conversational  Agent"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 0,
+			"target": 15,
+			"value": "13369159",
+			"name": "Quality Attributes Suggestion in Component Retrieval"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 0,
+			"target": 17,
+			"value": "13369259",
+			"name": "An Evaluation of Name Matching Techniques"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 28,
+			"target": 15,
+			"value": "13369352",
+			"name": "A Unified Approach for the Dynamic Evolution of Context-aware Services"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 0,
+			"target": 17,
+			"value": "13371313",
+			"name": "A Comparison of Techniques for Name Matching"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13371419",
+			"name": "E-Health: Chances and Challenges of Distributed, Service oriented Architectures"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13371419",
+			"name": "E-Health: Chances and Challenges of Distributed, Service oriented Architectures"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 41,
+			"value": "13371419",
+			"name": "E-Health: Chances and Challenges of Distributed, Service oriented Architectures"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 46,
+			"value": "13371419",
+			"name": "E-Health: Chances and Challenges of Distributed, Service oriented Architectures"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 30,
+			"target": 43,
+			"value": "13371419",
+			"name": "E-Health: Chances and Challenges of Distributed, Service oriented Architectures"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 30,
+			"target": 41,
+			"value": "13371419",
+			"name": "E-Health: Chances and Challenges of Distributed, Service oriented Architectures"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 30,
+			"target": 46,
+			"value": "13371419",
+			"name": "E-Health: Chances and Challenges of Distributed, Service oriented Architectures"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 43,
+			"target": 41,
+			"value": "13371419",
+			"name": "E-Health: Chances and Challenges of Distributed, Service oriented Architectures"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 43,
+			"target": 46,
+			"value": "13371419",
+			"name": "E-Health: Chances and Challenges of Distributed, Service oriented Architectures"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 41,
+			"target": 46,
+			"value": "13371419",
+			"name": "E-Health: Chances and Challenges of Distributed, Service oriented Architectures"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "13371509",
+			"name": "VIPER: a visualisation tool for exploring inheritance inconsistencies in genotyped pedigrees"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13371573",
+			"name": "Emotional and Aesthetic Attachment to Digital Artefacts"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13371604",
+			"name": "Crime Risk Evaluation within Information Sharing between the Police and Community Partners"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 26,
+			"target": 43,
+			"value": "13371604",
+			"name": "Crime Risk Evaluation within Information Sharing between the Police and Community Partners"
+		},
+		{
+			"date": "2011-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13371604",
+			"name": "Crime Risk Evaluation within Information Sharing between the Police and Community Partners"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13371798",
+			"name": "Cloud Forensics"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 45,
+			"value": "13371798",
+			"name": "Cloud Forensics"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 46,
+			"value": "13371798",
+			"name": "Cloud Forensics"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 43,
+			"target": 45,
+			"value": "13371798",
+			"name": "Cloud Forensics"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 43,
+			"target": 46,
+			"value": "13371798",
+			"name": "Cloud Forensics"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 45,
+			"target": 46,
+			"value": "13371798",
+			"name": "Cloud Forensics"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13371985",
+			"name": "How Was Your Day? Evaluating a Conversational Companion"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 25,
+			"value": "13372003",
+			"name": "A New Efficient Distributed Route Discovery for Wireless Mobile Ad hoc Networks"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "13372008",
+			"name": "Experimental Investigation of Link Layer Adaptation in IEEE 802.11n WLANs"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 48,
+			"value": "13372056",
+			"name": "Novel Tracking of Rogue Network Packets Using Danger Theory Approach"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13372056",
+			"name": "Novel Tracking of Rogue Network Packets Using Danger Theory Approach"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 48,
+			"target": 43,
+			"value": "13372056",
+			"name": "Novel Tracking of Rogue Network Packets Using Danger Theory Approach"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13372448",
+			"name": "Towards Simulation of Patient Data for Evaluation of E-Health Platform and Services"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 30,
+			"value": "13372448",
+			"name": "Towards Simulation of Patient Data for Evaluation of E-Health Platform and Services"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 43,
+			"value": "13372448",
+			"name": "Towards Simulation of Patient Data for Evaluation of E-Health Platform and Services"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 41,
+			"value": "13372448",
+			"name": "Towards Simulation of Patient Data for Evaluation of E-Health Platform and Services"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13372448",
+			"name": "Towards Simulation of Patient Data for Evaluation of E-Health Platform and Services"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13372448",
+			"name": "Towards Simulation of Patient Data for Evaluation of E-Health Platform and Services"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 41,
+			"value": "13372448",
+			"name": "Towards Simulation of Patient Data for Evaluation of E-Health Platform and Services"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 30,
+			"target": 43,
+			"value": "13372448",
+			"name": "Towards Simulation of Patient Data for Evaluation of E-Health Platform and Services"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 30,
+			"target": 41,
+			"value": "13372448",
+			"name": "Towards Simulation of Patient Data for Evaluation of E-Health Platform and Services"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 43,
+			"target": 41,
+			"value": "13372448",
+			"name": "Towards Simulation of Patient Data for Evaluation of E-Health Platform and Services"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "13372461",
+			"name": "Redeeming Pedigree Data with an Interactive Error Cleaning Visualisation"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 15,
+			"target": 21,
+			"value": "13372493",
+			"name": "Towards OWL 2 Natively Supported Fuzzy Cloud Ontology"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 15,
+			"target": 49,
+			"value": "13372493",
+			"name": "Towards OWL 2 Natively Supported Fuzzy Cloud Ontology"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 21,
+			"target": 49,
+			"value": "13372493",
+			"name": "Towards OWL 2 Natively Supported Fuzzy Cloud Ontology"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 8,
+			"target": 32,
+			"value": "13372680",
+			"name": "Soundscapes and Repertory Grids: Comparing Listeners’ and a Designer’s Experiences"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13372709",
+			"name": "Technical Evaluation of an E-Health Platform"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13372709",
+			"name": "Technical Evaluation of an E-Health Platform"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 41,
+			"value": "13372709",
+			"name": "Technical Evaluation of an E-Health Platform"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 30,
+			"target": 43,
+			"value": "13372709",
+			"name": "Technical Evaluation of an E-Health Platform"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 30,
+			"target": 41,
+			"value": "13372709",
+			"name": "Technical Evaluation of an E-Health Platform"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 43,
+			"target": 41,
+			"value": "13372709",
+			"name": "Technical Evaluation of an E-Health Platform"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 10,
+			"target": 45,
+			"value": "13372820",
+			"name": "Security Issues of a Publicly Accessible Cloud Computing Infrastructure"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 23,
+			"target": 35,
+			"value": "13372902",
+			"name": "The right resources to support LIS research: findings from the RiLIES2 project poll"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 23,
+			"target": 50,
+			"value": "13372902",
+			"name": "The right resources to support LIS research: findings from the RiLIES2 project poll"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 35,
+			"target": 50,
+			"value": "13372902",
+			"name": "The right resources to support LIS research: findings from the RiLIES2 project poll"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 4,
+			"target": 27,
+			"value": "13373315",
+			"name": "A Hyper-Heuristic Classifier for One Dimensional Bin Packing                Problems: Improving Classification Accuracy by Attribute  Evolution"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 4,
+			"target": 51,
+			"value": "13373315",
+			"name": "A Hyper-Heuristic Classifier for One Dimensional Bin Packing                Problems: Improving Classification Accuracy by Attribute  Evolution"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 27,
+			"target": 51,
+			"value": "13373315",
+			"name": "A Hyper-Heuristic Classifier for One Dimensional Bin Packing                Problems: Improving Classification Accuracy by Attribute  Evolution"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 14,
+			"target": 24,
+			"value": "13373330",
+			"name": "Constructive scaffolding for accessible PBL"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 10,
+			"target": 44,
+			"value": "13373334",
+			"name": "A Forensic Image Description Language for Generating Test Images"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 10,
+			"target": 45,
+			"value": "13373334",
+			"name": "A Forensic Image Description Language for Generating Test Images"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 44,
+			"target": 45,
+			"value": "13373334",
+			"name": "A Forensic Image Description Language for Generating Test Images"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 12,
+			"target": 33,
+			"value": "13373367",
+			"name": "Sketching Concatenative Synthesis: Audiovisual Isomorphism In Reduced Modes"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 12,
+			"target": 52,
+			"value": "13373367",
+			"name": "Sketching Concatenative Synthesis: Audiovisual Isomorphism In Reduced Modes"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 33,
+			"target": 52,
+			"value": "13373367",
+			"name": "Sketching Concatenative Synthesis: Audiovisual Isomorphism In Reduced Modes"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13373434",
+			"name": "Computational data protection law: trusting each other offline and online. "
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 30,
+			"value": "13373434",
+			"name": "Computational data protection law: trusting each other offline and online. "
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 43,
+			"value": "13373434",
+			"name": "Computational data protection law: trusting each other offline and online. "
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13373434",
+			"name": "Computational data protection law: trusting each other offline and online. "
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13373434",
+			"name": "Computational data protection law: trusting each other offline and online. "
+		},
+		{
+			"date": "2012-01-01",
+			"source": 30,
+			"target": 43,
+			"value": "13373434",
+			"name": "Computational data protection law: trusting each other offline and online. "
+		},
+		{
+			"date": "2012-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13373458",
+			"name": "Location as interaction: Designing Blended Spaces for Digital Tourism"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 3,
+			"target": 53,
+			"value": "13373458",
+			"name": "Location as interaction: Designing Blended Spaces for Digital Tourism"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 38,
+			"target": 53,
+			"value": "13373458",
+			"name": "Location as interaction: Designing Blended Spaces for Digital Tourism"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13373460",
+			"name": "Designing Blended Spaces "
+		},
+		{
+			"date": "2012-01-01",
+			"source": 3,
+			"target": 53,
+			"value": "13373460",
+			"name": "Designing Blended Spaces "
+		},
+		{
+			"date": "2012-01-01",
+			"source": 38,
+			"target": 53,
+			"value": "13373460",
+			"name": "Designing Blended Spaces "
+		},
+		{
+			"date": "2012-01-01",
+			"source": 0,
+			"target": 18,
+			"value": "13373931",
+			"name": "MaTSE: The Microarray Time-Series Explorer"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 0,
+			"target": 7,
+			"value": "13373931",
+			"name": "MaTSE: The Microarray Time-Series Explorer"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 18,
+			"target": 7,
+			"value": "13373931",
+			"name": "MaTSE: The Microarray Time-Series Explorer"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 23,
+			"target": 35,
+			"value": "13374038",
+			"name": "Improving access to Library and Information Science research: Maximizing its relevance and impact to practitioners "
+		},
+		{
+			"date": "2012-01-01",
+			"source": 23,
+			"target": 50,
+			"value": "13374038",
+			"name": "Improving access to Library and Information Science research: Maximizing its relevance and impact to practitioners "
+		},
+		{
+			"date": "2012-01-01",
+			"source": 35,
+			"target": 50,
+			"value": "13374038",
+			"name": "Improving access to Library and Information Science research: Maximizing its relevance and impact to practitioners "
+		},
+		{
+			"date": "2012-01-01",
+			"source": 15,
+			"target": 20,
+			"value": "13374098",
+			"name": "Evolution Pattern for Service Evolution in Clouds"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 15,
+			"target": 54,
+			"value": "13374098",
+			"name": "Evolution Pattern for Service Evolution in Clouds"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 20,
+			"target": 54,
+			"value": "13374098",
+			"name": "Evolution Pattern for Service Evolution in Clouds"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13374374",
+			"name": "Computational data protection law: trusting each other offline and online"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 30,
+			"value": "13374374",
+			"name": "Computational data protection law: trusting each other offline and online"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 26,
+			"target": 43,
+			"value": "13374374",
+			"name": "Computational data protection law: trusting each other offline and online"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13374374",
+			"name": "Computational data protection law: trusting each other offline and online"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13374374",
+			"name": "Computational data protection law: trusting each other offline and online"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 30,
+			"target": 43,
+			"value": "13374374",
+			"name": "Computational data protection law: trusting each other offline and online"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 15,
+			"target": 20,
+			"value": "13374698",
+			"name": "Evolution Feature Oriented Model Driven Product Line Engineering Approach for Synergistic and Dynamic Service Evolution in Clouds"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 15,
+			"target": 54,
+			"value": "13374698",
+			"name": "Evolution Feature Oriented Model Driven Product Line Engineering Approach for Synergistic and Dynamic Service Evolution in Clouds"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 20,
+			"target": 54,
+			"value": "13374698",
+			"name": "Evolution Feature Oriented Model Driven Product Line Engineering Approach for Synergistic and Dynamic Service Evolution in Clouds"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 20,
+			"target": 54,
+			"value": "13374699",
+			"name": "Evolution Feature Oriented Model Driven Product Line Engineering Approach for Synergistic and Dynamic Service Evolution in Clouds:Four Kinds of Schema"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 20,
+			"target": 54,
+			"value": "13374700",
+			"name": "Evolution Feature Oriented Model Driven Product Line Engineering Approach for Synergistic and Dynamic Service Evolution in Clouds:Pattern Data Structure"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 15,
+			"target": 20,
+			"value": "13374701",
+			"name": "Evolution Feature Oriented Model Driven Product Line Engineering Approach for Synergistic and Dynamic Service Evolution in Clouds:AO4BPEL3.0 Proposal"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 15,
+			"target": 54,
+			"value": "13374701",
+			"name": "Evolution Feature Oriented Model Driven Product Line Engineering Approach for Synergistic and Dynamic Service Evolution in Clouds:AO4BPEL3.0 Proposal"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 20,
+			"target": 54,
+			"value": "13374701",
+			"name": "Evolution Feature Oriented Model Driven Product Line Engineering Approach for Synergistic and Dynamic Service Evolution in Clouds:AO4BPEL3.0 Proposal"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 27,
+			"target": 51,
+			"value": "13374716",
+			"name": "Generating Single and Multiple Cooperative Heuristics for the One Dimensional Bin Packing Problem Using a Single Node Genetic Programming Island Model"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 15,
+			"target": 49,
+			"value": "13374725",
+			"name": "Evolution for the Sustainability of Internetware"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 55,
+			"value": "13374750",
+			"name": "Monitoring information security risks within health care"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 42,
+			"value": "13374750",
+			"name": "Monitoring information security risks within health care"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 55,
+			"target": 42,
+			"value": "13374750",
+			"name": "Monitoring information security risks within health care"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13374838",
+			"name": "Conducting Performance Evaluation of an e-Health Platform"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13374838",
+			"name": "Conducting Performance Evaluation of an e-Health Platform"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 41,
+			"value": "13374838",
+			"name": "Conducting Performance Evaluation of an e-Health Platform"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 30,
+			"target": 43,
+			"value": "13374838",
+			"name": "Conducting Performance Evaluation of an e-Health Platform"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 30,
+			"target": 41,
+			"value": "13374838",
+			"name": "Conducting Performance Evaluation of an e-Health Platform"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 43,
+			"target": 41,
+			"value": "13374838",
+			"name": "Conducting Performance Evaluation of an e-Health Platform"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "13374865",
+			"name": "Pianola - Visualization of Multivariate Time-Series Security Event Data"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 12,
+			"target": 31,
+			"value": "13374913",
+			"name": "Tangible possibilities—envisioning interactions in public space"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13374922",
+			"name": "Interagency Data exchange, Privacy protection and Governance Architecture for Information Sharing across Domains"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 45,
+			"value": "13374928",
+			"name": "Experimental Evaluation of Disk Sector Hash Comparison for Forensic Triage using a Bloom Filter"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 27,
+			"target": 5,
+			"value": "13374947",
+			"name": "Incorporating Emissions Models within a Multi-Objective Vehicle Routing Problem"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 27,
+			"target": 37,
+			"value": "13374947",
+			"name": "Incorporating Emissions Models within a Multi-Objective Vehicle Routing Problem"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 5,
+			"target": 37,
+			"value": "13374947",
+			"name": "Incorporating Emissions Models within a Multi-Objective Vehicle Routing Problem"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 27,
+			"target": 5,
+			"value": "13374949",
+			"name": "Using Graphical Information Systems to improve vehicle routing problem instances"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 27,
+			"target": 37,
+			"value": "13374949",
+			"name": "Using Graphical Information Systems to improve vehicle routing problem instances"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 5,
+			"target": 37,
+			"value": "13374949",
+			"name": "Using Graphical Information Systems to improve vehicle routing problem instances"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13374960",
+			"name": "A Novel Information Sharing Model using Binary Decision Diagrams for Redundancy, Shadowing, Generalisation and Correlation"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 26,
+			"target": 43,
+			"value": "13374960",
+			"name": "A Novel Information Sharing Model using Binary Decision Diagrams for Redundancy, Shadowing, Generalisation and Correlation"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13374960",
+			"name": "A Novel Information Sharing Model using Binary Decision Diagrams for Redundancy, Shadowing, Generalisation and Correlation"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 8,
+			"target": 9,
+			"value": "13374962",
+			"name": "Enlightened Trial and Error"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 8,
+			"target": 40,
+			"value": "13374962",
+			"name": "Enlightened Trial and Error"
+		},
+		{
+			"date": "2012-01-01",
+			"source": 9,
+			"target": 40,
+			"value": "13374962",
+			"name": "Enlightened Trial and Error"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 12,
+			"target": 31,
+			"value": "13374969",
+			"name": " UrbanIxD: designing human interactions in the networked city"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 3,
+			"target": 29,
+			"value": "13375028",
+			"name": "Norms and Standards in Modular Medical Architectures"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13375028",
+			"name": "Norms and Standards in Modular Medical Architectures"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 3,
+			"target": 30,
+			"value": "13375028",
+			"name": "Norms and Standards in Modular Medical Architectures"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 38,
+			"value": "13375028",
+			"name": "Norms and Standards in Modular Medical Architectures"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13375028",
+			"name": "Norms and Standards in Modular Medical Architectures"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 38,
+			"target": 30,
+			"value": "13375028",
+			"name": "Norms and Standards in Modular Medical Architectures"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13375034",
+			"name": "Evaluation of Binary Decision Diagrams for Redundancy, Shadowing, Generalisation and Correlation in an Information Sharing Model"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 26,
+			"target": 43,
+			"value": "13375034",
+			"name": "Evaluation of Binary Decision Diagrams for Redundancy, Shadowing, Generalisation and Correlation in an Information Sharing Model"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13375034",
+			"name": "Evaluation of Binary Decision Diagrams for Redundancy, Shadowing, Generalisation and Correlation in an Information Sharing Model"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 45,
+			"value": "13375090",
+			"name": "Approaches to the Classification Of High Entropy File Fragments"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 56,
+			"value": "13375090",
+			"name": "Approaches to the Classification Of High Entropy File Fragments"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 45,
+			"target": 56,
+			"value": "13375090",
+			"name": "Approaches to the Classification Of High Entropy File Fragments"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13375116",
+			"name": "Modelling of Integrated Trust, Governance and Access safi.re: Information Sharing Architecture"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 26,
+			"target": 43,
+			"value": "13375116",
+			"name": "Modelling of Integrated Trust, Governance and Access safi.re: Information Sharing Architecture"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 26,
+			"target": 41,
+			"value": "13375116",
+			"name": "Modelling of Integrated Trust, Governance and Access safi.re: Information Sharing Architecture"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13375116",
+			"name": "Modelling of Integrated Trust, Governance and Access safi.re: Information Sharing Architecture"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 41,
+			"value": "13375116",
+			"name": "Modelling of Integrated Trust, Governance and Access safi.re: Information Sharing Architecture"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 43,
+			"target": 41,
+			"value": "13375116",
+			"name": "Modelling of Integrated Trust, Governance and Access safi.re: Information Sharing Architecture"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 28,
+			"target": 15,
+			"value": "13375130",
+			"name": "Jabber-based Cross-Domain Efficient and Privacy-Ensuring Context Management Framework"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 26,
+			"target": 29,
+			"value": "13375260",
+			"name": "Who Would You Trust To Identify You In Accessing Your Health Record?"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 26,
+			"target": 41,
+			"value": "13375260",
+			"name": "Who Would You Trust To Identify You In Accessing Your Health Record?"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 41,
+			"value": "13375260",
+			"name": "Who Would You Trust To Identify You In Accessing Your Health Record?"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 57,
+			"value": "13375514",
+			"name": "UK Citizen Attitudes on the Access to Electronic Health Records"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13375643",
+			"name": "How Was Your Day? Evaluating a Conversational Companion"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 4,
+			"target": 27,
+			"value": "13375664",
+			"name": "Learning to Solve Bin Packing Problems with an Immune Inspired Hyper-heuristic"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 4,
+			"target": 51,
+			"value": "13375664",
+			"name": "Learning to Solve Bin Packing Problems with an Immune Inspired Hyper-heuristic"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 27,
+			"target": 51,
+			"value": "13375664",
+			"name": "Learning to Solve Bin Packing Problems with an Immune Inspired Hyper-heuristic"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 15,
+			"target": 49,
+			"value": "13375679",
+			"name": "TARGO: Transition and Reallocation Based Green Optimization for Cloud VMs"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 58,
+			"target": 5,
+			"value": "13375686",
+			"name": "Techniques for Auditing the ICT carbon footprint of an organisation"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "13375910",
+			"name": "Visual Cleaning of Genotype Data"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 0,
+			"target": 18,
+			"value": "13376150",
+			"name": "MaTSE: the gene expression time-series explorer"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 0,
+			"target": 7,
+			"value": "13376150",
+			"name": "MaTSE: the gene expression time-series explorer"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 18,
+			"target": 7,
+			"value": "13376150",
+			"name": "MaTSE: the gene expression time-series explorer"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 15,
+			"target": 20,
+			"value": "13376176",
+			"name": "Pricing Intelligence as a Service for Cloud Computing"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 15,
+			"target": 59,
+			"value": "13376176",
+			"name": "Pricing Intelligence as a Service for Cloud Computing"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 20,
+			"target": 59,
+			"value": "13376176",
+			"name": "Pricing Intelligence as a Service for Cloud Computing"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 15,
+			"target": 20,
+			"value": "13376797",
+			"name": "Evolution Pattern Verification for Services Evolution in Clouds with Model Driven Architecture"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 15,
+			"target": 54,
+			"value": "13376797",
+			"name": "Evolution Pattern Verification for Services Evolution in Clouds with Model Driven Architecture"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 20,
+			"target": 54,
+			"value": "13376797",
+			"name": "Evolution Pattern Verification for Services Evolution in Clouds with Model Driven Architecture"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 8,
+			"target": 3,
+			"value": "13376811",
+			"name": "Using Participatory Visualisation of Soundscapes to compare Designers’ and Listeners’ Experiences of Sound Designs"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 8,
+			"target": 32,
+			"value": "13376811",
+			"name": "Using Participatory Visualisation of Soundscapes to compare Designers’ and Listeners’ Experiences of Sound Designs"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 3,
+			"target": 32,
+			"value": "13376811",
+			"name": "Using Participatory Visualisation of Soundscapes to compare Designers’ and Listeners’ Experiences of Sound Designs"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 4,
+			"target": 27,
+			"value": "13377145",
+			"name": "A Lifelong Learning Hyper-heuristic Method for Bin Packing"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 4,
+			"target": 51,
+			"value": "13377145",
+			"name": "A Lifelong Learning Hyper-heuristic Method for Bin Packing"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 27,
+			"target": 51,
+			"value": "13377145",
+			"name": "A Lifelong Learning Hyper-heuristic Method for Bin Packing"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 20,
+			"target": 54,
+			"value": "13377256",
+			"name": "Service Evolution in Clouds for Dementia Patient Monitoring System Usability Enhancement(Book Chapter)"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 15,
+			"target": 21,
+			"value": "13377466",
+			"name": "A Loosely-coupled Semantic Model for Efficient Cloud Service Search and Retrieval"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 15,
+			"target": 49,
+			"value": "13377466",
+			"name": "A Loosely-coupled Semantic Model for Efficient Cloud Service Search and Retrieval"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 21,
+			"target": 49,
+			"value": "13377466",
+			"name": "A Loosely-coupled Semantic Model for Efficient Cloud Service Search and Retrieval"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 29,
+			"target": 21,
+			"value": "13377467",
+			"name": "Mobile User Authentication System for E-commerce Applications"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 29,
+			"target": 60,
+			"value": "13377467",
+			"name": "Mobile User Authentication System for E-commerce Applications"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 21,
+			"target": 60,
+			"value": "13377467",
+			"name": "Mobile User Authentication System for E-commerce Applications"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "13377471",
+			"name": "Reliable Hierarchical Cluster Routing Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 21,
+			"target": 61,
+			"value": "13377471",
+			"name": "Reliable Hierarchical Cluster Routing Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 21,
+			"target": 62,
+			"value": "13377471",
+			"name": "Reliable Hierarchical Cluster Routing Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 25,
+			"target": 61,
+			"value": "13377471",
+			"name": "Reliable Hierarchical Cluster Routing Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 25,
+			"target": 62,
+			"value": "13377471",
+			"name": "Reliable Hierarchical Cluster Routing Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 61,
+			"target": 62,
+			"value": "13377471",
+			"name": "Reliable Hierarchical Cluster Routing Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 3,
+			"target": 53,
+			"value": "13377551",
+			"name": "Designing Blended Spaces: Historical Echoes, Testing a Framework for Digital Tourism"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 28,
+			"target": 50,
+			"value": "13377989",
+			"name": "Can pay, should pay? Comparing employer and student outcomes of paid and unpaid work opportunities"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 29,
+			"target": 45,
+			"value": "13378550",
+			"name": "Evaluating Digital Forensic Tools (DFTs)"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 29,
+			"target": 57,
+			"value": "13378550",
+			"name": "Evaluating Digital Forensic Tools (DFTs)"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 29,
+			"target": 63,
+			"value": "13378550",
+			"name": "Evaluating Digital Forensic Tools (DFTs)"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 45,
+			"target": 57,
+			"value": "13378550",
+			"name": "Evaluating Digital Forensic Tools (DFTs)"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 45,
+			"target": 63,
+			"value": "13378550",
+			"name": "Evaluating Digital Forensic Tools (DFTs)"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 57,
+			"target": 63,
+			"value": "13378550",
+			"name": "Evaluating Digital Forensic Tools (DFTs)"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 29,
+			"target": 35,
+			"value": "13378551",
+			"name": "CLOUD-BASED IDENTITY AND IDENTITY META-DATA: SECURE AND CONTROL OWN DATA IN GLOBALIZATION ERA"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 29,
+			"target": 46,
+			"value": "13378551",
+			"name": "CLOUD-BASED IDENTITY AND IDENTITY META-DATA: SECURE AND CONTROL OWN DATA IN GLOBALIZATION ERA"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 29,
+			"target": 64,
+			"value": "13378551",
+			"name": "CLOUD-BASED IDENTITY AND IDENTITY META-DATA: SECURE AND CONTROL OWN DATA IN GLOBALIZATION ERA"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 35,
+			"target": 46,
+			"value": "13378551",
+			"name": "CLOUD-BASED IDENTITY AND IDENTITY META-DATA: SECURE AND CONTROL OWN DATA IN GLOBALIZATION ERA"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 35,
+			"target": 64,
+			"value": "13378551",
+			"name": "CLOUD-BASED IDENTITY AND IDENTITY META-DATA: SECURE AND CONTROL OWN DATA IN GLOBALIZATION ERA"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 46,
+			"target": 64,
+			"value": "13378551",
+			"name": "CLOUD-BASED IDENTITY AND IDENTITY META-DATA: SECURE AND CONTROL OWN DATA IN GLOBALIZATION ERA"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 27,
+			"target": 51,
+			"value": "13378565",
+			"name": "An Improved Immune Inspired Hyper-Heuristic for Combinatorial Optimisation Problems"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 27,
+			"target": 5,
+			"value": "13378566",
+			"name": "A Real-World Employee Scheduling and Routing Application"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 27,
+			"target": 51,
+			"value": "13378566",
+			"name": "A Real-World Employee Scheduling and Routing Application"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 5,
+			"target": 51,
+			"value": "13378566",
+			"name": "A Real-World Employee Scheduling and Routing Application"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 3,
+			"target": 29,
+			"value": "13378653",
+			"name": "Norms and standards in modular medical architectures"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13378653",
+			"name": "Norms and standards in modular medical architectures"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 3,
+			"target": 30,
+			"value": "13378653",
+			"name": "Norms and standards in modular medical architectures"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 38,
+			"value": "13378653",
+			"name": "Norms and standards in modular medical architectures"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 29,
+			"target": 30,
+			"value": "13378653",
+			"name": "Norms and standards in modular medical architectures"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 38,
+			"target": 30,
+			"value": "13378653",
+			"name": "Norms and standards in modular medical architectures"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 27,
+			"target": 51,
+			"value": "13378699",
+			"name": "On the life-long learning capabilities of a NELLI*: a hyper-heuristic optimisation system"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 0,
+			"target": 20,
+			"value": "13378890",
+			"name": "The Design Space of Temporal Graph Visualisation"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 0,
+			"target": 65,
+			"value": "13378890",
+			"name": "The Design Space of Temporal Graph Visualisation"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 20,
+			"target": 65,
+			"value": "13378890",
+			"name": "The Design Space of Temporal Graph Visualisation"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 38,
+			"target": 30,
+			"value": "13378947",
+			"name": "Health: RFID makes surgery safer"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 15,
+			"target": 49,
+			"value": "13378968",
+			"name": "OCSO: Off-the-cloud service optimization for green efficient service resource utilization"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 15,
+			"target": 20,
+			"value": "13379003",
+			"name": "Benefits Management of Cloud Computing Investments"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 15,
+			"target": 59,
+			"value": "13379003",
+			"name": "Benefits Management of Cloud Computing Investments"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 20,
+			"target": 59,
+			"value": "13379003",
+			"name": "Benefits Management of Cloud Computing Investments"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "13379034",
+			"name": "SRRP: A Sensor Reliable Routing Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 21,
+			"target": 61,
+			"value": "13379034",
+			"name": "SRRP: A Sensor Reliable Routing Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 21,
+			"target": 62,
+			"value": "13379034",
+			"name": "SRRP: A Sensor Reliable Routing Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 25,
+			"target": 61,
+			"value": "13379034",
+			"name": "SRRP: A Sensor Reliable Routing Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 25,
+			"target": 62,
+			"value": "13379034",
+			"name": "SRRP: A Sensor Reliable Routing Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 61,
+			"target": 62,
+			"value": "13379034",
+			"name": "SRRP: A Sensor Reliable Routing Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "13379036",
+			"name": "Battery Aware and Reliable Beacon Enabled IEEE802.15.4: An Adaptive and Cross-Layer Approach"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 21,
+			"target": 66,
+			"value": "13379036",
+			"name": "Battery Aware and Reliable Beacon Enabled IEEE802.15.4: An Adaptive and Cross-Layer Approach"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 25,
+			"target": 66,
+			"value": "13379036",
+			"name": "Battery Aware and Reliable Beacon Enabled IEEE802.15.4: An Adaptive and Cross-Layer Approach"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 15,
+			"target": 25,
+			"value": "13379052",
+			"name": "An Aspect Oriented Model for Software Energy Efficiency in Decentralised Servers"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 15,
+			"target": 67,
+			"value": "13379052",
+			"name": "An Aspect Oriented Model for Software Energy Efficiency in Decentralised Servers"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 25,
+			"target": 67,
+			"value": "13379052",
+			"name": "An Aspect Oriented Model for Software Energy Efficiency in Decentralised Servers"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 20,
+			"target": 54,
+			"value": "13379056",
+			"name": "An appproch to Synergistic and Dynamic Service Evolution in Clouds"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13379177",
+			"name": "User Experience (UX) Design for Medical Personnel and Patients"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 38,
+			"target": 30,
+			"value": "13379178",
+			"name": "IoT for a Shock Warning System"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 38,
+			"target": 68,
+			"value": "13379178",
+			"name": "IoT for a Shock Warning System"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 30,
+			"target": 68,
+			"value": "13379178",
+			"name": "IoT for a Shock Warning System"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13379181",
+			"name": "Scenarios for Companions"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "13379248",
+			"name": "Helium: Visualization of Large Scale Plant Pedigrees"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 0,
+			"target": 69,
+			"value": "13379248",
+			"name": "Helium: Visualization of Large Scale Plant Pedigrees"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 1,
+			"target": 69,
+			"value": "13379248",
+			"name": "Helium: Visualization of Large Scale Plant Pedigrees"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 20,
+			"target": 54,
+			"value": "13379452",
+			"name": "Improving of the University Course Teaching Methodology A Case Study"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 34,
+			"target": 35,
+			"value": "13379512",
+			"name": "Disconnected Democracy? A Survey Of Scottish Community Councils’ Online Presences"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 34,
+			"target": 70,
+			"value": "13379512",
+			"name": "Disconnected Democracy? A Survey Of Scottish Community Councils’ Online Presences"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 35,
+			"target": 70,
+			"value": "13379512",
+			"name": "Disconnected Democracy? A Survey Of Scottish Community Councils’ Online Presences"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 34,
+			"target": 35,
+			"value": "13379668",
+			"name": "'Hyperlocal e-democracy'? The experience of Scotland's Community Councils"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 34,
+			"target": 70,
+			"value": "13379668",
+			"name": "'Hyperlocal e-democracy'? The experience of Scotland's Community Councils"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 35,
+			"target": 70,
+			"value": "13379668",
+			"name": "'Hyperlocal e-democracy'? The experience of Scotland's Community Councils"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "13379745",
+			"name": "Vesper: Visualising Species Archives"
+		},
+		{
+			"date": "2013-01-01",
+			"source": 6,
+			"target": 20,
+			"value": "13379797",
+			"name": "Verifying the CPA Networking Stack using SPIN/Promela"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 5,
+			"target": 71,
+			"value": "13380011",
+			"name": "AGADE How Individual Guidance Leads to Group Behaviour and How This Can Be Simulated"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 15,
+			"target": 67,
+			"value": "13380113",
+			"name": "Cloud Migration Patterns: A Multi-Cloud Architectural Perspective"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 28,
+			"target": 15,
+			"value": "13381429",
+			"name": "A Unified Platform for the Dynamic Evolution of Context-aware Highly Agile Services"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 28,
+			"target": 36,
+			"value": "13381468",
+			"name": "From employability attributes to professional identity: students transitioning to the workplace"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 14,
+			"target": 26,
+			"value": "13381512",
+			"name": "Adaptive Learning in Computing for non-native speakers"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 14,
+			"target": 72,
+			"value": "13381512",
+			"name": "Adaptive Learning in Computing for non-native speakers"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 26,
+			"target": 72,
+			"value": "13381512",
+			"name": "Adaptive Learning in Computing for non-native speakers"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 11,
+			"target": 2,
+			"value": "13381563",
+			"name": "Poxels: polygonal voxel environment rendering"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 11,
+			"target": 20,
+			"value": "13381563",
+			"name": "Poxels: polygonal voxel environment rendering"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 11,
+			"target": 73,
+			"value": "13381563",
+			"name": "Poxels: polygonal voxel environment rendering"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 2,
+			"target": 20,
+			"value": "13381563",
+			"name": "Poxels: polygonal voxel environment rendering"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 2,
+			"target": 73,
+			"value": "13381563",
+			"name": "Poxels: polygonal voxel environment rendering"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 20,
+			"target": 73,
+			"value": "13381563",
+			"name": "Poxels: polygonal voxel environment rendering"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 15,
+			"target": 20,
+			"value": "13381838",
+			"name": "An Upper Ontology for Benefits Management of Cloud Computing"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 15,
+			"target": 59,
+			"value": "13381838",
+			"name": "An Upper Ontology for Benefits Management of Cloud Computing"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 20,
+			"target": 59,
+			"value": "13381838",
+			"name": "An Upper Ontology for Benefits Management of Cloud Computing"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 74,
+			"target": 75,
+			"value": "13381946",
+			"name": "Belonging: Blurring the Boundaries"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 74,
+			"target": 75,
+			"value": "13381963",
+			"name": "Student Beliefs as Barriers to Articulation"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 5,
+			"target": 71,
+			"value": "13382189",
+			"name": "AGADE - Using personal preferences and world knowledge to model agent behaviour"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 29,
+			"target": 45,
+			"value": "13382202",
+			"name": "Fast contraband detection in large capacity disk drives"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 29,
+			"target": 56,
+			"value": "13382202",
+			"name": "Fast contraband detection in large capacity disk drives"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 45,
+			"target": 56,
+			"value": "13382202",
+			"name": "Fast contraband detection in large capacity disk drives"
+		},
+		{
+			"date": "2014-01-01",
+			"source": 12,
+			"target": 31,
+			"value": "13382225",
+			"name": "city | data | future – Interactions in Hybrid Urban Space: The UrbanIxD Exhibition"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 3,
+			"target": 38,
+			"value": "13382284",
+			"name": "Blended Spaces for Collaboration"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 28,
+			"target": 34,
+			"value": "13382298",
+			"name": "Can pay, should pay? Exploring employer and student perceptions of paid and unpaid placements"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 27,
+			"target": 5,
+			"value": "13382310",
+			"name": "Multi-Modal Employee Routing with Time Windows in an Urban Environment"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 74,
+			"target": 76,
+			"value": "13382328",
+			"name": "Widening access through transition from College to University"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 0,
+			"target": 65,
+			"value": "13382435",
+			"name": "A Task Taxonomy for Temporal Graph Visualisation"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 21,
+			"target": 25,
+			"value": "13382446",
+			"name": "A New Energy Efficient Cluster based Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 21,
+			"target": 61,
+			"value": "13382446",
+			"name": "A New Energy Efficient Cluster based Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 25,
+			"target": 61,
+			"value": "13382446",
+			"name": "A New Energy Efficient Cluster based Protocol for Wireless Sensor Networks"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 5,
+			"target": 71,
+			"value": "13382487",
+			"name": "AGADE: Using communities of agents to provide realistic feedback in business smulations"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 10,
+			"target": 29,
+			"value": "13382500",
+			"name": "RESCUE: Resilient Secret Sharing Cloud-based Architecture"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 10,
+			"target": 43,
+			"value": "13382500",
+			"name": "RESCUE: Resilient Secret Sharing Cloud-based Architecture"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 10,
+			"target": 41,
+			"value": "13382500",
+			"name": "RESCUE: Resilient Secret Sharing Cloud-based Architecture"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 10,
+			"target": 77,
+			"value": "13382500",
+			"name": "RESCUE: Resilient Secret Sharing Cloud-based Architecture"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13382500",
+			"name": "RESCUE: Resilient Secret Sharing Cloud-based Architecture"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 29,
+			"target": 41,
+			"value": "13382500",
+			"name": "RESCUE: Resilient Secret Sharing Cloud-based Architecture"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 29,
+			"target": 77,
+			"value": "13382500",
+			"name": "RESCUE: Resilient Secret Sharing Cloud-based Architecture"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 43,
+			"target": 41,
+			"value": "13382500",
+			"name": "RESCUE: Resilient Secret Sharing Cloud-based Architecture"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 43,
+			"target": 77,
+			"value": "13382500",
+			"name": "RESCUE: Resilient Secret Sharing Cloud-based Architecture"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 41,
+			"target": 77,
+			"value": "13382500",
+			"name": "RESCUE: Resilient Secret Sharing Cloud-based Architecture"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 12,
+			"target": 31,
+			"value": "13382515",
+			"name": "Discourse, Speculation And Multidisciplinarity: Designing Urban Futures"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 12,
+			"target": 31,
+			"value": "13382516",
+			"name": "City | Data | Future: Envisioning Interactions in Hybrid Urban Space"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 29,
+			"target": 45,
+			"value": "13382544",
+			"name": "Evaluation of TFTP DDoS Amplification Attack Article Type: Full Length Article"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 10,
+			"target": 29,
+			"value": "13382545",
+			"name": "The Future Internet: A World of Secret Shares"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 10,
+			"target": 43,
+			"value": "13382545",
+			"name": "The Future Internet: A World of Secret Shares"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 10,
+			"target": 41,
+			"value": "13382545",
+			"name": "The Future Internet: A World of Secret Shares"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 10,
+			"target": 77,
+			"value": "13382545",
+			"name": "The Future Internet: A World of Secret Shares"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 29,
+			"target": 43,
+			"value": "13382545",
+			"name": "The Future Internet: A World of Secret Shares"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 29,
+			"target": 41,
+			"value": "13382545",
+			"name": "The Future Internet: A World of Secret Shares"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 29,
+			"target": 77,
+			"value": "13382545",
+			"name": "The Future Internet: A World of Secret Shares"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 43,
+			"target": 41,
+			"value": "13382545",
+			"name": "The Future Internet: A World of Secret Shares"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 43,
+			"target": 77,
+			"value": "13382545",
+			"name": "The Future Internet: A World of Secret Shares"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 41,
+			"target": 77,
+			"value": "13382545",
+			"name": "The Future Internet: A World of Secret Shares"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 10,
+			"target": 44,
+			"value": "13382596",
+			"name": "Real-time Monitoring of Privacy Abuses and Intrusion Detection in Android System"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 10,
+			"target": 78,
+			"value": "13382596",
+			"name": "Real-time Monitoring of Privacy Abuses and Intrusion Detection in Android System"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 44,
+			"target": 78,
+			"value": "13382596",
+			"name": "Real-time Monitoring of Privacy Abuses and Intrusion Detection in Android System"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 27,
+			"target": 20,
+			"value": "13382624",
+			"name": "Collaborative Diffusion on the GPU for Path-Finding in Games"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 27,
+			"target": 79,
+			"value": "13382624",
+			"name": "Collaborative Diffusion on the GPU for Path-Finding in Games"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 20,
+			"target": 79,
+			"value": "13382624",
+			"name": "Collaborative Diffusion on the GPU for Path-Finding in Games"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 4,
+			"target": 27,
+			"value": "13382625",
+			"name": "Improving Survivability in Environment-driven Distributed  Evolutionary Algorithms through Explicit Relative Fitness and Fitness Proportionate Communication"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 4,
+			"target": 80,
+			"value": "13382625",
+			"name": "Improving Survivability in Environment-driven Distributed  Evolutionary Algorithms through Explicit Relative Fitness and Fitness Proportionate Communication"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 27,
+			"target": 80,
+			"value": "13382625",
+			"name": "Improving Survivability in Environment-driven Distributed  Evolutionary Algorithms through Explicit Relative Fitness and Fitness Proportionate Communication"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 4,
+			"target": 27,
+			"value": "13382626",
+			"name": "The Cost of Communication: Environmental Pressure and Survivability in mEDEA"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 4,
+			"target": 80,
+			"value": "13382626",
+			"name": "The Cost of Communication: Environmental Pressure and Survivability in mEDEA"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 27,
+			"target": 80,
+			"value": "13382626",
+			"name": "The Cost of Communication: Environmental Pressure and Survivability in mEDEA"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 27,
+			"target": 51,
+			"value": "13382634",
+			"name": "A Novel Heuristic Generator for JSSP Using a Tree-Based Representation of Dispatching Rules"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 15,
+			"target": 59,
+			"value": "13382669",
+			"name": "Semantic Description of Cloud Service Agreements"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 3,
+			"target": 23,
+			"value": "13382736",
+			"name": "A framework for the transformation of the incumbent creative industries in a digital age"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 15,
+			"target": 21,
+			"value": "13382779",
+			"name": "An Approach to Unified Cloud Service Access, Manipulation and Dynamic Orchestration via Semantic Cloud Service Operation Specification Framework"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 15,
+			"target": 49,
+			"value": "13382779",
+			"name": "An Approach to Unified Cloud Service Access, Manipulation and Dynamic Orchestration via Semantic Cloud Service Operation Specification Framework"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 21,
+			"target": 49,
+			"value": "13382779",
+			"name": "An Approach to Unified Cloud Service Access, Manipulation and Dynamic Orchestration via Semantic Cloud Service Operation Specification Framework"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 15,
+			"target": 21,
+			"value": "13382794",
+			"name": "An agility-oriented and fuzziness-embedded semantic model for collaborative cloud service search, retrieval and recommendation"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 15,
+			"target": 49,
+			"value": "13382794",
+			"name": "An agility-oriented and fuzziness-embedded semantic model for collaborative cloud service search, retrieval and recommendation"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 21,
+			"target": 49,
+			"value": "13382794",
+			"name": "An agility-oriented and fuzziness-embedded semantic model for collaborative cloud service search, retrieval and recommendation"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 0,
+			"target": 1,
+			"value": "13382809",
+			"name": "Visual Techniques to Support Exploratory Analysis of Temporal Graph Data"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 0,
+			"target": 20,
+			"value": "13382809",
+			"name": "Visual Techniques to Support Exploratory Analysis of Temporal Graph Data"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 0,
+			"target": 65,
+			"value": "13382809",
+			"name": "Visual Techniques to Support Exploratory Analysis of Temporal Graph Data"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 1,
+			"target": 20,
+			"value": "13382809",
+			"name": "Visual Techniques to Support Exploratory Analysis of Temporal Graph Data"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 1,
+			"target": 65,
+			"value": "13382809",
+			"name": "Visual Techniques to Support Exploratory Analysis of Temporal Graph Data"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 20,
+			"target": 65,
+			"value": "13382809",
+			"name": "Visual Techniques to Support Exploratory Analysis of Temporal Graph Data"
+		},
+		{
+			"date": "2015-01-01",
+			"source": 35,
+			"target": 70,
+			"value": "13382930",
+			"name": "The Communities of Practice model for understanding digital engagement by hyperlocal elected representatives (in press)"
+		}
+	]
+}

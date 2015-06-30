@@ -75,7 +75,7 @@ function resize() {
 //########    Data Picking, Validating, Loading
 //######################################################################
 var graphdata;
-var stockData = [{name:"Les Miserables",url:"graph-byyear.json"},{name:"data2",url:"graph-byyear.json"}];
+var stockData = [{name:"Les Miserables",url:"graph-byyear.json"},{name:"data2",url:"graph-byyear.json"},{name:"Napier Publications",url:"../data/napierPublications.json"}];
 var loadedData = [];
 ChangeData("Les Miserables");
 //dropdown selector ------------
