@@ -12,6 +12,7 @@
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="css/bootstrap-slider.min.css" rel="stylesheet">
     <link href="css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="css/bootstrap-toggle.min.css" rel="stylesheet">
     <link href="css/game.css" rel="stylesheet">
     <link href="css/git-commit-style.css" rel="stylesheet">
     <style>
@@ -75,9 +76,9 @@
         </div>
         <div class="col-sm-3">
           <h2>Control</h2>
-          <h3>
-            <button type="button" class="btn btn-lg btn-warning" id="regBtn">Regenerate</button>
-          </h3>
+          <div class="methodParam">Date Range:
+    <input id="rangetoggle" type="checkbox" data-toggle="toggle" data-onstyle="success" data-size="small">
+          </div>
           <div class="methodParam">Method Select:
             <select id="methodpicker" class="selectpicker" data-width="75%">
               <option>Simple</option>
@@ -108,7 +109,7 @@
             <div class="panel panel-default">
               <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#collapse1">
                 <span class="glyphicon glyphicon-collapse-down"></span>Show Channel Mixer</button>
-                   <span  id="channelPanelHeadder">hello world</span>
+              <span id="channelPanelHeadder">hello world</span>
               <div id="collapse1" class="panel-collapse collapse">
                 <div class="panel-body" id="channelPanel">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                   Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
@@ -163,6 +164,7 @@
         <script src="js/bootstrap.min.js"></script>
         <script src="js/bootstrap-slider.min.js"></script>
         <script src="js/bootstrap-select.min.js"></script>
+        <script src="js/bootstrap-toggle.min.js"></script>
         <script src="js/jquery.md5.js"></script>
         <script src="js/github-commit-history.js"></script>
         <script src="js/mustache.js"></script>

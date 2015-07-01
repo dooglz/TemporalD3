@@ -1,13 +1,13 @@
 /// <reference path="../typings/jquery/jquery.d.ts"/>
 /// <reference path="../typings/d3/d3.d.ts"/>
-/// <reference path="../typings/jquery/jquery.d.ts"/>
 //######################################################################
 //########    Date slider (more complex than it looks)
 //######################################################################
 var startDate = new Date("2007");
 var endDate = new Date("2016");
 var selectedDate = new Date("2011");
-
+var selectedDateMin = new Date("2011");
+var selectedDateMax = new Date("2011");
 //------------------------------------------
 var diffY = endDate.getFullYear() - startDate.getFullYear() + 1;
 var tickvals = [];
@@ -30,21 +30,53 @@ function slided() {
     Update();
 }
 
-var dateSlider = $("#ex13").slider({
-    ticks: tickvals,
-    ticks_labels: ticknames,
-    ticks_snap_bounds: 0,
-    min: 0,
-    max: diffY * 12,
-    step: 1,
-    value: 2,
-    formatter: function (value) {
-        var dd = new Date(startDate.toUTCString());
-        dd.setMonth(dd.getMonth() + value);
-        return dd.toDateString().slice(4);
-    },
-}).on('slide', slided).data('slider');
+var dateSlider;
+function CreateSlider(ranged) {
+    if(ranged === undefined){ranged = false;}
+    dateSlider = $("#ex13").slider({
+        ticks: tickvals,
+        ticks_labels: ticknames,
+        ticks_snap_bounds: 0,
+        min: 0,
+        max: diffY * 12,
+        step: 1,
+        range: ranged,
+        value: (ranged ? [3, 7] : 2),
+        formatter: function (value) {
+            var dd = new Date(startDate.toUTCString());
+            if(ranged){
+                dd.setMonth(dd.getMonth() + value[0]);
+                var start = dd.toDateString().slice(4);
+                dd = new Date(startDate.toUTCString());
+                dd.setMonth(dd.getMonth() + value[1]);
+                var end = dd.toDateString().slice(4);
+                return start + " - " + end;
+            }else{
+                dd.setMonth(dd.getMonth() + value);
+                return dd.toDateString().slice(4);
+            }
+        },
+    }).on('slide', slided).data('slider');
+}
+
+CreateSlider(false);
 dateSlider.setValue(48);
+
+var isSliderRanged = false;
+$('#rangetoggle').change(function() {
+      var val =  $(this).prop('checked');
+      if(val == isSliderRanged){return;}
+      if(val){
+          //transition form not ranged, to ranged
+          dateSlider.destroy();
+          CreateSlider(true);
+      }else{
+         // transition from ranged to not ranged
+          dateSlider.destroy();
+         CreateSlider(false);
+      }
+      isSliderRanged = val;
+});      
 
 //######################################################################
 //########    Main Update functions
@@ -55,11 +87,21 @@ function Update() {
     if (graphdata === undefined) {
         return;
     }
-
-    selectedDate = new Date(startDate.toUTCString());
-    selectedDate.setMonth(selectedDate.getMonth() + dateSlider.getValue());
+    
     selected_method.SetData(graphdata);
-    selected_method.SetDate(selectedDate);
+    
+    selectedDate = new Date(startDate.toUTCString());
+    if(isSliderRanged){
+        selectedDateMin = new Date(startDate.toUTCString());
+        selectedDateMin.setMonth(selectedDate.getMonth() + dateSlider.getValue()[0]);
+        selectedDateMax = new Date(startDate.toUTCString());
+        selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue()[1]);
+    }else{
+      selectedDateMin = startDate;
+      selectedDateMax = new Date(startDate.toUTCString());
+      selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue());
+    }
+    selected_method.SetDate(selectedDateMax,selectedDateMin);
 
     selected_method.Update();
 }
@@ -79,7 +121,7 @@ var graphdata;
 var stockData = [{ name: "Les Miserables", url: "data/miserables.json" }, 
     { name: "Napier Publications", url: "data/napierPublications.json" },
         { name: "freeScaleTime-300-1.4", url: "data/freeScaleTime-300-1.4.json" }, 
-            { name: "freeScaleTime-300-1.9", url: "sata/freeScaleTime-300-1.9.json" }, 
+            { name: "freeScaleTime-300-1.9", url: "data/freeScaleTime-300-1.9.json" }, 
     ];
 var loadedData = [];
 ChangeData("Les Miserables");
@@ -269,7 +311,7 @@ function changeMethod(methodName) {
                 break;
 
             case "checkbox":
-                var boxDiv = $("<input  id=" + param.name + " type='checkbox' " + (param.pval ? "checked" : "") + ">");
+                var boxDiv = $("<input  id=" + param.name + " type='checkbox' " + (param.pval ? "checked" : "") + " data-toggle='toggle' data-size='small'>");
                 newdiv.append(boxDiv).append("  " + param.name);
                 ! function outer(pp, bb) {
                     boxDiv.change(function inner() {
