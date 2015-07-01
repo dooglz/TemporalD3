@@ -120,6 +120,7 @@ function resize() {
 var graphdata;
 var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
     { name: "Napier Publications", url: "data/napierPublications.json" },
+    { name: "template", url: "data/template.json" },
     { name: "freeScaleTime-300-1.4", url: "data/freeScaleTime-300-1.4.json" },
     { name: "freeScaleTime-300-1.9", url: "data/freeScaleTime-300-1.9.json" },
 ];
@@ -164,20 +165,43 @@ function ChangeData(dataName) {
     }
 
     console.log("Loading Data");
-    d3.json(url, function (error, graph) {
+    d3.json(url, function (error, newData) {
         if (error) {
             console.error(error);
         } else {
             console.log("Loaded");
-            var nodekeys = Object.keys(graph.nodes[0]);
-            var linkkeys = Object.keys(graph.links[0]);
-            loadedData.push({ name: dataName, data: graph, url: url, nodekeys: nodekeys, linkkeys: linkkeys });
+            var data = {name: dataName, data: newData, url: url};
+            ParseDataAttributes(data);
+            loadedData.push(data);
             ChangeData(dataName);
         }
     });
 }
 
-
+//######################################################################
+//########    Data Attribute Parsing
+//######################################################################
+function ParseDataAttributes(data) {
+  if (data.data.nodes[0].hasOwnProperty('quantitative_attributes')) {
+    //new format
+    //temp new date system to old for now
+    for (var i = 0; i < data.data.links.length; i++) {
+      if (data.data.links[i].date === undefined) {
+        if (data.data.links[i].quantitative_attributes.start_date !== undefined) {
+          data.data.links[i].date = data.data.links[i].quantitative_attributes.start_date;
+        }
+      }
+    }
+    data.linkkeys = Object.keys(data.data.links[0].quantitative_attributes);
+    data.linkkeys.push.apply(data.linkkeys, Object.keys(data.data.links[0].ordinal_attributes));
+    data.nodekeys = Object.keys(data.data.nodes[0].quantitative_attributes);
+    data.nodekeys.push.apply(data.nodekeys, Object.keys(data.data.nodes[0].ordinal_attributes));
+  } else {
+    //legacy format
+    data.linkkeys = Object.keys(data.data.links[0]);
+    data.nodekeys = Object.keys(data.data.nodes[0]);
+  }
+}
 //######################################################################
 //########    Channel Mixer
 //######################################################################

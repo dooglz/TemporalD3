@@ -1,0 +1,114 @@
+{
+    "name": "Napier Publications",
+    "nodes": [
+        {
+            "name": "Steve",
+            "id": "40081234",
+            "ordinal_attributes": {
+                "nationality": "French",
+                "favourite_colour": "Blue",
+                "department": [
+                    [
+                        "2000",
+                        "2005",
+                        "2010"
+                    ],
+                    [
+                        "Security",
+                        "AI",
+                        "Networking"
+                    ]
+                ],
+                "position": [
+                    [
+                        "2001",
+                        "2005",
+                        "2015"
+                    ],
+                    [
+                        "PHD",
+                        "Lecturer",
+                        "Professor"
+                    ]
+                ]
+            },
+            "quantitative_attributes": {
+                "start_date": "1998-30-01",
+                "start_age": 25,
+                "fame": [
+                    [
+                        "2000",
+                        "2005",
+                        "2010-05-25"
+                    ],
+                    [
+                        0,
+                        10,
+                        30
+                    ]
+                ]
+            }
+        },
+        {
+            "name": "Joe",
+            "id": "50081235",
+            "ordinal_attributes": {
+                "nationality": "Irish",
+                "favourite_colour": "Red",
+                "department": [
+                    [
+                        "1995",
+                        "2004"
+                    ],
+                    [
+                        "Games",
+                        "AI"
+                    ]
+                ],
+                "position": "Lecturer"
+            },
+            "quantitative_attributes": {
+                "start_date": "1995-01-20",
+                "start_age": 30,
+                "fame": [
+                    [
+                        "2000",
+                        "2003-03-25"
+                    ],
+                    [
+                        0,
+                        10
+                    ]
+                ]
+            }
+        }
+    ],
+    "links": [
+        {
+            "name": "Paper 1",
+            "source": 0,
+            "target": 1,
+            "ordinal_attributes": {
+                "group": "AI"
+            },
+            "quantitative_attributes": {
+                "start_date": "2008-01-30",
+                "end_date": "2011-01-30",
+                "pages": 100
+            }
+        },
+        {
+            "name": "Paper 2",
+            "source": 0,
+            "target": 1,
+            "ordinal_attributes": {
+                "group": "Networking"
+            },
+            "quantitative_attributes": {
+                "start_date": "2009-01-30",
+                "end_date": "",
+                "pages": 300
+            }
+        }
+    ]
+}
