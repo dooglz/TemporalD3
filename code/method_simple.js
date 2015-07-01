@@ -8,11 +8,12 @@ method_simple.prototype.SetDateBounds = function (min, max) {};
 method_simple.prototype.SetDate = function (higher,lower) {};
 method_simple.prototype.Update = function () {};
 method_simple.prototype.parameters = [];
+method_simple.prototype.nodeChannels = [];
+method_simple.prototype.linkChannels = [];
+method_simple.prototype.ChannelChanged = function (param) {};
 method_simple.prototype.name = "";
 method_simple.prototype.SetData = function (d) {};
 //######################################################################*/
-
-
 
 method_simple.prototype.width = 0;
 method_simple.prototype.height = 0;
@@ -24,13 +25,22 @@ var m_simple_minDate,
     m_simple_currentDateMax;
 
 function method_simple() {
-    // Add object properties like this
     this.name = "simple";
     this.parameters = [
         { name: "Test Slider", ptype: "slider", minval: 0, maxval: 10, step: 1, pval: 0 },
         { name: "Disable rest", ptype: "checkbox", pval: false },
         { name: "Test TextBox", ptype: "textbox", pval: "" },
         { name: "Clamp within Canvas", ptype: "checkbox", pval: false }
+    ];
+    this.nodeChannels = [
+        { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
+        { name: "Gravity Point", ctype: "catagory", inUse: false, dataParam: "" },
+        { name: "Node Size", ctype: "numeric", inUse: false, dataParam: "" },
+    ];
+    this.linkChannels = [
+        { name: "Link Colour", ctype: "catagory", inUse: false, dataParam: "" },
+        { name: "Link Length", ctype: "numeric", inUse: false, dataParam: "" },
+        { name: "Link Width", ctype: "numeric", inUse: false, dataParam: "" },
     ];
 }
 method_simple.prototype.getParam = function (name) {
@@ -97,6 +107,32 @@ method_simple.prototype.ParamChanged = function (param) {
     this.Update();
 };
 
+method_simple.prototype.ChannelChanged = function (channel, ctype) {
+    if (channel === undefined) {
+        //We don't know which Channel Changed, could be more than one. Poll all of them.
+        //TODO
+        return;
+    }
+    console.log("method: Channel: " + channel.name + " is now assigned to: " + channel.dataParam);
+    if (ctype === undefined || !(ctype == "node" || ctype == "link")) {
+        if ($.inArray(channel, this.nodeChannels) != -1) {
+            ctype = "node";
+        } else if ($.inArray(channel, this.linkChannels) != -1) {
+            ctype = "link";
+        } else {
+            console.error("error");
+            return;
+        }
+    }
+    if (ctype == "node") {
+        //TODO Redo Node 
+        console.log("method: re-doing nodes");
+    } else {
+        //TODO Redo Links
+        console.log("method: re-doing links");
+    }
+};
+
 method_simple.prototype.SetDateBounds = function (min, max) {
     m_simple_minDate = min;
     m_simple_maxDate = max;
@@ -129,7 +165,7 @@ function getScreenCoords(x, y) {
 method_simple.prototype.Tick = function () {
     if (selected_method.getParam("Disable rest").pval) {
         //m_simple_force.resume();
-        m_simple_force.alpha(Math.max(m_simple_force.alpha(),0.1));
+        m_simple_force.alpha(Math.max(m_simple_force.alpha(), 0.1));
     }
     m_simple_circle.attr("cx", function (d) {
         if (selected_method.getParam("Clamp within Canvas").pval) {

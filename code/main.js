@@ -32,7 +32,7 @@ function slided() {
 
 var dateSlider;
 function CreateSlider(ranged) {
-    if(ranged === undefined){ranged = false;}
+    if (ranged === undefined) { ranged = false; }
     dateSlider = $("#ex13").slider({
         ticks: tickvals,
         ticks_labels: ticknames,
@@ -44,14 +44,14 @@ function CreateSlider(ranged) {
         value: (ranged ? [3, 7] : 2),
         formatter: function (value) {
             var dd = new Date(startDate.toUTCString());
-            if(ranged){
+            if (ranged) {
                 dd.setMonth(dd.getMonth() + value[0]);
                 var start = dd.toDateString().slice(4);
                 dd = new Date(startDate.toUTCString());
                 dd.setMonth(dd.getMonth() + value[1]);
                 var end = dd.toDateString().slice(4);
                 return start + " - " + end;
-            }else{
+            } else {
                 dd.setMonth(dd.getMonth() + value);
                 return dd.toDateString().slice(4);
             }
@@ -63,19 +63,19 @@ CreateSlider(false);
 dateSlider.setValue(48);
 
 var isSliderRanged = false;
-$('#rangetoggle').change(function() {
-      var val =  $(this).prop('checked');
-      if(val == isSliderRanged){return;}
-      if(val){
-          //transition form not ranged, to ranged
-          dateSlider.destroy();
-          CreateSlider(true);
-      }else{
-         // transition from ranged to not ranged
-          dateSlider.destroy();
-         CreateSlider(false);
-      }
-      isSliderRanged = val;
+$('#rangetoggle').change(function () {
+    var val = $(this).prop('checked');
+    if (val == isSliderRanged) { return; }
+    if (val) {
+        //transition form not ranged, to ranged
+        dateSlider.destroy();
+        CreateSlider(true);
+    } else {
+        // transition from ranged to not ranged
+        dateSlider.destroy();
+        CreateSlider(false);
+    }
+    isSliderRanged = val;
 });      
 
 //######################################################################
@@ -87,21 +87,21 @@ function Update() {
     if (graphdata === undefined) {
         return;
     }
-    
+
     selected_method.SetData(graphdata);
-    
+
     selectedDate = new Date(startDate.toUTCString());
-    if(isSliderRanged){
+    if (isSliderRanged) {
         selectedDateMin = new Date(startDate.toUTCString());
         selectedDateMin.setMonth(selectedDate.getMonth() + dateSlider.getValue()[0]);
         selectedDateMax = new Date(startDate.toUTCString());
         selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue()[1]);
-    }else{
-      selectedDateMin = startDate;
-      selectedDateMax = new Date(startDate.toUTCString());
-      selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue());
+    } else {
+        selectedDateMin = startDate;
+        selectedDateMax = new Date(startDate.toUTCString());
+        selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue());
     }
-    selected_method.SetDate(selectedDateMax,selectedDateMin);
+    selected_method.SetDate(selectedDateMax, selectedDateMin);
 
     selected_method.Update();
 }
@@ -118,11 +118,11 @@ function resize() {
 //########    Data Picking, Validating, Loading
 //######################################################################
 var graphdata;
-var stockData = [{ name: "Les Miserables", url: "data/miserables.json" }, 
+var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
     { name: "Napier Publications", url: "data/napierPublications.json" },
-        { name: "freeScaleTime-300-1.4", url: "data/freeScaleTime-300-1.4.json" }, 
-            { name: "freeScaleTime-300-1.9", url: "data/freeScaleTime-300-1.9.json" }, 
-    ];
+    { name: "freeScaleTime-300-1.4", url: "data/freeScaleTime-300-1.4.json" },
+    { name: "freeScaleTime-300-1.9", url: "data/freeScaleTime-300-1.9.json" },
+];
 var loadedData = [];
 ChangeData("Les Miserables");
 //dropdown selector ------------
@@ -171,12 +171,36 @@ function ChangeData(dataName) {
             console.log("Loaded");
             var nodekeys = Object.keys(graph.nodes[0]);
             var linkkeys = Object.keys(graph.links[0]);
-            loadedData.push({ name: dataName, data: graph, url: url,nodekeys:nodekeys,linkkeys:linkkeys });
+            loadedData.push({ name: dataName, data: graph, url: url, nodekeys: nodekeys, linkkeys: linkkeys });
             ChangeData(dataName);
         }
     });
 }
-function InitChannelMixer(data) {
+
+
+//######################################################################
+//########    Channel Mixer
+//######################################################################
+
+//Creates the UI for channel Mixer
+function InitChannelMixer(data) { 
+    var nodeChannels = {};
+    nodeChannels.channels = [];
+    for (var i = 0; i < selected_method.nodeChannels.length; i++) {
+        nodeChannels.amount = i;
+        nodeChannels.channels.push(selected_method.nodeChannels[i].name);
+        selected_method.nodeChannels[i].dataParam = "";
+        selected_method.nodeChannels[i].inUse = false;
+    }
+    var linkChannels = {};
+    linkChannels.channels = [];
+    for (var i = 0; i < selected_method.linkChannels.length; i++) {
+        linkChannels.amount = i;
+        linkChannels.channels.push(selected_method.linkChannels[i].name);
+        selected_method.linkChannels[i].dataParam = "";
+        selected_method.linkChannels[i].inUse = false;
+    }
+    selected_method.ChannelChanged();
     var cp = $("#channelPanel");
     cp.html("");
     $("#channelPanelHeadder").html(
@@ -184,27 +208,81 @@ function InitChannelMixer(data) {
         ", <strong>Nodes / Links:</strong> " + data.data.nodes.length + " / " + data.data.links.length
         );
     $('<div>', { 'class': 'row' }).html(
-        "<strong>Node Attributes:</strong> " + data.nodekeys +
-        ", <strong>Link Attributes:</strong> " + data.linkkeys
+        "<strong>Node Data Attributes:</strong> " + data.nodekeys +
+        " <strong>Link Data Attributes:</strong> " + data.linkkeys +
+        "<br><strong>Node Channels:</strong> "+ nodeChannels.channels +
+        " <strong>Link Channels:</strong> " + linkChannels.channels + "<hr>"
         ).appendTo(cp);
-
-    var lkeydiv = $('<div>', { 'class': 'col-sm-6' })
-        .text("hello worl4d")
+    var lkeydiv = $('<div>', { 'class': 'col-sm-4' })
+        .html("<strong>Links</strong>")
         .appendTo(cp);
-    var nkeydiv = $('<div>', { 'class': 'col-sm-6' })
-        .text("hello worl4d")
+    var nkeydiv = $('<div>', { 'class': 'col-sm-4' })
+        .html("<strong>Nodes</strong>")
         .appendTo(cp);
-     var linkDropdown = $();
-     /*
-     for (var key in data.nodekeys) {
-           $("div", { 'class': 'methodParam' }).html(key)
-           .append( $("div", { 'class': 'selectpicker','data-width':'75%' }).html(key)
-               
-               
-           )
-     }*/
-    // dropdowns
+    var linkDropdown = $();
+ 
+    for (var key in data.nodekeys) {
+         $('<div>', { 'class': 'methodParam text-right' }).html(data.nodekeys[key]+" - ")
+          .append(GetChannelDropdown(selected_method.nodeChannels,data.nodekeys[key],"node")).appendTo(nkeydiv);
+    }
+        for (var key in data.linkkeys) {
+         $('<div>', { 'class': 'methodParam text-right' }).html(data.linkkeys[key]+" - ")
+          .append(GetChannelDropdown(selected_method.linkChannels,data.linkkeys[key],"link")).appendTo(lkeydiv);
+    }
+    // Init dropdowns
+      $('.selectpicker').selectpicker();
 }
+
+// creates and returns a <select> div with all channel options as <option>'s
+function GetChannelDropdown(channels,attribute,atype){
+   str = "<option>Disabled</option>";
+   for (var i in channels) {
+       str += "<option>"+channels[i].name+"</option>";
+   }
+   var div =  $('<select>', { 'class': 'selectpicker','data-width':'50%', 'id':atype+"_"+attribute+"_dropdown"}).html(str);
+   div.on('change', function () {ChannelChange(atype,attribute,div.val());});
+   return div;
+}
+
+// Handles changing of channels, called when any dropdown selector changes
+function ChannelChange(atype, attribute, newChannel) {
+    console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
+    
+    //find the channel that we were previously assigned to and set to Null
+    var oldchannel = (atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels).filter(function (obj) {
+        return obj.dataParam == attribute;
+    });
+    if (oldchannel.length == 1) {
+        oldchannel[0].dataParam = "";
+        oldchannel[0].inUse = false;
+        selected_method.ChannelChanged(oldchannel[0]);
+    }
+    //Assign to new channel
+    if (newChannel != "Disabled") {    
+        //find the channel
+        var channel = (atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels).filter(function (obj) {
+            return obj.name == newChannel;
+        });
+        if (channel.length != 1) {
+            console.error("Can't find " + atype + " Channel '" + newChannel + "' in method " + selected_method.name);
+            return;
+        }
+        channel = channel[0];
+        //is this channel already in use?
+        if (channel.inUse == true) {
+           // console.log("channel already in use by attribute: " + channel.dataParam);
+            //Yes, change dropdown of assigned attribute to disabled
+            $("#" + atype + "_" + channel.dataParam + "_dropdown").selectpicker('val', "Disabled");
+            //unnasign current attribute
+            ChannelChange(atype, channel.dataParam, "Disabled");
+        }
+        //Add attritubute to the channel
+        channel.dataParam = attribute;
+        channel.inUse = true;
+        selected_method.ChannelChanged(channel);
+    }
+}
+
 //######################################################################
 //########    Method Picking, Validating, Loading
 //######################################################################
