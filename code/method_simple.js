@@ -43,27 +43,8 @@ function method_simple() {
     { name: "Link Width", ctype: "numeric", inUse: false, dataParam: "" },
   ];
 }
-method_simple.prototype.getParam = function (name) {
-  for (var i = 0; i < this.parameters.length; i++) {
-    if (this.parameters[i].name == name) {
-      return this.parameters[i];
-    }
-  }
-};
-method_simple.prototype.getLinkChannel = function (name) {
-  for (var i = 0; i < this.linkChannels.length; i++) {
-    if (this.linkChannels[i].name == name) {
-      return this.linkChannels[i];
-    }
-  }
-};
-method_simple.prototype.getNodeChannel = function (name) {
-  for (var i = 0; i < this.nodeChannels.length; i++) {
-    if (this.nodeChannels[i].name == name) {
-      return this.nodeChannels[i];
-    }
-  }
-};
+
+
 var m_simple_svg;
 var m_simple_force;
 var m_simple_container;
@@ -72,6 +53,81 @@ var m_simple_link;
 var m_simple_width = 960, m_simple_height = 500;
 var m_simple_scalefactor;
 var m_simple_translation;
+var m_simple_prev_currentDateMin, m_simple_prev_currentDateMax;
+var m_simple_filteredLinks;
+
+method_simple.prototype.SetDateBounds = function (min, max) {
+  m_simple_minDate = min;
+  m_simple_maxDate = max;
+};
+
+method_simple.prototype.SetDate = function (higher, lower) {
+  if (lower === undefined) {
+    lower = m_simple_minDate;
+  }
+  m_simple_currentDateMin = lower;
+  m_simple_currentDateMax = higher;
+};
+
+method_simple.prototype.SetData = function (d) {
+  this.data = d;
+};
+
+function getScreenCoords(x, y) {
+  if (m_simple_translation === undefined || m_simple_scalefactor === undefined) { return { x: x, y: y }; }
+  var xn = m_simple_translation[0] + x * m_simple_scalefactor;
+  var yn = m_simple_translation[1] + y * m_simple_scalefactor;
+  return { x: xn, y: yn };
+}
+
+var foci = [{ x: (m_simple_width / 2), y: (m_simple_height / 2) },
+  { x: (m_simple_width / 2) + 400, y: (m_simple_height / 2) + 400 },
+  { x: (m_simple_width / 2) + 400, y: (m_simple_height / 2) - 400 },
+  { x: (m_simple_width / 2) - 400, y: (m_simple_height / 2) + 400 },
+  { x: (m_simple_width / 2) - 400, y: (m_simple_height / 2) - 400 }];
+
+//######################################################################
+//########    Main Update and Tick
+//######################################################################
+
+method_simple.prototype.Update = function () {
+  if (m_simple_filteredLinks === undefined || m_simple_prev_currentDateMin != m_simple_currentDateMin || m_simple_prev_currentDateMax != m_simple_currentDateMax) {
+    //filter data by date
+    m_simple_filteredLinks = this.data.links.filter(
+      function (d) {
+        return (m_simple_currentDateMax >= new Date(d.date) && m_simple_currentDateMin <= new Date(d.date));
+      });
+    m_simple_prev_currentDateMin = m_simple_currentDateMin;
+    m_simple_prev_currentDateMax = m_simple_currentDateMax;
+  }
+  var fill = d3.scale.category20();
+
+  //Create Links
+  m_simple_link = m_simple_container.selectAll("line").data(m_simple_filteredLinks);
+  m_simple_link.enter().append("line")
+    .style("stroke", this.Linkcolour.bind(this))
+    .style("stroke-width", this.LinkWidth.bind(this));
+        
+  //when a link is no longer in the set, remove it from the graph.
+  m_simple_link.exit().remove();
+
+  //Create nodes
+  m_simple_circle = m_simple_container.selectAll("circle")
+    .data(this.data.nodes);
+  m_simple_circle.enter()
+    .append("circle")
+    .attr("r", this.NodeSize.bind(this))
+    .style("fill", this.NodeColour.bind(this))
+    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); })
+  //  .call(m_simple_force.drag);
+  m_simple_circle.exit().remove();
+
+  //force a tick
+  m_simple_force.resume();
+  //restart simulation
+  //force.stop();
+  m_simple_force.nodes(this.data.nodes).links(m_simple_filteredLinks).on("tick", this.Tick.bind(this)).start();
+};
 
 // The page has been resized or some other event that requires a redraw
 method_simple.prototype.Redraw = function (w, h) {
@@ -86,18 +142,83 @@ method_simple.prototype.Redraw = function (w, h) {
     .gravity(.25)
     .charge(-840)
     .friction(0.3)
-    .linkDistance(LinkLength)
+    .linkDistance(this.LinkLength.bind(this))
     .size([this.width, this.height]);
 
-  var zoom = d3.behavior.zoom()
-    .scaleExtent([0.5, 10])
-    .on("zoom", zoomed);
+  var zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", zoomed);
 
   m_simple_svg = d3.select("#chart").append("svg")
     .attr("width", this.width)
     .attr("height", this.height)
     .call(zoom)
   m_simple_container = m_simple_svg.append("g");
+};
+
+
+function zoomed() {
+  m_simple_translation = d3.event.translate;
+  m_simple_scalefactor = d3.event.scale;
+  m_simple_container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  //m_simple_circle.style("fill", "red");
+  // m_simple_link.style("stroke", "black");
+}
+
+method_simple.prototype.Tick = function (e) {
+  if (selected_method.getParam("Disable rest").pval) {
+    //m_simple_force.resume();
+    m_simple_force.alpha(Math.max(m_simple_force.alpha(), 0.1));
+  }
+  var channel = this.getNodeChannel("Gravity Point");
+  if (channel.inUse) {
+    var k = .1 * e.alpha;
+
+    this.data.nodes.forEach(function (o, i, array) {
+
+      o.y += (foci[i % 5].y - o.y) * k;
+      o.x += (foci[i % 5].x - o.x) * k;
+    });
+  }
+
+  m_simple_circle.attr("cx", $.proxy(function (d) {
+    if (this.getParam("Clamp within Canvas").pval) {
+      return d.x = Math.max(m_simple_radius, Math.min(canvasWidth - m_simple_radius, d.x));
+    } else {
+      return d.x;
+    }
+  }, this))
+    .attr("cy", $.proxy(function (d) {
+    if (this.getParam("Clamp within Canvas").pval) {
+      return d.y = Math.max(m_simple_radius, Math.min(canvasHeight - m_simple_radius, d.y));
+    } else {
+      return d.y;
+    }
+  }, this));
+
+  m_simple_link.attr("x1", function (d) {
+    return d.source.x;
+  })
+    .attr("y1", function (d) {
+    return d.source.y;
+  })
+    .attr("x2", function (d) {
+    return d.target.x;
+  })
+    .attr("y2", function (d) {
+    return d.target.y;
+  });
+};
+
+
+//######################################################################
+//########    Parameter handeling
+//######################################################################
+
+method_simple.prototype.getParam = function (name) {
+  for (var i = 0; i < this.parameters.length; i++) {
+    if (this.parameters[i].name == name) {
+      return this.parameters[i];
+    }
+  }
 };
 
 // Called when the user changes any of the Parameters
@@ -120,10 +241,16 @@ method_simple.prototype.ParamChanged = function (param) {
   this.Update();
 };
 
+//######################################################################
+//########    Channel Mapping Functions
+//######################################################################
+
 method_simple.prototype.ChannelChanged = function (channel, ctype) {
+  console.log("method: ChannelChanged: " + channel);
   if (channel === undefined) {
     //We don't know which Channel Changed, could be more than one. Poll all of them.
-    //TODO
+    this.RedoNodes();
+    this.RedoLinks();
     return;
   }
   console.log("method: Channel: " + channel.name + " is now assigned to: " + channel.dataParam);
@@ -138,125 +265,43 @@ method_simple.prototype.ChannelChanged = function (channel, ctype) {
     }
   }
   if (ctype == "node") {
-    //TODO Redo Node 
-    console.log("method: re-doing nodes");
+    this.RedoNodes();
   } else {
-    //TODO Redo Links
-    console.log("method: re-doing links");
-    m_simple_link.style("stroke", Linkcolour).style("stroke-width", LinkWidth);
-    m_simple_force.start();
+    this.RedoLinks();
   }
 };
-
-method_simple.prototype.SetDateBounds = function (min, max) {
-  m_simple_minDate = min;
-  m_simple_maxDate = max;
-};
-
-method_simple.prototype.SetDate = function (higher, lower) {
-  if (lower === undefined) {
-    lower = m_simple_minDate;
-  }
-  m_simple_currentDateMin = lower;
-  m_simple_currentDateMax = higher;
-};
-
-method_simple.prototype.SetData = function (d) {
-  this.data = d;
-};
-
-//######################################################################
-//########    Actual Method code Below
-//######################################################################
-
-function getScreenCoords(x, y) {
-  if (m_simple_translation === undefined || m_simple_scalefactor === undefined) { return { x: x, y: y }; }
-  var xn = m_simple_translation[0] + x * m_simple_scalefactor;
-  var yn = m_simple_translation[1] + y * m_simple_scalefactor;
-  return { x: xn, y: yn };
-}
-
-//used as callback, needs reference to 'this'
-method_simple.prototype.Tick = function () {
-  if (selected_method.getParam("Disable rest").pval) {
-    //m_simple_force.resume();
-    m_simple_force.alpha(Math.max(m_simple_force.alpha(), 0.1));
-  }
-  m_simple_circle.attr("cx", function (d) {
-    if (selected_method.getParam("Clamp within Canvas").pval) {
-      return d.x = Math.max(m_simple_radius, Math.min(canvasWidth - m_simple_radius, d.x));
-    } else {
-      return d.x;
+method_simple.prototype.getLinkChannel = function (name) {
+  for (var i = 0; i < this.linkChannels.length; i++) {
+    if (this.linkChannels[i].name == name) {
+      return this.linkChannels[i];
     }
-  })
-    .attr("cy", function (d) {
-    if (selected_method.getParam("Clamp within Canvas").pval) {
-      return d.y = Math.max(m_simple_radius, Math.min(canvasHeight - m_simple_radius, d.y));
-    } else {
-      return d.y;
+  }
+};
+method_simple.prototype.getNodeChannel = function (name) {
+  for (var i = 0; i < this.nodeChannels.length; i++) {
+    if (this.nodeChannels[i].name == name) {
+      return this.nodeChannels[i];
     }
-  });
-
-  m_simple_link.attr("x1", function (d) {
-    return d.source.x;
-  })
-    .attr("y1", function (d) {
-    return d.source.y;
-  })
-    .attr("x2", function (d) {
-    return d.target.x;
-  })
-    .attr("y2", function (d) {
-    return d.target.y;
-  });
+  }
+};
+method_simple.prototype.RedoLinks = function () {
+  if (m_simple_link === undefined) { return; }
+  console.log("method: re-doing links");
+  m_simple_link.style("stroke", this.Linkcolour.bind(this)).style("stroke-width", this.LinkWidth.bind(this));
+  m_simple_force.start();
 };
 
-var m_simple_prev_currentDateMin, m_simple_prev_currentDateMax;
-var m_simple_filteredLinks;
-
-method_simple.prototype.Update = function () {
-  if (m_simple_filteredLinks === undefined || m_simple_prev_currentDateMin != m_simple_currentDateMin || m_simple_prev_currentDateMax != m_simple_currentDateMax) {
-    //filter data by date
-    m_simple_filteredLinks = this.data.links.filter(
-      function (d) {
-        return (m_simple_currentDateMax >= new Date(d.date) && m_simple_currentDateMin <= new Date(d.date));
-      });
-    m_simple_prev_currentDateMin = m_simple_currentDateMin;
-    m_simple_prev_currentDateMax = m_simple_currentDateMax;
-  }
-  var fill = d3.scale.category20();
-
-  //Create Links
-  m_simple_link = m_simple_container.selectAll("line").data(m_simple_filteredLinks);
-  m_simple_link.enter().append("line")
-    .style("stroke", Linkcolour)
-    .style("stroke-width", LinkWidth);
-        
-  //when a link is no longer in the set, remove it from the graph.
-  m_simple_link.exit().remove();
-
-  //Create nodes
-  m_simple_circle = m_simple_container.selectAll("circle")
-    .data(this.data.nodes);
-  m_simple_circle.enter()
-    .append("circle")
-    .attr("r", m_simple_radius - .75)
-    .style("fill", function (d) { return fill(d.group); })
-    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); })
-  //  .call(m_simple_force.drag);
-  m_simple_circle.exit().remove();
-
-  //force a tick
-  m_simple_force.resume();
-  //restart simulation
-  //force.stop();
-  m_simple_force.nodes(this.data.nodes).links(m_simple_filteredLinks).on("tick", method_simple.prototype.Tick).start();
+method_simple.prototype.RedoNodes = function () {
+  if (m_simple_link === undefined) { return; }
+  console.log("method: re-doing nodes");
+  m_simple_circle.style("fill", this.NodeColour.bind(this)).attr("r", this.NodeSize.bind(this));
 };
 
 var fill = d3.scale.category20();
 
-function Linkcolour(d) {
-  var channel = selected_method.getLinkChannel("Link Colour");
+//------------------ Link Channels ----------------
+method_simple.prototype.Linkcolour = function (d) {
+  var channel = this.getLinkChannel("Link Colour");
   if (channel.inUse) {
     //just convert everythign to a scale of maxium of 20 for now
     var val;
@@ -270,27 +315,51 @@ function Linkcolour(d) {
     return "black";
   }
 }
-function LinkWidth(d) {
-  var channel = selected_method.getLinkChannel("Link Width");
+method_simple.prototype.LinkWidth = function (d) {
+  var channel = this.getLinkChannel("Link Width");
   if (channel.inUse) {
     return "2.5px";
   } else {
     return "1.5px";
   }
 }
-function LinkLength(d) {
-  var channel = selected_method.getLinkChannel("Link Length");
+
+method_simple.prototype.LinkLength = function (d) {
+  var channel = this.getLinkChannel("Link Length");
   if (channel.inUse) {
     return 100;
   } else {
     return 50;
   }
 }
-
-function zoomed() {
-  m_simple_translation = d3.event.translate;
-  m_simple_scalefactor = d3.event.scale;
-  m_simple_container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-  //m_simple_circle.style("fill", "red");
-  // m_simple_link.style("stroke", "black");
+//------------------ Node Channels ----------------
+method_simple.prototype.NodeColour = function (d) {
+  var channel = this.getNodeChannel("Node Colour");
+  if (channel.inUse) {
+    return "red";
+  } else {
+    return "black";
+  }
 }
+
+method_simple.prototype.NodeSize = function (d) {
+  var channel = this.getNodeChannel("Node Size");
+  if (channel.inUse) {
+    return m_simple_radius * 2.0;
+  } else {
+    return m_simple_radius - .75;
+  }
+}
+
+method_simple.prototype.GravityPoint = function (d) {
+  var channel = this.getNodeChannel("Gravity Point");
+  if (channel.inUse) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+//######################################################################
+//########    
+//######################################################################
