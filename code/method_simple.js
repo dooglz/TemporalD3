@@ -174,11 +174,11 @@ method_simple.prototype.Tick = function (e) {
   if (channel.inUse) {
     var k = .1 * e.alpha;
 
-    this.data.nodes.forEach(function (o, i, array) {
-
-      o.y += (foci[i % 5].y - o.y) * k;
-      o.x += (foci[i % 5].x - o.x) * k;
-    });
+    this.data.nodes.forEach($.proxy(function (o, i, array) {
+      var point = Math.round((foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam));
+      o.y += (foci[point].y - o.y) * k;
+      o.x += (foci[point].x - o.x) * k;
+    }, this));
   }
 
   m_simple_circle.attr("cx", $.proxy(function (d) {
@@ -320,7 +320,7 @@ method_simple.prototype.Linkcolour = function (d) {
 method_simple.prototype.LinkWidth = function (d) {
   var channel = this.getLinkChannel("Link Width");
   if (channel.inUse) {
-    return "2.5px";
+    return (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam)) + "px";
   } else {
     return "1.5px";
   }
@@ -329,7 +329,7 @@ method_simple.prototype.LinkWidth = function (d) {
 method_simple.prototype.LinkLength = function (d) {
   var channel = this.getLinkChannel("Link Length");
   if (channel.inUse) {
-    return 100;
+    return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam);
   } else {
     return 50;
   }
@@ -347,7 +347,7 @@ method_simple.prototype.NodeColour = function (d) {
 method_simple.prototype.NodeSize = function (d) {
   var channel = this.getNodeChannel("Node Size");
   if (channel.inUse) {
-    return m_simple_radius * 2.0;
+    return (m_simple_radius - .75) + m_simple_radius * getAttributeAsPercentage(this.data, d, channel.dataParam);
   } else {
     return m_simple_radius - .75;
   }
