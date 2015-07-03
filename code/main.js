@@ -141,10 +141,10 @@ function ChangeData(dataName) {
   //loaded?
   console.log("changing Data to: " + dataName);
   for (i = 0; i < loadedData.length; i++) {
-    if (loadedData[i].name == dataName) {
+    if (loadedData[i].displayName == dataName) {
       //yep, set and bail.
       InitChannelMixer(loadedData[i]);
-      graphdata = loadedData[i].data;
+      graphdata = loadedData[i];
       //channelPanel
       Update();
       return;
@@ -170,38 +170,15 @@ function ChangeData(dataName) {
       console.error(error);
     } else {
       console.log("Loaded");
-      var data = { name: dataName, data: newData, url: url };
-      ParseDataAttributes(data);
-      loadedData.push(data);
+      newData.url = url;
+      newData.displayName = dataName;
+      ParseData(newData);
+      loadedData.push(newData);
       ChangeData(dataName);
     }
   });
 }
 
-//######################################################################
-//########    Data Attribute Parsing
-//######################################################################
-function ParseDataAttributes(data) {
-  if (data.data.nodes[0].hasOwnProperty('quantitative_attributes')) {
-    //new format
-    //temp new date system to old for now
-    for (var i = 0; i < data.data.links.length; i++) {
-      if (data.data.links[i].date === undefined) {
-        if (data.data.links[i].quantitative_attributes.start_date !== undefined) {
-          data.data.links[i].date = data.data.links[i].quantitative_attributes.start_date;
-        }
-      }
-    }
-    data.linkkeys = Object.keys(data.data.links[0].quantitative_attributes);
-    data.linkkeys.push.apply(data.linkkeys, Object.keys(data.data.links[0].ordinal_attributes));
-    data.nodekeys = Object.keys(data.data.nodes[0].quantitative_attributes);
-    data.nodekeys.push.apply(data.nodekeys, Object.keys(data.data.nodes[0].ordinal_attributes));
-  } else {
-    //legacy format
-    data.linkkeys = Object.keys(data.data.links[0]);
-    data.nodekeys = Object.keys(data.data.nodes[0]);
-  }
-}
 //######################################################################
 //########    Channel Mixer
 //######################################################################
@@ -228,12 +205,12 @@ function InitChannelMixer(data) {
   var cp = $("#channelPanel");
   cp.html("");
   $("#channelPanelHeadder").html(
-    "<strong>DataSet:</strong> " + data.name +
-    ", <strong>Nodes / Links:</strong> " + data.data.nodes.length + " / " + data.data.links.length
+    "<strong>DataSet:</strong> " + data.displayName +
+    ", <strong>Nodes / Links:</strong> " + data.nodes.length + " / " + data.links.length
     );
   $('<div>', { 'class': 'row' }).html(
-    "<strong>Node Data Attributes:</strong> " + data.nodekeys +
-    " <strong>Link Data Attributes:</strong> " + data.linkkeys +
+    "<strong>Node Data Attributes:</strong> " + data.node_keys +
+    " <strong>Link Data Attributes:</strong> " + data.link_keys +
     "<br><strong>Node Channels:</strong> " + nodeChannels.channels +
     " <strong>Link Channels:</strong> " + linkChannels.channels + "<hr>"
     ).appendTo(cp);
@@ -245,13 +222,13 @@ function InitChannelMixer(data) {
     .appendTo(cp);
   var linkDropdown = $();
 
-  for (var key in data.nodekeys) {
-    $('<div>', { 'class': 'methodParam text-right' }).html(data.nodekeys[key] + " - ")
-      .append(GetChannelDropdown(selected_method.nodeChannels, data.nodekeys[key], "node")).appendTo(nkeydiv);
+  for (var key in data.node_keys) {
+    $('<div>', { 'class': 'methodParam text-right' }).html(data.node_keys[key] + " - ")
+      .append(GetChannelDropdown(selected_method.nodeChannels, data.node_keys[key], "node")).appendTo(nkeydiv);
   }
-  for (var key in data.linkkeys) {
-    $('<div>', { 'class': 'methodParam text-right' }).html(data.linkkeys[key] + " - ")
-      .append(GetChannelDropdown(selected_method.linkChannels, data.linkkeys[key], "link")).appendTo(lkeydiv);
+  for (var key in data.link_keys) {
+    $('<div>', { 'class': 'methodParam text-right' }).html(data.link_keys[key] + " - ")
+      .append(GetChannelDropdown(selected_method.linkChannels, data.link_keys[key], "link")).appendTo(lkeydiv);
   }
   // Init dropdowns
   $('.selectpicker').selectpicker();

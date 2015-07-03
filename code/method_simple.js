@@ -1,4 +1,6 @@
+/// <reference path="../typings/jquery/jquery.d.ts"/>
 /// <reference path="../typings/d3/d3.d.ts"/>
+
 //######################################################################
 //########  Interface code, All methods should have this
 /*######################################################################
