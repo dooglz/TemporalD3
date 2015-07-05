@@ -236,7 +236,7 @@ function InitChannelMixer(data) {
 
 // creates and returns a <select> div with all channel options as <option>'s
 function GetChannelDropdown(channels, attribute, atype) {
-  str = "<option>Disabled</option>";
+  var str = "<option>Disabled</option>";
   for (var i in channels) {
     str += "<option>" + channels[i].name + "</option>";
   }
@@ -265,7 +265,7 @@ function ChannelChange(atype, attribute, newChannel) {
       return obj.name == newChannel;
     });
     if (channel.length != 1) {
-      console.error("Can't find " + atype + " Channel '" + newChannel + "' in method " + selected_method.name);
+      console.error("Can't find " + atype + " Channel '" + newChannel + "' in method %o", selected_method.name);
       return;
     }
     channel = channel[0];
@@ -288,7 +288,7 @@ function ChannelChange(atype, attribute, newChannel) {
 //########    Method Picking, Validating, Loading
 //######################################################################
 var methods = [];
-var m_simple = new method_simple();
+var m_simple = new Method_Simple();
 methods.push(m_simple);
 var selected_method;
 changeMethod(m_simple);
@@ -308,18 +308,17 @@ function VerifyMethodParmeters(method) {
 
   for (var i in method.parameters) {
     var param = method.parameters[i];
+    if ($.inArray(param.ptype, acceptedParams) == -1) {
+      console.error("Method %o Unkown parameter type %o - %o ", method, param.name, param.ptype);
+      break;
+    }
     for (var j in mustHaveParams) {
       var str = mustHaveParams[j];
       if (!param.hasOwnProperty(str)) {
-        console.error("Method '" + method.name + "', parameter '" + param.name + "', must have a '" + str + "' member!");
+        console.error("Method %o parameter %o, must have a %o member!", method, param, str);
         return false;
       }
     }
-
-    if ($.inArray(param.ptype, acceptedParams) == -1) {
-      console.error("Method '" + method.name + "', Unkown parameter type : " + param.name + " - " + param.ptype);
-    }
-
   }
   return true;
 }
@@ -355,7 +354,7 @@ function changeMethod(methodName) {
 
   console.log("Loading Method: " + selected_method.name);
   if (!selected_method.hasOwnProperty("parameters")) {
-    console.log("Method: " + selected_method.name + " has no parameters");
+    console.log("Method: %o has no parameters", selected_method);
     return;
   }
 

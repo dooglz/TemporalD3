@@ -12,10 +12,16 @@
   }
 */
 
-function isDate(datestring) {
-  return ((new Date(datestring) !== "Invalid Date" && !isNaN(new Date(datestring))));
+function IsDate(datestring) {
+  //checks to see if string begins with "yyyy-mm-dd" and "01 < mm < 12"
+  var dateRegEx = /^\d{4}-(0\d|1[0-2])-\d{2}/;
+  return ((dateRegEx.test(datestring)) && (new Date(datestring) !== "Invalid Date") && (!isNaN(new Date(datestring))));
 }
-
+function IsNumber(numberString) {
+  //will return true on "1234","0.123","1234.1234" and "1234.1234f",
+  var numberRegEx = /^(([0-9]+)||([0-9]+\.[0-9]+f?))$/;
+  return ((numberRegEx.test(numberString)) && (!isNaN(parseFloat(numberString))));
+}
 
 function FillAttributesInfo(infoObj, keys, values) {
 
@@ -27,7 +33,10 @@ function FillAttributesInfo(infoObj, keys, values) {
     var attributeType = typeof (sampleValue);
 
     if (attributeType == "string") {
-      if (isDate(sampleValue)) { attributeType = "date"; } else {
+      if (IsDate(sampleValue)) { attributeType = "date"; } else {
+        if (IsNumber(sampleValue)) {
+          console.warn("Data attribute:'%s' is a valid number, but is encoded with qoutes, treating as String",attribute);
+        } 
         //pure string
         attributeInfo.values = [];
         //we must find all values of this attribute so we can catagorize them
@@ -67,8 +76,8 @@ function FillAttributesInfo(infoObj, keys, values) {
       attributeInfo.max_val = max_val;
     }
 
-    console.log(keys[i] + " - " + sampleValue + " - " + attributeType);
-    console.log(attributeInfo);
+    // console.log(keys[i] + " - " + sampleValue + " - " + attributeType);
+    // console.log(attributeInfo);
     attributeInfo.type = attributeType;
     attributeInfo.dynamic = false;
   }
@@ -77,7 +86,7 @@ function FillAttributesInfo(infoObj, keys, values) {
 function ParseData(data) {
   if (data.nodes[0].hasOwnProperty('attributes')) {
     //new format
-    console.error("New Json Format not yet supported")
+    console.error("New Json Format not yet supported");
     return;
   } else {
     //legacy format
@@ -107,7 +116,7 @@ function getAttributeAsPercentage(data, nodeOrLink, attribute) {
     //link
     return getNLAttributeAsPercentage(false, data, nodeOrLink, attribute);
   } else {
-    console.error("coudn't determine type of attribute: " + attribute);
+    console.error("coudn't determine type of attribute: %o", attribute);
     return 0;
   }
 
@@ -127,12 +136,12 @@ function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute) {
 
   var index = keys.indexOf(attribute);
   if (index == -1) {
-    console.error((atype ? "node" : "link") + " has no attribute " + attribute);
+    console.error((atype ? "node" : "link") + " has no attribute %o",attribute);
     return 0;
   }
 
   if (attributes_info === undefined) {
-    console.error("can find attribute info " + attribute);
+    console.error("can find attribute info: %o", attribute);
     return 0;
   }
   var attribute_value = nodeOrLink[attribute];
@@ -144,10 +153,9 @@ function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute) {
     return (attribute_value - attributes_info.min_val) / (attributes_info.max_val - attributes_info.min_val);
   } else if (attributes_info.type == "string") {
     var aindex = attributes_info.values.indexOf(attribute_value);
-    // console.log("string");
     if (aindex == -1) { return 0; }
     return (aindex * 1.0) / (attributes_info.count * 1.0);
   } else {
-    console.error("unkown type! " + attributes_info.type);
+    console.error("unkown type! %o",attributes_info.type);
   }
 }

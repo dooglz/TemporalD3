@@ -1,24 +1,23 @@
 /// <reference path="../typings/jquery/jquery.d.ts"/>
 /// <reference path="../typings/d3/d3.d.ts"/>
-
 //######################################################################
 //########  Interface code, All methods should have this
 /*######################################################################
-method_simple.prototype.Redraw = function (w,h) {};
-method_simple.prototype.ParamChanged = function (param) {};
-method_simple.prototype.SetDateBounds = function (min, max) {};
-method_simple.prototype.SetDate = function (higher,lower) {};
-method_simple.prototype.Update = function () {};
-method_simple.prototype.parameters = [];
-method_simple.prototype.nodeChannels = [];
-method_simple.prototype.linkChannels = [];
-method_simple.prototype.ChannelChanged = function (param) {};
-method_simple.prototype.name = "";
-method_simple.prototype.SetData = function (d) {};
+Method_Simple.prototype.Redraw = function (w,h) {};
+Method_Simple.prototype.ParamChanged = function (param) {};
+Method_Simple.prototype.SetDateBounds = function (min, max) {};
+Method_Simple.prototype.SetDate = function (higher,lower) {};
+Method_Simple.prototype.Update = function () {};
+Method_Simple.prototype.parameters = [];
+Method_Simple.prototype.nodeChannels = [];
+Method_Simple.prototype.linkChannels = [];
+Method_Simple.prototype.ChannelChanged = function (param) {};
+Method_Simple.prototype.name = "";
+Method_Simple.prototype.SetData = function (d) {};
 //######################################################################*/
 
-method_simple.prototype.width = 0;
-method_simple.prototype.height = 0;
+Method_Simple.prototype.width = 0;
+Method_Simple.prototype.height = 0;
 
 var m_simple_radius = 6;
 var m_simple_minDate,
@@ -26,7 +25,7 @@ var m_simple_minDate,
   m_simple_currentDateMin,
   m_simple_currentDateMax;
 
-function method_simple() {
+function Method_Simple() {
   this.name = "simple";
   this.parameters = [
     { name: "Test Slider", ptype: "slider", minval: 0, maxval: 10, step: 1, pval: 0 },
@@ -58,12 +57,12 @@ var m_simple_translation;
 var m_simple_prev_currentDateMin, m_simple_prev_currentDateMax;
 var m_simple_filteredLinks;
 
-method_simple.prototype.SetDateBounds = function (min, max) {
+Method_Simple.prototype.SetDateBounds = function (min, max) {
   m_simple_minDate = min;
   m_simple_maxDate = max;
 };
 
-method_simple.prototype.SetDate = function (higher, lower) {
+Method_Simple.prototype.SetDate = function (higher, lower) {
   if (lower === undefined) {
     lower = m_simple_minDate;
   }
@@ -71,7 +70,7 @@ method_simple.prototype.SetDate = function (higher, lower) {
   m_simple_currentDateMax = higher;
 };
 
-method_simple.prototype.SetData = function (d) {
+Method_Simple.prototype.SetData = function (d) {
   this.data = d;
 };
 
@@ -92,7 +91,7 @@ var foci = [{ x: (m_simple_width / 2), y: (m_simple_height / 2) },
 //########    Main Update and Tick
 //######################################################################
 
-method_simple.prototype.Update = function () {
+Method_Simple.prototype.Update = function () {
   if (m_simple_filteredLinks === undefined || m_simple_prev_currentDateMin != m_simple_currentDateMin || m_simple_prev_currentDateMax != m_simple_currentDateMax) {
     //filter data by date
     m_simple_filteredLinks = this.data.links.filter(
@@ -120,7 +119,7 @@ method_simple.prototype.Update = function () {
     .append("circle")
     .attr("r", this.NodeSize.bind(this))
     .style("fill", this.NodeColour.bind(this))
-    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); })
+    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
   //  .call(m_simple_force.drag);
   m_simple_circle.exit().remove();
 
@@ -132,7 +131,7 @@ method_simple.prototype.Update = function () {
 };
 
 // The page has been resized or some other event that requires a redraw
-method_simple.prototype.Redraw = function (w, h) {
+Method_Simple.prototype.Redraw = function (w, h) {
   if (w !== undefined && h !== undefined) {
     this.width = w;
     this.height = h;
@@ -152,7 +151,7 @@ method_simple.prototype.Redraw = function (w, h) {
   m_simple_svg = d3.select("#chart").append("svg")
     .attr("width", this.width)
     .attr("height", this.height)
-    .call(zoom)
+    .call(zoom);
   m_simple_container = m_simple_svg.append("g");
 };
 
@@ -165,7 +164,7 @@ function zoomed() {
   // m_simple_link.style("stroke", "black");
 }
 
-method_simple.prototype.Tick = function (e) {
+Method_Simple.prototype.Tick = function (e) {
   if (selected_method.getParam("Disable rest").pval) {
     //m_simple_force.resume();
     m_simple_force.alpha(Math.max(m_simple_force.alpha(), 0.1));
@@ -215,7 +214,7 @@ method_simple.prototype.Tick = function (e) {
 //########    Parameter handeling
 //######################################################################
 
-method_simple.prototype.getParam = function (name) {
+Method_Simple.prototype.getParam = function (name) {
   for (var i = 0; i < this.parameters.length; i++) {
     if (this.parameters[i].name == name) {
       return this.parameters[i];
@@ -224,20 +223,19 @@ method_simple.prototype.getParam = function (name) {
 };
 
 // Called when the user changes any of the Parameters
-method_simple.prototype.ParamChanged = function (param) {
+Method_Simple.prototype.ParamChanged = function (param) {
   if (param !== undefined) {
     var i = this.parameters.indexOf(param);
     if (i != -1) {
-      console.log("Parameter: " + this.parameters[i].name + " is now: " + this.parameters[i].pval);
+      console.log("Parameter:%o is now:%o", + this.parameters[i].name, this.parameters[i].pval);
     } else {
-      console.error("Unkown parameter changed!");
-      console.error(param);
+      console.error("Unkown parameter changed! %o", param);
     }
   } else {
     //We don't know which parmeter changed, could be more than one. Poll all of them.
     for (var i in this.parameters) {
       param = this.parameters[i];
-      console.log("Parameter: " + param.name + " is: " + param.pval);
+      console.log("Parameter: %o is: %o", param.name, param.pval);
     }
   }
   this.Update();
@@ -247,15 +245,15 @@ method_simple.prototype.ParamChanged = function (param) {
 //########    Channel Mapping Functions
 //######################################################################
 
-method_simple.prototype.ChannelChanged = function (channel, ctype) {
-  console.log("method: ChannelChanged: " + channel);
+Method_Simple.prototype.ChannelChanged = function (channel, ctype) {
+  //console.log("method: ChannelChanged: " + channel);
   if (channel === undefined) {
     //We don't know which Channel Changed, could be more than one. Poll all of them.
     this.RedoNodes();
     this.RedoLinks();
     return;
   }
-  console.log("method: Channel: " + channel.name + " is now assigned to: " + channel.dataParam);
+  console.log("method: Channel: %o is now assigned to: %o", channel.name, channel.dataParam);
   if (ctype === undefined || !(ctype == "node" || ctype == "link")) {
     if ($.inArray(channel, this.nodeChannels) != -1) {
       ctype = "node";
@@ -272,28 +270,31 @@ method_simple.prototype.ChannelChanged = function (channel, ctype) {
     this.RedoLinks();
   }
 };
-method_simple.prototype.getLinkChannel = function (name) {
+
+Method_Simple.prototype.getLinkChannel = function (name) {
   for (var i = 0; i < this.linkChannels.length; i++) {
     if (this.linkChannels[i].name == name) {
       return this.linkChannels[i];
     }
   }
 };
-method_simple.prototype.getNodeChannel = function (name) {
+
+Method_Simple.prototype.getNodeChannel = function (name) {
   for (var i = 0; i < this.nodeChannels.length; i++) {
     if (this.nodeChannels[i].name == name) {
       return this.nodeChannels[i];
     }
   }
 };
-method_simple.prototype.RedoLinks = function () {
+
+Method_Simple.prototype.RedoLinks = function () {
   if (m_simple_link === undefined) { return; }
   console.log("method: re-doing links");
   m_simple_link.style("stroke", this.Linkcolour.bind(this)).style("stroke-width", this.LinkWidth.bind(this));
   m_simple_force.start();
 };
 
-method_simple.prototype.RedoNodes = function () {
+Method_Simple.prototype.RedoNodes = function () {
   if (m_simple_link === undefined) { return; }
   console.log("method: re-doing nodes");
   m_simple_circle.style("fill", this.NodeColour.bind(this)).attr("r", this.NodeSize.bind(this));
@@ -302,7 +303,7 @@ method_simple.prototype.RedoNodes = function () {
 var fill = d3.scale.category20();
 
 //------------------ Link Channels ----------------
-method_simple.prototype.Linkcolour = function (d) {
+Method_Simple.prototype.Linkcolour = function (d) {
   var channel = this.getLinkChannel("Link Colour");
   if (channel.inUse) {
     //just convert everythign to a scale of maxium of 20 for now
@@ -316,51 +317,52 @@ method_simple.prototype.Linkcolour = function (d) {
   } else {
     return "black";
   }
-}
-method_simple.prototype.LinkWidth = function (d) {
+};
+
+Method_Simple.prototype.LinkWidth = function (d) {
   var channel = this.getLinkChannel("Link Width");
   if (channel.inUse) {
     return (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam)) + "px";
   } else {
     return "1.5px";
   }
-}
+};
 
-method_simple.prototype.LinkLength = function (d) {
+Method_Simple.prototype.LinkLength = function (d) {
   var channel = this.getLinkChannel("Link Length");
   if (channel.inUse) {
     return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam);
   } else {
     return 50;
   }
-}
+};
 //------------------ Node Channels ----------------
-method_simple.prototype.NodeColour = function (d) {
+Method_Simple.prototype.NodeColour = function (d) {
   var channel = this.getNodeChannel("Node Colour");
   if (channel.inUse) {
     return "red";
   } else {
     return "black";
   }
-}
+};
 
-method_simple.prototype.NodeSize = function (d) {
+Method_Simple.prototype.NodeSize = function (d) {
   var channel = this.getNodeChannel("Node Size");
   if (channel.inUse) {
     return (m_simple_radius - .75) + m_simple_radius * getAttributeAsPercentage(this.data, d, channel.dataParam);
   } else {
     return m_simple_radius - .75;
   }
-}
+};
 
-method_simple.prototype.GravityPoint = function (d) {
+Method_Simple.prototype.GravityPoint = function (d) {
   var channel = this.getNodeChannel("Gravity Point");
   if (channel.inUse) {
     return 1;
   } else {
     return 0;
   }
-}
+};
 
 //######################################################################
 //########    
