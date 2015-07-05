@@ -101,14 +101,30 @@ Method_Simple.prototype.Update = function () {
     m_simple_prev_currentDateMin = m_simple_currentDateMin;
     m_simple_prev_currentDateMax = m_simple_currentDateMax;
   }
-  var fill = d3.scale.category20();
+
+  this.nodeTooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
+  this.linkTooltip = d3.select("body").append("div").attr("class", "tooltip link").style("opacity", 0);
+  
 
   //Create Links
   m_simple_link = m_simple_container.selectAll("line").data(m_simple_filteredLinks);
   m_simple_link.enter().append("line")
     .style("stroke", this.Linkcolour.bind(this))
     .style("stroke-width", this.LinkWidth.bind(this));
-        
+  //add hover tooltip
+  m_simple_link.on("mouseover", $.proxy(function (d) {
+    var str = "";
+    this.data.link_keys.forEach(function (o) {
+      str += o + ": " + d[o] + "<br/>";
+    });
+    this.linkTooltip.transition().duration(200).style("opacity", .9);
+    this.linkTooltip.html(str)
+      .style("left",(d3.event.pageX) + "px")
+      .style("top",(d3.event.pageY - 28) + "px");
+  }, this));
+  m_simple_link.on("mouseout", $.proxy(function (d) {
+    this.linkTooltip.transition().duration(500).style("opacity", 0);
+  }, this));    
   //when a link is no longer in the set, remove it from the graph.
   m_simple_link.exit().remove();
 
@@ -120,6 +136,21 @@ Method_Simple.prototype.Update = function () {
     .attr("r", this.NodeSize.bind(this))
     .style("fill", this.NodeColour.bind(this))
     .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
+  //add hover tooltip
+  m_simple_circle.on("mouseover", $.proxy(function (d) {
+    var str = "";
+    this.data.node_keys.forEach(function (o) {
+      str += o + ": " + d[o] + "<br/>";
+    });
+    this.nodeTooltip.transition().duration(200).style("opacity", .9);
+    this.nodeTooltip.html(str)
+      .style("left",(d3.event.pageX) + "px")
+      .style("top",(d3.event.pageY - 28) + "px");
+  }, this));
+  m_simple_circle.on("mouseout", $.proxy(function (d) {
+    this.nodeTooltip.transition().duration(500).style("opacity", 0);
+  }, this)); 
+    
   //  .call(m_simple_force.drag);
   m_simple_circle.exit().remove();
 
@@ -300,20 +331,13 @@ Method_Simple.prototype.RedoNodes = function () {
   m_simple_circle.style("fill", this.NodeColour.bind(this)).attr("r", this.NodeSize.bind(this));
 };
 
-var fill = d3.scale.category20();
+var fill = d3.scale.category20().domain(d3.range(0, 20));
 
 //------------------ Link Channels ----------------
 Method_Simple.prototype.Linkcolour = function (d) {
   var channel = this.getLinkChannel("Link Colour");
   if (channel.inUse) {
-    //just convert everythign to a scale of maxium of 20 for now
-    var val;
-    if (channel.dataParam == "date") {
-      val = parseInt(d.date.slice(0, 4)) - startDate.getFullYear();//will break if  > 20 years in scale
-    } else {
-      val = d[channel.dataParam]; //who knows what type this is, needtype hint, //TODO
-    }
-    return d3.rgb(fill(val)).darker();
+    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam)))).darker();
   } else {
     return "black";
   }
@@ -340,7 +364,7 @@ Method_Simple.prototype.LinkLength = function (d) {
 Method_Simple.prototype.NodeColour = function (d) {
   var channel = this.getNodeChannel("Node Colour");
   if (channel.inUse) {
-    return "red";
+    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam)))).darker();
   } else {
     return "black";
   }
