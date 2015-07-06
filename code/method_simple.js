@@ -15,16 +15,26 @@ Method_Simple.prototype.ChannelChanged = function (param) {};
 Method_Simple.prototype.name = "";
 Method_Simple.prototype.SetData = function (d) {};
 //######################################################################*/
+// Important object globals
+Method_Simple.prototype.width = 1013;
+Method_Simple.prototype.height = 568;
+Method_Simple.prototype.halfWidth = 506.5;
+Method_Simple.prototype.halfHeight = 284;
+Method_Simple.prototype.default_radius = 6;
+Method_Simple.prototype.prev_currentDateMin;
+Method_Simple.prototype.currentDateMin;
+Method_Simple.prototype.prev_currentDateMax;
+Method_Simple.prototype.currentDateMax;
+Method_Simple.prototype.data;
+Method_Simple.prototype.filteredLinks;
+Method_Simple.prototype.svg;
+Method_Simple.prototype.svgContainer;
+Method_Simple.prototype.svgTranslation;
+Method_Simple.prototype.forceLayout;
+Method_Simple.prototype.graphLink;
+Method_Simple.prototype.graphNode;
 
-Method_Simple.prototype.width = 0;
-Method_Simple.prototype.height = 0;
-
-var m_simple_radius = 6;
-var m_simple_minDate,
-  m_simple_maxDate,
-  m_simple_currentDateMin,
-  m_simple_currentDateMax;
-
+//Method constructor
 function Method_Simple() {
   this.name = "simple";
   this.parameters = [
@@ -45,99 +55,88 @@ function Method_Simple() {
   ];
 }
 
-
-var m_simple_svg;
-var m_simple_force;
-var m_simple_container;
-var m_simple_circle;
-var m_simple_link;
-var m_simple_width = 960, m_simple_height = 500;
-var m_simple_scalefactor;
-var m_simple_translation;
-var m_simple_prev_currentDateMin, m_simple_prev_currentDateMax;
-var m_simple_filteredLinks;
-
 Method_Simple.prototype.SetDateBounds = function (min, max) {
-  m_simple_minDate = min;
-  m_simple_maxDate = max;
+  this.minDate = min;
+  this.maxDate = max;
 };
 
 Method_Simple.prototype.SetDate = function (higher, lower) {
   if (lower === undefined) {
-    lower = m_simple_minDate;
+    lower = this.minDate;
   }
-  m_simple_currentDateMin = lower;
-  m_simple_currentDateMax = higher;
+  this.currentDateMin = lower;
+  this.currentDateMax = higher;
 };
 
 Method_Simple.prototype.SetData = function (d) {
   this.data = d;
 };
-
+/*
 function getScreenCoords(x, y) {
-  if (m_simple_translation === undefined || m_simple_scalefactor === undefined) { return { x: x, y: y }; }
-  var xn = m_simple_translation[0] + x * m_simple_scalefactor;
-  var yn = m_simple_translation[1] + y * m_simple_scalefactor;
+  if (this.svgTranslation === undefined || this.scalefactor === undefined) { return { x: x, y: y }; }
+  var xn = this.svgTranslation[0] + x * this.scalefactor;
+  var yn = this.svgTranslation[1] + y * this.scalefactor;
   return { x: xn, y: yn };
 }
-
-var foci = [{ x: (m_simple_width / 2), y: (m_simple_height / 2) },
-  { x: (m_simple_width / 2) + 400, y: (m_simple_height / 2) + 400 },
-  { x: (m_simple_width / 2) + 400, y: (m_simple_height / 2) - 400 },
-  { x: (m_simple_width / 2) - 400, y: (m_simple_height / 2) + 400 },
-  { x: (m_simple_width / 2) - 400, y: (m_simple_height / 2) - 400 }];
-
+*/
+Method_Simple.prototype.foci = [
+  { x: 400, y: 0 },
+  { x: 200, y: - 346 },
+  { x: - 200, y: - 346 },
+  { x: - 400, y: 0 },
+  { x: 200, y: 346 }
+];
 //######################################################################
 //########    Main Update and Tick
 //######################################################################
 
 Method_Simple.prototype.Update = function () {
-  if (m_simple_filteredLinks === undefined || m_simple_prev_currentDateMin != m_simple_currentDateMin || m_simple_prev_currentDateMax != m_simple_currentDateMax) {
+  if (this.filteredLinks === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
     //filter data by date
-    m_simple_filteredLinks = this.data.links.filter(
-      function (d) {
-        return (m_simple_currentDateMax >= new Date(d.date) && m_simple_currentDateMin <= new Date(d.date));
-      });
-    m_simple_prev_currentDateMin = m_simple_currentDateMin;
-    m_simple_prev_currentDateMax = m_simple_currentDateMax;
+    this.filteredLinks = this.data.links.filter(
+      $.proxy(function (d) {
+        return (this.currentDateMax >= new Date(d.date) && this.currentDateMin <= new Date(d.date));
+      }, this));
+    this.prev_currentDateMin = this.currentDateMin;
+    this.prev_currentDateMax = this.currentDateMax;
   }
 
   this.nodeTooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
-  this.linkTooltip = d3.select("body").append("div").attr("class", "tooltip link").style("opacity", 0);
+  this.graphLinkTooltip = d3.select("body").append("div").attr("class", "tooltip link").style("opacity", 0);
   
 
   //Create Links
-  m_simple_link = m_simple_container.selectAll("line").data(m_simple_filteredLinks);
-  m_simple_link.enter().append("line")
+  this.graphLink = this.svgContainer.selectAll("line").data(this.filteredLinks);
+  this.graphLink.enter().append("line")
     .style("stroke", this.Linkcolour.bind(this))
     .style("stroke-width", this.LinkWidth.bind(this));
   //add hover tooltip
-  m_simple_link.on("mouseover", $.proxy(function (d) {
+  this.graphLink.on("mouseover", $.proxy(function (d) {
     var str = "";
     this.data.link_keys.forEach(function (o) {
       str += o + ": " + d[o] + "<br/>";
     });
-    this.linkTooltip.transition().duration(200).style("opacity", .9);
-    this.linkTooltip.html(str)
+    this.graphLinkTooltip.transition().duration(200).style("opacity", .9);
+    this.graphLinkTooltip.html(str)
       .style("left",(d3.event.pageX) + "px")
       .style("top",(d3.event.pageY - 28) + "px");
   }, this));
-  m_simple_link.on("mouseout", $.proxy(function (d) {
-    this.linkTooltip.transition().duration(500).style("opacity", 0);
+  this.graphLink.on("mouseout", $.proxy(function (d) {
+    this.graphLinkTooltip.transition().duration(500).style("opacity", 0);
   }, this));    
   //when a link is no longer in the set, remove it from the graph.
-  m_simple_link.exit().remove();
+  this.graphLink.exit().remove();
 
   //Create nodes
-  m_simple_circle = m_simple_container.selectAll("circle")
+  this.graphNode = this.svgContainer.selectAll("circle")
     .data(this.data.nodes);
-  m_simple_circle.enter()
+  this.graphNode.enter()
     .append("circle")
     .attr("r", this.NodeSize.bind(this))
     .style("fill", this.NodeColour.bind(this))
     .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
   //add hover tooltip
-  m_simple_circle.on("mouseover", $.proxy(function (d) {
+  this.graphNode.on("mouseover", $.proxy(function (d) {
     var str = "";
     this.data.node_keys.forEach(function (o) {
       str += o + ": " + d[o] + "<br/>";
@@ -147,18 +146,18 @@ Method_Simple.prototype.Update = function () {
       .style("left",(d3.event.pageX) + "px")
       .style("top",(d3.event.pageY - 28) + "px");
   }, this));
-  m_simple_circle.on("mouseout", $.proxy(function (d) {
+  this.graphNode.on("mouseout", $.proxy(function (d) {
     this.nodeTooltip.transition().duration(500).style("opacity", 0);
   }, this)); 
     
-  //  .call(m_simple_force.drag);
-  m_simple_circle.exit().remove();
+  //  .call(forceLayout.drag);
+  this.graphNode.exit().remove();
 
   //force a tick
-  m_simple_force.resume();
+  this.forceLayout.resume();
   //restart simulation
   //force.stop();
-  m_simple_force.nodes(this.data.nodes).links(m_simple_filteredLinks).on("tick", this.Tick.bind(this)).start();
+  this.forceLayout.nodes(this.data.nodes).links(this.filteredLinks).on("tick", this.Tick.bind(this)).start();
 };
 
 // The page has been resized or some other event that requires a redraw
@@ -166,67 +165,66 @@ Method_Simple.prototype.Redraw = function (w, h) {
   if (w !== undefined && h !== undefined) {
     this.width = w;
     this.height = h;
-    m_simple_width = w;
-    m_simple_height = h;
+    this.halfWidth = w * 0.5;
+    this.halfHeight = h * 0.5;
   }
   // force = customLayout()
-  m_simple_force = d3.layout.force()
+  this.forceLayout = d3.layout.force()
     .gravity(.25)
     .charge(-840)
     .friction(0.3)
     .linkDistance(this.LinkLength.bind(this))
     .size([this.width, this.height]);
 
-  var zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", zoomed);
+  var zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", this.zoomed.bind(this));
 
-  m_simple_svg = d3.select("#chart").append("svg")
+  this.svg = d3.select("#chart").append("svg")
     .attr("width", this.width)
     .attr("height", this.height)
     .call(zoom);
-  m_simple_container = m_simple_svg.append("g");
+  this.svgContainer = this.svg.append("g");
 };
 
-
-function zoomed() {
-  m_simple_translation = d3.event.translate;
-  m_simple_scalefactor = d3.event.scale;
-  m_simple_container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-  //m_simple_circle.style("fill", "red");
-  // m_simple_link.style("stroke", "black");
-}
+Method_Simple.prototype.zoomed = function () {
+  this.svgTranslation = d3.event.translate;
+  this.scalefactor = d3.event.scale;
+  this.svgContainer.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+};
 
 Method_Simple.prototype.Tick = function (e) {
   if (selected_method.getParam("Disable rest").pval) {
-    //m_simple_force.resume();
-    m_simple_force.alpha(Math.max(m_simple_force.alpha(), 0.1));
+    //forceLayout.resume();
+    this.forceLayout.alpha(Math.max(this.forceLayout.alpha(), 0.1));
   }
   var channel = this.getNodeChannel("Gravity Point");
   if (channel.inUse) {
     var k = .1 * e.alpha;
 
     this.data.nodes.forEach($.proxy(function (o, i, array) {
-      var point = Math.round((foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam));
-      o.y += (foci[point].y - o.y) * k;
-      o.x += (foci[point].x - o.x) * k;
+      var point = Math.round((this.foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam));
+      o.y += ((this.halfHeight + this.foci[point].y) - o.y) * k;
+      o.x += ((this.halfWidth + this.foci[point].x) - o.x) * k;
     }, this));
   }
 
-  m_simple_circle.attr("cx", $.proxy(function (d) {
+
+  this.graphNode.attr("cx", $.proxy(function (d) {
     if (this.getParam("Clamp within Canvas").pval) {
-      return d.x = Math.max(m_simple_radius, Math.min(canvasWidth - m_simple_radius, d.x));
+      return d.x = Math.max(this.default_radius, Math.min(canvasWidth - this.default_radius, d.x));
     } else {
       return d.x;
     }
   }, this))
     .attr("cy", $.proxy(function (d) {
     if (this.getParam("Clamp within Canvas").pval) {
-      return d.y = Math.max(m_simple_radius, Math.min(canvasHeight - m_simple_radius, d.y));
+      return d.y = Math.max(this.default_radius, Math.min(canvasHeight - this.default_radius, d.y));
     } else {
       return d.y;
     }
   }, this));
 
-  m_simple_link.attr("x1", function (d) {
+  this.graphLink.attr("x1", function (d) {
+    //  console.log("d: %o,",d);
     return d.source.x;
   })
     .attr("y1", function (d) {
@@ -258,7 +256,7 @@ Method_Simple.prototype.ParamChanged = function (param) {
   if (param !== undefined) {
     var i = this.parameters.indexOf(param);
     if (i != -1) {
-      console.log("Parameter:%o is now:%o", + this.parameters[i].name, this.parameters[i].pval);
+      console.log("Parameter:%o is now:%o", this.parameters[i].name, this.parameters[i].pval);
     } else {
       console.error("Unkown parameter changed! %o", param);
     }
@@ -319,16 +317,16 @@ Method_Simple.prototype.getNodeChannel = function (name) {
 };
 
 Method_Simple.prototype.RedoLinks = function () {
-  if (m_simple_link === undefined) { return; }
+  if (this.graphLink === undefined) { return; }
   console.log("method: re-doing links");
-  m_simple_link.style("stroke", this.Linkcolour.bind(this)).style("stroke-width", this.LinkWidth.bind(this));
-  m_simple_force.start();
+  this.graphLink.style("stroke", this.Linkcolour.bind(this)).style("stroke-width", this.LinkWidth.bind(this));
+  this.forceLayout.start();
 };
 
 Method_Simple.prototype.RedoNodes = function () {
-  if (m_simple_link === undefined) { return; }
+  if (this.graphLink === undefined) { return; }
   console.log("method: re-doing nodes");
-  m_simple_circle.style("fill", this.NodeColour.bind(this)).attr("r", this.NodeSize.bind(this));
+  this.graphNode.style("fill", this.NodeColour.bind(this)).attr("r", this.NodeSize.bind(this));
 };
 
 var fill = d3.scale.category20().domain(d3.range(0, 20));
@@ -373,9 +371,9 @@ Method_Simple.prototype.NodeColour = function (d) {
 Method_Simple.prototype.NodeSize = function (d) {
   var channel = this.getNodeChannel("Node Size");
   if (channel.inUse) {
-    return (m_simple_radius - .75) + m_simple_radius * getAttributeAsPercentage(this.data, d, channel.dataParam);
+    return (this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam);
   } else {
-    return m_simple_radius - .75;
+    return this.default_radius - .75;
   }
 };
 
@@ -387,7 +385,3 @@ Method_Simple.prototype.GravityPoint = function (d) {
     return 0;
   }
 };
-
-//######################################################################
-//########    
-//######################################################################

@@ -5,7 +5,10 @@
 .container {
   max-width: 2560px; /* or 950px */
 }
-
+.container.superwide{
+  max-width: 2560px; /* or 950px */
+  width: 100%;
+}
 .box{
 	position: relative;
 	width: 100%;		/* desired width */
