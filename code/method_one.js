@@ -2,23 +2,23 @@
 /// <reference path="../typings/d3/d3.d.ts"/>
 
 //Inheritance from base ojbect
-//make sure this is called before any additions to Method_Simple.prototype
-Method_Simple.prototype = Object.create(Base_Method.prototype);
+//make sure this is called before any additions to Method_One.prototype
+Method_One.prototype = Object.create(Base_Method.prototype);
 // Important object globals
-Method_Simple.prototype.default_radius = 6;
-Method_Simple.prototype.prev_currentDateMin;
-Method_Simple.prototype.prev_currentDateMax;
-Method_Simple.prototype.filteredLinks;
-Method_Simple.prototype.svg;
-Method_Simple.prototype.svgContainer;
-Method_Simple.prototype.svgTranslation;
-Method_Simple.prototype.forceLayout;
-Method_Simple.prototype.graphLink;
-Method_Simple.prototype.graphNode;
+Method_One.prototype.default_radius = 6;
+Method_One.prototype.prev_currentDateMin;
+Method_One.prototype.prev_currentDateMax;
+Method_One.prototype.filteredLinks;
+Method_One.prototype.svg;
+Method_One.prototype.svgContainer;
+Method_One.prototype.svgTranslation;
+Method_One.prototype.forceLayout;
+Method_One.prototype.graphLink;
+Method_One.prototype.graphNode;
 
 //Method constructor
-function Method_Simple() {
-  this.name = "simple";
+function Method_One() {
+  this.name = "Method One";
   this.parameters = [
     { name: "Test Slider", ptype: "slider", minval: 0, maxval: 10, step: 1, pval: 0 },
     { name: "Disable rest", ptype: "checkbox", pval: false },
@@ -37,9 +37,8 @@ function Method_Simple() {
   ];
 }
 
-Method_Simple.prototype.Load = function () { };
-
-Method_Simple.prototype.Unload = function () {
+Method_One.prototype.Load = function () { };
+Method_One.prototype.Unload = function () {
   if (this.svg != undefined) {
     this.svg.selectAll("*").remove();
     this.svg.remove();
@@ -55,7 +54,7 @@ Method_Simple.prototype.Unload = function () {
   this.graphNode = undefined;
 };
 
-Method_Simple.prototype.foci = [
+Method_One.prototype.foci = [
   { x: 400, y: 0 },
   { x: 200, y: - 346 },
   { x: - 200, y: - 346 },
@@ -67,7 +66,7 @@ Method_Simple.prototype.foci = [
 //########    Main Update
 //######################################################################
 
-Method_Simple.prototype.Update = function () {
+Method_One.prototype.Update = function () {
   Base_Method.prototype.Update.call(this);
   if (this.filteredLinks === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
     //filter data by date
@@ -143,7 +142,7 @@ Method_Simple.prototype.Update = function () {
 //######################################################################
 
 // The page has been resized or some other event that requires a redraw
-Method_Simple.prototype.Redraw = function (w, h) {
+Method_One.prototype.Redraw = function (w, h) {
   Base_Method.prototype.Redraw.call(this);
   // force = customLayout()
   this.forceLayout = d3.layout.force()
@@ -162,7 +161,7 @@ Method_Simple.prototype.Redraw = function (w, h) {
   this.svgContainer = this.svg.append("g");
 };
 
-Method_Simple.prototype.zoomed = function () {
+Method_One.prototype.zoomed = function () {
   this.svgTranslation = d3.event.translate;
   this.scalefactor = d3.event.scale;
   this.svgContainer.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
@@ -172,7 +171,7 @@ Method_Simple.prototype.zoomed = function () {
 //########    Force layout tick
 //######################################################################
 
-Method_Simple.prototype.Tick = function (e) {
+Method_One.prototype.Tick = function (e) {
   if (selected_method.getParam("Disable rest").pval) {
     //forceLayout.resume();
     this.forceLayout.alpha(Math.max(this.forceLayout.alpha(), 0.1));
@@ -222,14 +221,14 @@ Method_Simple.prototype.Tick = function (e) {
 //########    Channel Mapping Functions
 //######################################################################
 
-Method_Simple.prototype.RedoLinks = function () {
+Method_One.prototype.RedoLinks = function () {
   if (this.graphLink === undefined) { return; }
   console.log("method: re-doing links");
   this.graphLink.style("stroke", this.Linkcolour.bind(this)).style("stroke-width", this.LinkWidth.bind(this));
   this.forceLayout.start();
 };
 
-Method_Simple.prototype.RedoNodes = function () {
+Method_One.prototype.RedoNodes = function () {
   if (this.graphLink === undefined) { return; }
   console.log("method: re-doing nodes");
   this.graphNode.style("fill", this.NodeColour.bind(this)).attr("r", this.NodeSize.bind(this));
@@ -238,7 +237,7 @@ Method_Simple.prototype.RedoNodes = function () {
 var fill = d3.scale.category20().domain(d3.range(0, 20));
 
 //------------------ Link Channels ----------------
-Method_Simple.prototype.Linkcolour = function (d) {
+Method_One.prototype.Linkcolour = function (d) {
   var channel = this.getLinkChannel("Link Colour");
   if (channel.inUse) {
     return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam)))).darker();
@@ -247,7 +246,7 @@ Method_Simple.prototype.Linkcolour = function (d) {
   }
 };
 
-Method_Simple.prototype.LinkWidth = function (d) {
+Method_One.prototype.LinkWidth = function (d) {
   var channel = this.getLinkChannel("Link Width");
   if (channel.inUse) {
     return (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam)) + "px";
@@ -256,7 +255,7 @@ Method_Simple.prototype.LinkWidth = function (d) {
   }
 };
 
-Method_Simple.prototype.LinkLength = function (d) {
+Method_One.prototype.LinkLength = function (d) {
   var channel = this.getLinkChannel("Link Length");
   if (channel.inUse) {
     return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam);
@@ -265,7 +264,7 @@ Method_Simple.prototype.LinkLength = function (d) {
   }
 };
 //------------------ Node Channels ----------------
-Method_Simple.prototype.NodeColour = function (d) {
+Method_One.prototype.NodeColour = function (d) {
   var channel = this.getNodeChannel("Node Colour");
   if (channel.inUse) {
     return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam)))).darker();
@@ -274,7 +273,7 @@ Method_Simple.prototype.NodeColour = function (d) {
   }
 };
 
-Method_Simple.prototype.NodeSize = function (d) {
+Method_One.prototype.NodeSize = function (d) {
   var channel = this.getNodeChannel("Node Size");
   if (channel.inUse) {
     return (this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam);
@@ -283,7 +282,7 @@ Method_Simple.prototype.NodeSize = function (d) {
   }
 };
 
-Method_Simple.prototype.GravityPoint = function (d) {
+Method_One.prototype.GravityPoint = function (d) {
   var channel = this.getNodeChannel("Gravity Point");
   if (channel.inUse) {
     return 1;

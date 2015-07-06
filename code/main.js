@@ -14,7 +14,7 @@ var tickvals = [];
 var ticknames = [];
 var canvasWidth = $('#chart').width();
 var canvasHeight = $('#chart').height();
-
+var selected_method;
 for (var i = 0; i < diffY; i++) {
   tickvals[i] = i * 12;
   ticknames[i] = "" + (startDate.getFullYear() + i);
@@ -88,8 +88,6 @@ function Update() {
     return;
   }
 
-  selected_method.SetData(graphdata);
-
   selectedDate = new Date(startDate.toUTCString());
   if (isSliderRanged) {
     selectedDateMin = new Date(startDate.toUTCString());
@@ -145,7 +143,7 @@ function ChangeData(dataName) {
       //yep, set and bail.
       InitChannelMixer(loadedData[i]);
       graphdata = loadedData[i];
-      //channelPanel
+      selected_method.SetData(graphdata);
       Update();
       return;
     }
@@ -183,7 +181,7 @@ function ChangeData(dataName) {
 //########    Channel Mixer
 //######################################################################
 
-//Creates the UI for channel Mixer
+//Creates the UI for channel Mixer, called on data change
 function InitChannelMixer(data) {
   var nodeChannels = {};
   nodeChannels.channels = [];
@@ -245,6 +243,32 @@ function GetChannelDropdown(channels, attribute, atype) {
   return div;
 }
 
+//reads selected channels from the method and set UI accordingly
+//TODO Test this for bugs.
+function Readchannels() {
+  //wipe dropdowns
+  $("[id$=_dropdown]").selectpicker('val', "Disabled");
+  for (var i = 0; i < selected_method.nodeChannels.length; i++) {
+    var channel = selected_method.nodeChannels[i];
+    if (channel.inUse) {
+      var dd = $("#node_" + channel.dataParam + "_dropdown");
+      if (dd.length == 1) {
+        dd.selectpicker('val', channel.name);
+      }
+    }
+  }
+  for (var i = 0; i < selected_method.linkChannels.length; i++) {
+    var channel = selected_method.linkChannels[i];
+    if (channel.inUse) {
+      var dd = $("#link_" + channel.dataParam + "_dropdown");
+      if (dd.length == 1) {
+        dd.selectpicker('val', channel.name);
+      }
+    }
+  }
+  selected_method.ChannelChanged();
+}
+
 // Handles changing of channels, called when any dropdown selector changes
 function ChannelChange(atype, attribute, newChannel) {
   console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
@@ -290,6 +314,8 @@ function ChannelChange(atype, attribute, newChannel) {
 var methods = [];
 var m_simple = new Method_Simple();
 methods.push(m_simple);
+var m_one = new Method_One();
+methods.push(m_one);
 var selected_method;
 changeMethod(m_simple);
 
@@ -324,7 +350,9 @@ function VerifyMethodParmeters(method) {
 }
 
 function changeMethod(methodName) {
+  var oldMethod = selected_method;
   if (typeof (methodName) === "string") {
+    if (methodName == selected_method.name) { return; }
     var find = $.grep(methods, function (e) {
       return e.name == methodName
     });
@@ -342,17 +370,22 @@ function changeMethod(methodName) {
       console.error("Unkown object type passed to changeMethod");
       return;
     }
+    if (methodName == selected_method) { return; }
     selected_method = methodName;
   }
-  resize();
-  selected_method.SetDateBounds(startDate, endDate);
+  if (oldMethod !== undefined) {
+    oldMethod.Unload();
+  }
 
+  console.log("Loading Method: " + selected_method.name);
+  selected_method.SetDateBounds(startDate, endDate);
+  selected_method.Load();
+ 
   //clear param div
   var pdiv1 = $('#paramDiv1').html("");
   var pdiv2 = $('#paramDiv2').html("");
   var pdiv;
 
-  console.log("Loading Method: " + selected_method.name);
   if (!selected_method.hasOwnProperty("parameters")) {
     console.log("Method: %o has no parameters", selected_method);
     return;
@@ -397,6 +430,7 @@ function changeMethod(methodName) {
             selected_method.ParamChanged(pp);
           });
         } (param, boxDiv);
+        boxDiv.bootstrapToggle();
         break;
 
       case "textbox":
@@ -422,4 +456,8 @@ function changeMethod(methodName) {
     pdiv.append(newdiv);
   }
   pdiv.hide().show(0);
+  Readchannels();
+  resize();
+  selected_method.SetData(graphdata);
+  Update();
 }
