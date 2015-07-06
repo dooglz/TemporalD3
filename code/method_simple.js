@@ -1,31 +1,13 @@
 /// <reference path="../typings/jquery/jquery.d.ts"/>
 /// <reference path="../typings/d3/d3.d.ts"/>
-//######################################################################
-//########  Interface code, All methods should have this
-/*######################################################################
-Method_Simple.prototype.Redraw = function (w,h) {};
-Method_Simple.prototype.ParamChanged = function (param) {};
-Method_Simple.prototype.SetDateBounds = function (min, max) {};
-Method_Simple.prototype.SetDate = function (higher,lower) {};
-Method_Simple.prototype.Update = function () {};
-Method_Simple.prototype.parameters = [];
-Method_Simple.prototype.nodeChannels = [];
-Method_Simple.prototype.linkChannels = [];
-Method_Simple.prototype.ChannelChanged = function (param) {};
-Method_Simple.prototype.name = "";
-Method_Simple.prototype.SetData = function (d) {};
-//######################################################################*/
+
+//Inheritance from base ojbect
+//make sure this is called before any additiosn to Method_Simple.prototype
+Method_Simple.prototype = Object.create(Base_Method.prototype);
 // Important object globals
-Method_Simple.prototype.width = 1013;
-Method_Simple.prototype.height = 568;
-Method_Simple.prototype.halfWidth = 506.5;
-Method_Simple.prototype.halfHeight = 284;
 Method_Simple.prototype.default_radius = 6;
 Method_Simple.prototype.prev_currentDateMin;
-Method_Simple.prototype.currentDateMin;
 Method_Simple.prototype.prev_currentDateMax;
-Method_Simple.prototype.currentDateMax;
-Method_Simple.prototype.data;
 Method_Simple.prototype.filteredLinks;
 Method_Simple.prototype.svg;
 Method_Simple.prototype.svgContainer;
@@ -33,6 +15,7 @@ Method_Simple.prototype.svgTranslation;
 Method_Simple.prototype.forceLayout;
 Method_Simple.prototype.graphLink;
 Method_Simple.prototype.graphNode;
+//Method_Simple.prototype = Base_Method.prototype;
 
 //Method constructor
 function Method_Simple() {
@@ -55,30 +38,6 @@ function Method_Simple() {
   ];
 }
 
-Method_Simple.prototype.SetDateBounds = function (min, max) {
-  this.minDate = min;
-  this.maxDate = max;
-};
-
-Method_Simple.prototype.SetDate = function (higher, lower) {
-  if (lower === undefined) {
-    lower = this.minDate;
-  }
-  this.currentDateMin = lower;
-  this.currentDateMax = higher;
-};
-
-Method_Simple.prototype.SetData = function (d) {
-  this.data = d;
-};
-/*
-function getScreenCoords(x, y) {
-  if (this.svgTranslation === undefined || this.scalefactor === undefined) { return { x: x, y: y }; }
-  var xn = this.svgTranslation[0] + x * this.scalefactor;
-  var yn = this.svgTranslation[1] + y * this.scalefactor;
-  return { x: xn, y: yn };
-}
-*/
 Method_Simple.prototype.foci = [
   { x: 400, y: 0 },
   { x: 200, y: - 346 },
@@ -86,11 +45,13 @@ Method_Simple.prototype.foci = [
   { x: - 400, y: 0 },
   { x: 200, y: 346 }
 ];
+
 //######################################################################
 //########    Main Update and Tick
 //######################################################################
 
 Method_Simple.prototype.Update = function () {
+  Base_Method.prototype.Update.call(this);
   if (this.filteredLinks === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
     //filter data by date
     this.filteredLinks = this.data.links.filter(
@@ -160,14 +121,13 @@ Method_Simple.prototype.Update = function () {
   this.forceLayout.nodes(this.data.nodes).links(this.filteredLinks).on("tick", this.Tick.bind(this)).start();
 };
 
+//######################################################################
+//########    Redraw
+//######################################################################
+
 // The page has been resized or some other event that requires a redraw
 Method_Simple.prototype.Redraw = function (w, h) {
-  if (w !== undefined && h !== undefined) {
-    this.width = w;
-    this.height = h;
-    this.halfWidth = w * 0.5;
-    this.halfHeight = h * 0.5;
-  }
+  Base_Method.prototype.Redraw.call(this);
   // force = customLayout()
   this.forceLayout = d3.layout.force()
     .gravity(.25)
@@ -191,6 +151,10 @@ Method_Simple.prototype.zoomed = function () {
   this.svgContainer.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 };
 
+//######################################################################
+//########    Force layout tick
+//######################################################################
+
 Method_Simple.prototype.Tick = function (e) {
   if (selected_method.getParam("Disable rest").pval) {
     //forceLayout.resume();
@@ -206,7 +170,6 @@ Method_Simple.prototype.Tick = function (e) {
       o.x += ((this.halfWidth + this.foci[point].x) - o.x) * k;
     }, this));
   }
-
 
   this.graphNode.attr("cx", $.proxy(function (d) {
     if (this.getParam("Clamp within Canvas").pval) {
@@ -238,83 +201,9 @@ Method_Simple.prototype.Tick = function (e) {
   });
 };
 
-
-//######################################################################
-//########    Parameter handeling
-//######################################################################
-
-Method_Simple.prototype.getParam = function (name) {
-  for (var i = 0; i < this.parameters.length; i++) {
-    if (this.parameters[i].name == name) {
-      return this.parameters[i];
-    }
-  }
-};
-
-// Called when the user changes any of the Parameters
-Method_Simple.prototype.ParamChanged = function (param) {
-  if (param !== undefined) {
-    var i = this.parameters.indexOf(param);
-    if (i != -1) {
-      console.log("Parameter:%o is now:%o", this.parameters[i].name, this.parameters[i].pval);
-    } else {
-      console.error("Unkown parameter changed! %o", param);
-    }
-  } else {
-    //We don't know which parmeter changed, could be more than one. Poll all of them.
-    for (var i in this.parameters) {
-      param = this.parameters[i];
-      console.log("Parameter: %o is: %o", param.name, param.pval);
-    }
-  }
-  this.Update();
-};
-
 //######################################################################
 //########    Channel Mapping Functions
 //######################################################################
-
-Method_Simple.prototype.ChannelChanged = function (channel, ctype) {
-  //console.log("method: ChannelChanged: " + channel);
-  if (channel === undefined) {
-    //We don't know which Channel Changed, could be more than one. Poll all of them.
-    this.RedoNodes();
-    this.RedoLinks();
-    return;
-  }
-  console.log("method: Channel: %o is now assigned to: %o", channel.name, channel.dataParam);
-  if (ctype === undefined || !(ctype == "node" || ctype == "link")) {
-    if ($.inArray(channel, this.nodeChannels) != -1) {
-      ctype = "node";
-    } else if ($.inArray(channel, this.linkChannels) != -1) {
-      ctype = "link";
-    } else {
-      console.error("error");
-      return;
-    }
-  }
-  if (ctype == "node") {
-    this.RedoNodes();
-  } else {
-    this.RedoLinks();
-  }
-};
-
-Method_Simple.prototype.getLinkChannel = function (name) {
-  for (var i = 0; i < this.linkChannels.length; i++) {
-    if (this.linkChannels[i].name == name) {
-      return this.linkChannels[i];
-    }
-  }
-};
-
-Method_Simple.prototype.getNodeChannel = function (name) {
-  for (var i = 0; i < this.nodeChannels.length; i++) {
-    if (this.nodeChannels[i].name == name) {
-      return this.nodeChannels[i];
-    }
-  }
-};
 
 Method_Simple.prototype.RedoLinks = function () {
   if (this.graphLink === undefined) { return; }
