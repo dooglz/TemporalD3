@@ -20,10 +20,11 @@ Method_Simple.prototype.graphNode;
 function Method_Simple() {
   this.name = "simple";
   this.parameters = [
-    { name: "Test Slider", ptype: "slider", minval: 0, maxval: 10, step: 1, pval: 0 },
+    //{ name: "Test Slider", ptype: "slider", minval: 0, maxval: 10, step: 1, pval: 0 },
+    //{ name: "Test TextBox", ptype: "textbox", pval: "" },
     { name: "Disable rest", ptype: "checkbox", pval: false },
-    { name: "Test TextBox", ptype: "textbox", pval: "" },
-    { name: "Clamp within Canvas", ptype: "checkbox", pval: false }
+    { name: "Clamp within Canvas", ptype: "checkbox", pval: false },
+    { name: "Cumulative", ptype: "checkbox", pval: true, func:function(){this.filteredLinks = undefined;}}
   ];
   this.nodeChannels = [
     { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -73,13 +74,12 @@ Method_Simple.prototype.Update = function () {
     //filter data by date
     this.filteredLinks = this.data.links.filter(
       $.proxy(function (d) {
-        if(this.discreet){
-         var range = this.getRangeFromDiscreet(this.currentDateMin);
-         return IsLinkEverAliveInRange(d,range.min,range.max);
+        if (selected_method.getParam("Cumulative").pval) {
+          return IsLinkEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
         }else{
-          return IsLinkEverAliveInRange(d,this.currentDateMin,this.currentDateMax )
-          //return (this.currentDateMax >= new Date(d.date) && this.currentDateMin <= new Date(d.date));
+          return LinkCreatedInRange(d, this.currentDateMin, this.currentDateMax);
         }
+        //return (this.currentDateMax >= new Date(d.date) && this.currentDateMin <= new Date(d.date));
       }, this));
     this.prev_currentDateMin = this.currentDateMin;
     this.prev_currentDateMax = this.currentDateMax;
@@ -102,8 +102,8 @@ Method_Simple.prototype.Update = function () {
     });
     this.graphLinkTooltip.transition().duration(200).style("opacity", .9);
     this.graphLinkTooltip.html(str)
-      .style("left",(d3.event.pageX) + "px")
-      .style("top",(d3.event.pageY - 28) + "px");
+      .style("left", (d3.event.pageX) + "px")
+      .style("top", (d3.event.pageY - 28) + "px");
   }, this));
   this.graphLink.on("mouseout", $.proxy(function (d) {
     this.graphLinkTooltip.transition().duration(500).style("opacity", 0);
@@ -127,8 +127,8 @@ Method_Simple.prototype.Update = function () {
     });
     this.nodeTooltip.transition().duration(200).style("opacity", .9);
     this.nodeTooltip.html(str)
-      .style("left",(d3.event.pageX) + "px")
-      .style("top",(d3.event.pageY - 28) + "px");
+      .style("left", (d3.event.pageX) + "px")
+      .style("top", (d3.event.pageY - 28) + "px");
   }, this));
   this.graphNode.on("mouseout", $.proxy(function (d) {
     this.nodeTooltip.transition().duration(500).style("opacity", 0);
@@ -202,26 +202,26 @@ Method_Simple.prototype.Tick = function (e) {
     }
   }, this))
     .attr("cy", $.proxy(function (d) {
-    if (this.getParam("Clamp within Canvas").pval) {
-      return d.y = Math.max(this.default_radius, Math.min(canvasHeight - this.default_radius, d.y));
-    } else {
-      return d.y;
-    }
-  }, this));
+      if (this.getParam("Clamp within Canvas").pval) {
+        return d.y = Math.max(this.default_radius, Math.min(canvasHeight - this.default_radius, d.y));
+      } else {
+        return d.y;
+      }
+    }, this));
 
   this.graphLink.attr("x1", function (d) {
     //  console.log("d: %o,",d);
     return d.source.x;
   })
     .attr("y1", function (d) {
-    return d.source.y;
-  })
+      return d.source.y;
+    })
     .attr("x2", function (d) {
-    return d.target.x;
-  })
+      return d.target.x;
+    })
     .attr("y2", function (d) {
-    return d.target.y;
-  });
+      return d.target.y;
+    });
 };
 
 //######################################################################

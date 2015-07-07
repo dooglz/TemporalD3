@@ -20,10 +20,9 @@ Method_One.prototype.graphNode;
 function Method_One() {
   this.name = "Method One";
   this.parameters = [
-    { name: "Test Slider", ptype: "slider", minval: 0, maxval: 10, step: 1, pval: 0 },
     { name: "Disable rest", ptype: "checkbox", pval: false },
-    { name: "Test TextBox", ptype: "textbox", pval: "" },
-    { name: "Clamp within Canvas", ptype: "checkbox", pval: false }
+    { name: "Clamp within Canvas", ptype: "checkbox", pval: false },
+    { name: "Cumulative", ptype: "checkbox", pval: true, func:function(){this.filteredLinks = undefined;}}
   ];
   this.nodeChannels = [
     { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -72,7 +71,11 @@ Method_One.prototype.Update = function () {
     //filter data by date
     this.filteredLinks = this.data.links.filter(
       $.proxy(function (d) {
-        return (this.currentDateMax >= new Date(d.date) && this.currentDateMin <= new Date(d.date));
+       if (selected_method.getParam("Cumulative").pval) {
+          return IsLinkEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
+        }else{
+          return LinkCreatedInRange(d, this.currentDateMin, this.currentDateMax);
+        }
       }, this));
     this.prev_currentDateMin = this.currentDateMin;
     this.prev_currentDateMax = this.currentDateMax;

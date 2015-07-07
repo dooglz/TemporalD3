@@ -42,6 +42,11 @@ Base_Method.prototype.SetDate = function (higher, lower) {
     lower = this.minDate;
   }
   this.discreet = (lower == higher);
+  if(this.discreet){
+    var range = this.getRangeFromDiscreet(lower);
+    this.currentDateMin = range.min;
+    this.currentDateMax = range.max;
+  }
   this.currentDateMin = lower;
   this.currentDateMax = higher;
 };
@@ -88,6 +93,9 @@ Base_Method.prototype.ParamChanged = function (param) {
     var i = this.parameters.indexOf(param);
     if (i != -1) {
       console.log("Parameter:%o is now:%o", this.parameters[i].name, this.parameters[i].pval);
+      if(this.parameters[i].func !== undefined){
+        this.parameters[i].func.bind(this)();
+      }
     } else {
       console.error("Unkown parameter changed! %o", param);
     }
@@ -151,6 +159,14 @@ Base_Method.prototype.getNodeChannel = function (name) {
 
 
 Base_Method.prototype.getRangeFromDiscreet = function (discreetTime) {
-  //TODO
-  return {min:this.currentDateMin,max:discreetTime};
+  //base functionality is to round to the whole month
+  var mindate = new Date();
+  var maxdate = new Date()
+  mindate.setTime(0);
+  maxdate.setTime(0);
+  mindate.setFullYear(discreetTime.getFullYear());
+  maxdate.setFullYear(discreetTime.getFullYear());
+  mindate.setMonth(discreetTime.getMonth());
+  maxdate.setMonth(discreetTime.getMonth()+1);
+  return {min:mindate,max:maxdate};
 };
