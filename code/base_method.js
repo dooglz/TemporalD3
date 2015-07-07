@@ -42,7 +42,7 @@ Base_Method.prototype.SetDate = function (higher, lower) {
     lower = this.minDate;
   }
   this.discreet = (lower == higher);
-  if(this.discreet){
+  if (this.discreet) {
     var range = this.getRangeFromDiscreet(lower);
     this.currentDateMin = range.min;
     this.currentDateMax = range.max;
@@ -93,7 +93,7 @@ Base_Method.prototype.ParamChanged = function (param) {
     var i = this.parameters.indexOf(param);
     if (i != -1) {
       console.log("Parameter:%o is now:%o", this.parameters[i].name, this.parameters[i].pval);
-      if(this.parameters[i].func !== undefined){
+      if (this.parameters[i].func !== undefined) {
         this.parameters[i].func.bind(this)();
       }
     } else {
@@ -167,6 +167,11 @@ Base_Method.prototype.getRangeFromDiscreet = function (discreetTime) {
   mindate.setFullYear(discreetTime.getFullYear());
   maxdate.setFullYear(discreetTime.getFullYear());
   mindate.setMonth(discreetTime.getMonth());
-  maxdate.setMonth(discreetTime.getMonth()+1);
-  return {min:mindate,max:maxdate};
+  maxdate.setMonth(discreetTime.getMonth() + 1);
+  return { min: mindate, max: maxdate };
 };
+
+function forceLayoutPercentDone(force) {
+  if (force.alpha() == 0) { return 100; }
+  return Math.round(((0.1 - force.alpha()) / 0.1) * 100);
+}

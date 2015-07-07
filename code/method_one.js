@@ -22,7 +22,7 @@ function Method_One() {
   this.parameters = [
     { name: "Disable rest", ptype: "checkbox", pval: false },
     { name: "Clamp within Canvas", ptype: "checkbox", pval: false },
-    { name: "Cumulative", ptype: "checkbox", pval: true, func:function(){this.filteredLinks = undefined;}}
+    { name: "Cumulative", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; } }
   ];
   this.nodeChannels = [
     { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -61,19 +61,77 @@ Method_One.prototype.foci = [
   { x: 200, y: 346 }
 ];
 
+
+Method_One.prototype.Loading = function () {
+  var gp = forceLayoutPercentDone(this.globalForceLayout);
+  var lp = this.LocalLayoutPercentDone;
+  var str = "calculating global layout";
+  if (gp == 100) { str = "calculating Local layout"; }
+  ShowLoadingBar((gp * 0.3) + (lp * 0.7), str);
+  if (gp + lp == 200) {
+    clearTimeout(this.loadingtimerfunc);
+    HideLoadingBar();
+  }
+}
+
+Method_One.prototype.Recalculate = function () {
+  this.loadingtimerfunc = setInterval(this.Loading.bind(this), 300);
+  //zero position of all nodes
+  this.data.nodes.forEach(function (o, i, array) {
+    o.px = o.py = o.x = o.y = 0;
+  });
+  this.CaluclateGlobalLayout();
+  this.CaluclateLocalLayouts();
+}
+
+Method_One.prototype.CaluclateGlobalLayout = function () {
+  //create a new force layout
+  this.globalForceLayout = d3.layout.force()
+    .gravity(.25)
+    .charge(-840)
+    .friction(0.3)
+    .linkDistance(this.LinkLength.bind(this))
+    .size([this.width, this.height])
+    .nodes(this.data.nodes)
+    .links(this.data.links)
+    .on("tick", this.GlobalTick.bind(this))
+    .on('end', function () { console.log('ended!'); })
+    .start();
+  console.log("Global force layout running");
+  ShowLoadingBar(0, "calculating global layout");
+}
+
+Method_One.prototype.CaluclateLocalLayouts = function () {
+  this.LocalLayoutPercentDone = 10;
+}
+
+Method_One.prototype.GlobalTick = function (e) {
+  var channel = this.getNodeChannel("Gravity Point");
+  if (channel.inUse) {
+    var k = .1 * e.alpha;
+    this.data.nodes.forEach($.proxy(function (o, i, array) {
+      var point = Math.round((this.foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam));
+      o.y += ((this.halfHeight + this.foci[point].y) - o.y) * k;
+      o.x += ((this.halfWidth + this.foci[point].x) - o.x) * k;
+    }, this));
+  }
+};
+
+
 //######################################################################
 //########    Main Update
 //######################################################################
 
 Method_One.prototype.Update = function () {
+  return;
   Base_Method.prototype.Update.call(this);
   if (this.filteredLinks === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
     //filter data by date
     this.filteredLinks = this.data.links.filter(
       $.proxy(function (d) {
-       if (selected_method.getParam("Cumulative").pval) {
+        if (selected_method.getParam("Cumulative").pval) {
           return IsLinkEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
-        }else{
+        } else {
           return LinkCreatedInRange(d, this.currentDateMin, this.currentDateMax);
         }
       }, this));
@@ -98,8 +156,8 @@ Method_One.prototype.Update = function () {
     });
     this.graphLinkTooltip.transition().duration(200).style("opacity", .9);
     this.graphLinkTooltip.html(str)
-      .style("left",(d3.event.pageX) + "px")
-      .style("top",(d3.event.pageY - 28) + "px");
+      .style("left", (d3.event.pageX) + "px")
+      .style("top", (d3.event.pageY - 28) + "px");
   }, this));
   this.graphLink.on("mouseout", $.proxy(function (d) {
     this.graphLinkTooltip.transition().duration(500).style("opacity", 0);
@@ -123,8 +181,8 @@ Method_One.prototype.Update = function () {
     });
     this.nodeTooltip.transition().duration(200).style("opacity", .9);
     this.nodeTooltip.html(str)
-      .style("left",(d3.event.pageX) + "px")
-      .style("top",(d3.event.pageY - 28) + "px");
+      .style("left", (d3.event.pageX) + "px")
+      .style("top", (d3.event.pageY - 28) + "px");
   }, this));
   this.graphNode.on("mouseout", $.proxy(function (d) {
     this.nodeTooltip.transition().duration(500).style("opacity", 0);
@@ -146,6 +204,7 @@ Method_One.prototype.Update = function () {
 
 // The page has been resized or some other event that requires a redraw
 Method_One.prototype.Redraw = function (w, h) {
+  return;
   Base_Method.prototype.Redraw.call(this);
   // force = customLayout()
   this.forceLayout = d3.layout.force()
@@ -175,6 +234,7 @@ Method_One.prototype.zoomed = function () {
 //######################################################################
 
 Method_One.prototype.Tick = function (e) {
+  return;
   if (selected_method.getParam("Disable rest").pval) {
     //forceLayout.resume();
     this.forceLayout.alpha(Math.max(this.forceLayout.alpha(), 0.1));
@@ -198,26 +258,26 @@ Method_One.prototype.Tick = function (e) {
     }
   }, this))
     .attr("cy", $.proxy(function (d) {
-    if (this.getParam("Clamp within Canvas").pval) {
-      return d.y = Math.max(this.default_radius, Math.min(canvasHeight - this.default_radius, d.y));
-    } else {
-      return d.y;
-    }
-  }, this));
+      if (this.getParam("Clamp within Canvas").pval) {
+        return d.y = Math.max(this.default_radius, Math.min(canvasHeight - this.default_radius, d.y));
+      } else {
+        return d.y;
+      }
+    }, this));
 
   this.graphLink.attr("x1", function (d) {
     //  console.log("d: %o,",d);
     return d.source.x;
   })
     .attr("y1", function (d) {
-    return d.source.y;
-  })
+      return d.source.y;
+    })
     .attr("x2", function (d) {
-    return d.target.x;
-  })
+      return d.target.x;
+    })
     .attr("y2", function (d) {
-    return d.target.y;
-  });
+      return d.target.y;
+    });
 };
 
 //######################################################################

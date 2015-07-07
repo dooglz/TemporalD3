@@ -57,11 +57,11 @@ function CreateSlider(ranged) {
       }
     },
   }).on('slide', slided).data('slider');
-    //this is just for styling
-  if (ranged){
+  //this is just for styling
+  if (ranged) {
     $("#ex13Slider").addClass("ranged");
-  }else{
-     $("#ex13Slider").addClass("discreet");
+  } else {
+    $("#ex13Slider").addClass("discreet");
   }
 }
 
@@ -101,10 +101,10 @@ function Update() {
     selectedDateMax = new Date(startDate.toUTCString());
     selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue()[1]);
   } else {
-   // selectedDateMin = startDate;
+    // selectedDateMin = startDate;
     selectedDateMax = new Date(startDate.toUTCString());
     selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue());
-    selectedDateMin =selectedDateMax;
+    selectedDateMin = selectedDateMax;
   }
   selected_method.SetDate(selectedDateMax, selectedDateMin);
 
@@ -467,4 +467,20 @@ function changeMethod(methodName) {
   resize();
   selected_method.SetData(graphdata);
   Update();
+}
+var progressbar = $("#progressbar");
+var progressContainer = $("#progressContainer").detach();
+
+var progressbarVisible = false;
+function ShowLoadingBar(percent, message) {
+  if (!progressbarVisible) {
+    $('#Slidercontainer').append(progressContainer);
+    progressbarVisible = true;
+  }
+  progressbar.css('width', percent + '%');
+  progressbar.html(percent + "% " + message);
+}
+function HideLoadingBar() {
+  progressContainer.detach();
+  progressbarVisible = false;
 }
