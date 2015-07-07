@@ -159,3 +159,26 @@ function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute) {
     console.error("unkown type! %o",attributes_info.type);
   }
 }
+//true if link was created before range end AND died after range start
+function IsLinkEverAliveInRange(link, min, max){
+  //todo take into account multiple births and deaths
+  var LinkBirthday = new Date(link.date);
+  var LinkDeathDay = Infinity
+  return (LinkBirthday <= max && LinkDeathDay >= min);
+}
+
+//true if link created during range
+function LinkCreatedInRange(link, min, max){
+  //todo take into account births and deaths
+  var LinkBirthday = new Date(link.date);
+  return (max >= LinkBirthday && min <= LinkBirthday);
+}
+
+//true if time is between link start and end
+function IsLinkAliveAtTime(link, time){
+  //todo take into account multiple births and deaths
+  var LinkBirthday = new Date(link.date);
+  var LinkDeathDay = Infinity
+  return (LinkDeathDay >= time && LinkBirthday <= time);
+  return true;
+}

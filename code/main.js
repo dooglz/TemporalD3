@@ -20,7 +20,7 @@ for (var i = 0; i < diffY; i++) {
   ticknames[i] = "" + (startDate.getFullYear() + i);
 }
 
-$('#ex1').slider({
+$('#dateSliderInput').slider({
   formatter: function (value) {
     return 'Current value: ' + value;
   }
@@ -41,7 +41,7 @@ function CreateSlider(ranged) {
     max: diffY * 12,
     step: 1,
     range: ranged,
-    value: (ranged ? [3, 7] : 2),
+    value: (ranged ? [3, 7] : 2),//This actually toggles range mode
     formatter: function (value) {
       var dd = new Date(startDate.toUTCString());
       if (ranged) {
@@ -57,6 +57,12 @@ function CreateSlider(ranged) {
       }
     },
   }).on('slide', slided).data('slider');
+    //this is just for styling
+  if (ranged){
+    $("#ex13Slider").addClass("ranged");
+  }else{
+     $("#ex13Slider").addClass("discreet");
+  }
 }
 
 CreateSlider(false);
@@ -95,9 +101,10 @@ function Update() {
     selectedDateMax = new Date(startDate.toUTCString());
     selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue()[1]);
   } else {
-    selectedDateMin = startDate;
+   // selectedDateMin = startDate;
     selectedDateMax = new Date(startDate.toUTCString());
     selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue());
+    selectedDateMin =selectedDateMax;
   }
   selected_method.SetDate(selectedDateMax, selectedDateMin);
 

@@ -73,7 +73,13 @@ Method_Simple.prototype.Update = function () {
     //filter data by date
     this.filteredLinks = this.data.links.filter(
       $.proxy(function (d) {
-        return (this.currentDateMax >= new Date(d.date) && this.currentDateMin <= new Date(d.date));
+        if(this.discreet){
+         var range = this.getRangeFromDiscreet(this.currentDateMin);
+         return IsLinkEverAliveInRange(d,range.min,range.max);
+        }else{
+          return IsLinkEverAliveInRange(d,this.currentDateMin,this.currentDateMax )
+          //return (this.currentDateMax >= new Date(d.date) && this.currentDateMin <= new Date(d.date));
+        }
       }, this));
     this.prev_currentDateMin = this.currentDateMin;
     this.prev_currentDateMax = this.currentDateMax;

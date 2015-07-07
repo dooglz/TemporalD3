@@ -23,6 +23,7 @@ Base_Method.prototype.halfWidth = 506.5;
 Base_Method.prototype.halfHeight = 284;
 Base_Method.prototype.currentDateMax;
 Base_Method.prototype.currentDateMin;
+Base_Method.prototype.discreet = false;
 ///Method constructor
 function Base_Method() {
   this.name = "Base_method";
@@ -40,6 +41,7 @@ Base_Method.prototype.SetDate = function (higher, lower) {
   if (lower === undefined) {
     lower = this.minDate;
   }
+  this.discreet = (lower == higher);
   this.currentDateMin = lower;
   this.currentDateMax = higher;
 };
@@ -55,9 +57,9 @@ function getScreenCoords(x, y) {
   return { x: xn, y: yn };
 }
 */
-Base_Method.prototype.Update = function () {};
-Base_Method.prototype.Load = function () {};
-Base_Method.prototype.Unload = function () {};
+Base_Method.prototype.Update = function () { };
+Base_Method.prototype.Load = function () { };
+Base_Method.prototype.Unload = function () { };
 Base_Method.prototype.Redraw = function (w, h) {
   if (w !== undefined && h !== undefined) {
     this.width = w;
@@ -145,4 +147,10 @@ Base_Method.prototype.getNodeChannel = function (name) {
       return this.nodeChannels[i];
     }
   }
+};
+
+
+Base_Method.prototype.getRangeFromDiscreet = function (discreetTime) {
+  //TODO
+  return {min:this.currentDateMin,max:discreetTime};
 };

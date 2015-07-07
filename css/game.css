@@ -36,9 +36,6 @@ line {
   stroke: #999;
 }
 
-#ex1Slider .slider-track {
-	background: #FFCC99;
-}
 
 #ex1Slider .slider-selection {
 	background: red;
@@ -56,8 +53,17 @@ line {
 	background: #FF9933;
 }
 
-#ex13Slider .slider-tick.in-selection {
+#ex13Slider.ranged .slider-tick.in-selection {
 	background: #009933;
+}
+
+#ex13Slider.discreet .slider-selection {
+  background-image: none;
+  background: none;
+}
+
+#ex13Slider.ranged .slider-selection {
+	background-image: linear-gradient(to bottom,#149bdf 0,#0480be 100%);
 }
 
 .methodParam{
