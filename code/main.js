@@ -23,8 +23,13 @@ $('#dateSliderInput').slider({
   }
 });
 
-function slided() {
+function SliderVarToDate(value){
+   var dd = new Date(startDate.toUTCString());
+   dd.setMonth(dd.getMonth() + value);
+   return dd;
+}
 
+function slided() {
   if (graphdata.date_type == "static") {
     selectedDateMin = -Infinity;
     selectedDateMax = Infinity;
@@ -47,7 +52,7 @@ function slided() {
       selectedDateMin = dateSlider.getValue()[0]
       selectedDateMax = dateSlider.getValue()[1]
     } else {
-      selectedDateMax = dateSlider.getValue()[1]
+      selectedDateMax = dateSlider.getValue();
       selectedDateMin = selectedDateMax;
     }
     selectedDate = selectedDateMin;
@@ -64,8 +69,15 @@ function CreateSlider(ranged) {
   var spread = 0;
   if (graphdata.date_type == "static") {
     dateSlider = $("#ex13").slider({ enabled: false, min: 0, max: 0, value: 0 }).data('slider');
-  } else if(graphdata.date_type == "number"){
-     dateSlider = $("#ex13").slider({ min: startDate, max: endDate, value: 0 }).data('slider');
+  } else if (graphdata.date_type == "number") {
+    spread = (endDate - startDate) / slider_num_ticks;
+    spread = Math.ceil((spread) / slider_num_steps) * slider_num_steps;
+    for (var i = 0; i < (slider_num_ticks); i++) {
+      tickvals[i] = i * spread;
+      ticknames[i] = "" + tickvals[i];
+    }
+    dateSlider = $("#ex13").slider({ticks: tickvals,ticks_labels: ticknames,
+    ticks_snap_bounds: 0,min: startDate, max: endDate, value: 0 }).on('slide', slided).data('slider');
   } else {
     year_diff = endDate.getFullYear() - startDate.getFullYear();
     spread = ((year_diff + 1) * 12.0) / (slider_num_ticks * 1.0);
@@ -74,9 +86,7 @@ function CreateSlider(ranged) {
     spread = Math.ceil((spread) / slider_num_steps) * slider_num_steps;
     for (var i = 0; i < (slider_num_ticks); i++) {
       tickvals[i] = i * spread;
-      var dd = new Date(startDate.toUTCString());
-      dd.setMonth(dd.getMonth() + (i * spread));
-      ticknames[i] = "" + dd.toDateString().slice(-4);
+      ticknames[i] = SliderVarToDate((i * spread)).toDateString().slice(-4);
     }
 
     if (ranged === undefined) { ranged = false; }
@@ -90,17 +100,13 @@ function CreateSlider(ranged) {
       range: ranged,
       value: (ranged ? [3, 7] : 2),//This actually toggles range mode
       formatter: function (value) {
-        var dd = new Date(startDate.toUTCString());
+       // var dd = new Date(startDate.toUTCString());
         if (ranged) {
-          dd.setMonth(dd.getMonth() + value[0]);
-          var start = dd.toDateString().slice(4);
-          dd = new Date(startDate.toUTCString());
-          dd.setMonth(dd.getMonth() + value[1]);
-          var end = dd.toDateString().slice(4);
-          return start + " - " + end;
+          var start = SliderVarToDate(value[0]).toDateString().slice(4);
+          var end = SliderVarToDate(value[1]).toDateString().slice(4);
+         return start + " - " + end;
         } else {
-          dd.setMonth(dd.getMonth() + value);
-          return value + " " + dd.toDateString().slice(4);
+          return SliderVarToDate(value).toDateString().slice(4);
         }
       },
     }).on('slide', slided).data('slider');
@@ -165,7 +171,6 @@ function resize() {
 var graphdata;
 var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "Napier Publications", url: "data/napierPublications.json" },
-  { name: "template", url: "data/template.json" },
   { name: "freeScaleTime-300-1.4", url: "data/freeScaleTime-300-1.4.json" },
   { name: "freeScaleTime-300-1.9", url: "data/freeScaleTime-300-1.9.json" },
   { name: "graphTest2b", url: "data/graphTest2b.json" },

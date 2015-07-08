@@ -167,6 +167,9 @@ Base_Method.prototype.forceLayoutPercentDone = function (force) {
 }
 
 Base_Method.prototype.getRangeFromDiscreet = function (discreetTime) {
+  if(this.data.date_type == "number" || this.data.date_type == "static"){
+    return { min: discreetTime, max: discreetTime };
+  }
   //base functionality is to round to the whole month
   var mindate = new Date();
   var maxdate = new Date()

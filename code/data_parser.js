@@ -191,17 +191,25 @@ function ParseData(data) {
     //get date format
     if (data.links[0].start !== undefined) {
       data.date_type = typeof (data.links[0].start);
-      if (data.date_type == "string" && IsDate(data.links[0].start)) {
-        data.date_type = "date";
+      if (data.date_type == "string") {
+        if (IsDate(data.links[0].start)) {
+          data.date_type = "date";
+        } else {
+          console.error("Unkown date type");
+          data.date_type = "static";
+        }
       }
+      console.log("Determined date-type as %o, from sample %o", data.date_type, data.links[0].start);
     } else if (data.links[0].end !== undefined) {
       data.date_type = typeof (data.links[0].end);
       if (data.date_type == "string" && IsDate(data.links[0].end)) {
         data.date_type = "date";
       }
+      console.log("Determined date-type as %o, from sample %o", data.date_type, data.links[0].end);
     } else {
       data.date_type = "static";
     }
+     
     
     //make sure targets are in correct format
     data.links.forEach(function (o) {
@@ -250,10 +258,21 @@ function ParseData(data) {
   if (data.date_type == "static") {
     maxdate = Infinity;
     minDate = -Infinity;
+    data.links.forEach(function (o) {
+      if (o.source >= data.nodes.length || o.target >= data.nodes.length) {
+        console.error("Link %o, has source or target to non-existant node!", o);
+        o.source = 0;
+        o.target = 1;
+      }});
   } else if (data.date_type == "date" || data.date_type == "number") {
     maxdate = -Infinity;
     minDate = Infinity;
     data.links.forEach(function (o) {
+      if (o.source >= data.nodes.length || o.target >= data.nodes.length) {
+        console.error("Link %o, has source or target to non-existant node!", o);
+        o.source = 0;
+        o.target = 1;
+      }
       var nval;
       if (o.date !== undefined) {
         nval = o.date
@@ -302,6 +321,7 @@ function ParseData(data) {
   }
   data.maxDate = maxdate;
   data.minDate = minDate;
+
 
 
 }
