@@ -1,0 +1,154 @@
+{
+"edges":[
+{"source":"0","target":"1"},
+{"source":"0","target":"5"},
+{"source":"0","target":"9"},
+{"source":"0","target":"15"},
+{"source":"0","target":"19"},
+{"source":"1","target":"0"},
+{"source":"1","target":"7"},
+{"source":"2","target":"17"},
+{"source":"5","target":"0"},
+{"source":"5","target":"3"},
+{"source":"6","target":"19"},
+{"source":"9","target":"3"}
+],
+
+"nodes":[
+	{
+		"id":0,
+		"attributes":[
+			{"values":[
+				{"start":"0","value":"6","end":"2"},
+				{"start":"2","value":"9","end":"19"},
+				{"start":"19","value":"8","end":"26"},
+				{"start":"26","value":"0","end":"47"},
+				{"start":"47","value":"9","end":"58"},
+				{"start":"58","value":"9","end":"65"},
+				{"start":"65","value":"3","end":"72"},
+				{"start":"72","value":"5"}
+			],
+			"name":"magnitude","type":"numeric"}
+		]
+	},
+	{
+		"id":1,
+		"attributes":[
+			{"values":[
+				{"start":"0","value":"8","end":"17"},
+				{"start":"17","value":"6","end":"24"},
+				{"start":"24","value":"6","end":"37"},
+				{"start":"37","value":"8","end":"41"},
+				{"start":"41","value":"7","end":"46"},
+				{"start":"46","value":"9","end":"55"},
+				{"start":"55","value":"3","end":"65"},
+				{"start":"65","value":"2","end":"71"},
+				{"start":"71","value":"0","end":"78"},
+				{"start":"78","value":"7","end":"84"},
+				{"start":"84","value":"9","end":"95"},
+				{"start":"95","value":"8"}
+			],
+			"name":"magnitude","type":"numeric"}
+		]
+	},
+	{
+		"id":2,
+		"attributes":[
+			{"values":[
+				{"start":"0","value":"2","end":"19"},
+				{"start":"19","value":"1","end":"32"},
+				{"start":"32","value":"7","end":"35"},
+				{"start":"35","value":"3","end":"40"},
+				{"start":"40","value":"3","end":"57"},
+				{"start":"57","value":"1","end":"59"},
+				{"start":"59","value":"1","end":"66"},
+				{"start":"66","value":"0","end":"75"},
+				{"start":"75","value":"1","end":"76"},
+				{"start":"76","value":"8","end":"78"},
+				{"start":"78","value":"9","end":"82"},
+				{"start":"82","value":"4","end":"94"},
+				{"start":"94","value":"8"}
+			],
+			"name":"magnitude","type":"numeric"}
+		]
+	},
+	{
+		"id":3,
+		"attributes":[
+			{"values":[
+				{"start":"0","value":"0","end":"1"},
+				{"start":"1","value":"5","end":"10"},
+				{"start":"10","value":"0","end":"12"},
+				{"start":"12","value":"1","end":"53"},
+				{"start":"53","value":"3","end":"55"},
+				{"start":"55","value":"3","end":"87"},
+				{"start":"87","value":"6"}
+			],
+			"name":"magnitude","type":"numeric"}
+		]
+	},
+	{
+		"id":4,
+		"attributes":[
+			{"values":[
+				{"start":"0","value":"8","end":"6"},
+				{"start":"6","value":"6","end":"9"},
+				{"start":"9","value":"6","end":"38"},
+				{"start":"38","value":"0","end":"43"},
+				{"start":"43","value":"9","end":"49"},
+				{"start":"49","value":"2","end":"78"},
+				{"start":"78","value":"6","end":"84"},
+				{"start":"84","value":"4","end":"87"},
+				{"start":"87","value":"0","end":"92"},
+				{"start":"92","value":"4"}
+			],
+			"name":"magnitude","type":"numeric"}
+		]
+	},
+	{
+		"id":5,
+		"attributes":[
+			{"values":[
+				{"start":"0","value":"1","end":"11"},
+				{"start":"11","value":"0","end":"15"},
+				{"start":"15","value":"9","end":"23"},
+				{"start":"23","value":"7","end":"24"},
+				{"start":"24","value":"3","end":"25"},
+				{"start":"25","value":"7","end":"38"},
+				{"start":"38","value":"2","end":"42"},
+				{"start":"42","value":"8","end":"47"},
+				{"start":"47","value":"8","end":"50"},
+				{"start":"50","value":"4","end":"64"},
+				{"start":"64","value":"3","end":"75"},
+				{"start":"75","value":"3","end":"79"},
+				{"start":"79","value":"4","end":"85"},
+				{"start":"85","value":"3"}
+			],
+	"name":"magnitude","type":"numeric"}]
+	},
+{
+"id":6,
+"attributes":[
+{"values":[
+	{"start":"0","value":"0","end":"9"},{"start":"9","value":"1","end":"14"},{"start":"14","value":"5","end":"15"},
+	{"start":"15","value":"5","end":"19"},{"start":"19","value":"8","end":"25"},{"start":"25","value":"3","end":"36"},
+	{"start":"36","value":"5","end":"46"},{"start":"46","value":"0","end":"47"},{"start":"47","value":"4","end":"48"},
+	{"start":"48","value":"8","end":"51"},{"start":"51","value":"6","end":"54"},{"start":"54","value":"3","end":"63"},
+	{"start":"63","value":"1","end":"65"},{"start":"65","value":"2","end":"68"},{"start":"68","value":"0","end":"77"},
+	{"start":"77","value":"2","end":"80"},{"start":"80","value":"5","end":"89"},{"start":"89","value":"4","end":"91"},
+	{"start":"91","value":"4","end":"94"},{"start":"94","value":"5","end":"96"},{"start":"96","value":"6"}
+],
+"name":"magnitude","type":"numeric"}]},
+
+{"id":7,"attributes":[{"values":[{"start":"0","value":"8","end":"10"},{"start":"10","value":"6","end":"14"},{"start":"14","value":"6","end":"17"},{"start":"17","value":"8","end":"47"},{"start":"47","value":"1","end":"56"},{"start":"56","value":"2","end":"60"},{"start":"60","value":"4","end":"72"},{"start":"72","value":"7","end":"73"},{"start":"73","value":"6","end":"74"},{"start":"74","value":"1","end":"83"},{"start":"83","value":"9"}],"name":"magnitude","type":"numeric"}]},{"id":8,"attributes":[{"values":[{"start":"0","value":"9","end":"1"},{"start":"1","value":"6","end":"9"},{"start":"9","value":"2","end":"53"},{"start":"53","value":"6","end":"55"},{"start":"55","value":"5","end":"66"},{"start":"66","value":"1","end":"79"},{"start":"79","value":"1","end":"85"},{"start":"85","value":"3"}],"name":"magnitude","type":"numeric"}]},
+{"id":9,"attributes":[{"values":[{"start":"0","value":"3","end":"3"},{"start":"3","value":"6","end":"49"},{"start":"49","value":"5","end":"50"},{"start":"50","value":"1","end":"61"},{"start":"61","value":"5","end":"64"},{"start":"64","value":"7","end":"69"},{"start":"69","value":"9","end":"91"},{"start":"91","value":"9","end":"92"},{"start":"92","value":"3"}],"name":"magnitude","type":"numeric"}]},
+{"id":10,"attributes":[{"values":[{"start":"0","value":"9","end":"0"},{"start":"0","value":"8","end":"14"},{"start":"14","value":"4","end":"59"},{"start":"59","value":"8","end":"61"},{"start":"61","value":"6","end":"62"},{"start":"62","value":"3","end":"66"},{"start":"66","value":"6","end":"84"},{"start":"84","value":"9"}],"name":"magnitude","type":"numeric"}]},
+{"id":11,"attributes":[{"values":[{"start":"0","value":"1","end":"3"},{"start":"3","value":"2","end":"26"},{"start":"26","value":"0","end":"27"},{"start":"27","value":"2","end":"51"},{"start":"51","value":"5","end":"61"},{"start":"61","value":"5","end":"81"},{"start":"81","value":"9","end":"82"},{"start":"82","value":"3","end":"86"},{"start":"86","value":"7","end":"96"},{"start":"96","value":"1"}],"name":"magnitude","type":"numeric"}]},
+{"id":12,"attributes":[{"values":[{"start":"0","value":"7","end":"10"},{"start":"10","value":"9","end":"22"},{"start":"22","value":"1","end":"33"},{"start":"33","value":"5","end":"38"},{"start":"38","value":"8","end":"46"},{"start":"46","value":"1","end":"51"},{"start":"51","value":"4","end":"58"},{"start":"58","value":"9","end":"66"},{"start":"66","value":"9","end":"69"},{"start":"69","value":"8","end":"79"},{"start":"79","value":"2","end":"90"},{"start":"90","value":"2","end":"95"},{"start":"95","value":"4"}],"name":"magnitude","type":"numeric"}]},
+{"id":13,"attributes":[{"values":[{"start":"0","value":"5","end":"6"},{"start":"6","value":"0","end":"46"},{"start":"46","value":"6","end":"55"},{"start":"55","value":"3","end":"63"},{"start":"63","value":"8","end":"72"},{"start":"72","value":"1","end":"75"},{"start":"75","value":"8","end":"81"},{"start":"81","value":"3","end":"82"},{"start":"82","value":"2","end":"86"},{"start":"86","value":"8","end":"87"},{"start":"87","value":"1","end":"90"},{"start":"90","value":"5"}],"name":"magnitude","type":"numeric"}]},
+{"id":14,"attributes":[{"values":[{"start":"0","value":"3","end":"0"},{"start":"0","value":"9","end":"1"},{"start":"1","value":"2","end":"5"},{"start":"5","value":"9","end":"8"},{"start":"8","value":"2","end":"16"},{"start":"16","value":"1","end":"18"},{"start":"18","value":"6","end":"35"},{"start":"35","value":"2","end":"46"},{"start":"46","value":"1","end":"48"},{"start":"48","value":"6","end":"56"},{"start":"56","value":"2","end":"64"},{"start":"64","value":"0","end":"75"},{"start":"75","value":"7"}],"name":"magnitude","type":"numeric"}]},
+{"id":15,"attributes":[{"values":[{"start":"0","value":"0","end":"7"},{"start":"7","value":"3","end":"13"},{"start":"13","value":"0","end":"14"},{"start":"14","value":"3","end":"36"},{"start":"36","value":"1","end":"41"},{"start":"41","value":"0","end":"49"},{"start":"49","value":"9","end":"57"},{"start":"57","value":"8","end":"60"},{"start":"60","value":"1","end":"63"},{"start":"63","value":"8","end":"75"},{"start":"75","value":"0","end":"84"},{"start":"84","value":"0","end":"98"},{"start":"98","value":"2"}],"name":"magnitude","type":"numeric"}]},
+{"id":16,"attributes":[{"values":[{"start":"0","value":"5","end":"2"},{"start":"2","value":"2","end":"4"},{"start":"4","value":"7","end":"12"},{"start":"12","value":"5","end":"37"},{"start":"37","value":"0","end":"51"},{"start":"51","value":"9","end":"71"},{"start":"71","value":"6","end":"74"},{"start":"74","value":"3","end":"84"},{"start":"84","value":"3","end":"85"},{"start":"85","value":"8","end":"97"},{"start":"97","value":"8"}],"name":"magnitude","type":"numeric"}]},
+{"id":17,"attributes":[{"values":[{"start":"0","value":"6","end":"13"},{"start":"13","value":"6","end":"16"},{"start":"16","value":"5","end":"25"},{"start":"25","value":"5","end":"64"},{"start":"64","value":"7","end":"68"},{"start":"68","value":"0","end":"71"},{"start":"71","value":"5","end":"79"},{"start":"79","value":"5","end":"98"},{"start":"98","value":"8"}],"name":"magnitude","type":"numeric"}]},
+{"id":18,"attributes":[{"values":[{"start":"0","value":"7","end":"20"},{"start":"20","value":"6","end":"28"},{"start":"28","value":"6","end":"44"},{"start":"44","value":"5","end":"45"},{"start":"45","value":"9","end":"46"},{"start":"46","value":"3","end":"76"},{"start":"76","value":"8","end":"78"},{"start":"78","value":"1","end":"79"},{"start":"79","value":"0"}],"name":"magnitude","type":"numeric"}]},
+{"id":19,"attributes":[{"values":[{"start":"0","value":"8","end":"24"},{"start":"24","value":"9","end":"35"},{"start":"35","value":"4","end":"49"},{"start":"49","value":"2","end":"77"},{"start":"77","value":"8","end":"78"},{"start":"78","value":"0"}],"name":"magnitude","type":"numeric"}]}]}
