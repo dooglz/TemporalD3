@@ -260,7 +260,7 @@ function ParseData(data) {
       minDate = Math.min(minDate, nval);
     }
   }, this);
-  data.maxdate = maxdate;
+  data.maxDate = maxdate;
   data.minDate = minDate;
 
 }

@@ -9,8 +9,6 @@ var selectedDate = new Date("2011");
 var selectedDateMin = new Date("2011");
 var selectedDateMax = new Date("2011");
 //------------------------------------------
-
-
 var canvasWidth = $('#chart').width();
 var canvasHeight = $('#chart').height();
 var selected_method;
@@ -31,50 +29,69 @@ function slided() {
 
 var dateSlider;
 function CreateSlider(ranged) {
-  
-  var diffY = endDate.getFullYear() - startDate.getFullYear() + 1;
   var tickvals = [];
   var ticknames = [];
-for (var i = 0; i < diffY; i++) {
-  tickvals[i] = i * 12;
-  ticknames[i] = "" + (startDate.getFullYear() + i);
-}
-
-  if (ranged === undefined) { ranged = false; }
-  dateSlider = $("#ex13").slider({
-    ticks: tickvals,
-    ticks_labels: ticknames,
-    ticks_snap_bounds: 0,
-    min: 0,
-    max: diffY * 12,
-    step: 1,
-    range: ranged,
-    value: (ranged ? [3, 7] : 2),//This actually toggles range mode
-    formatter: function (value) {
-      var dd = new Date(startDate.toUTCString());
-      if (ranged) {
-        dd.setMonth(dd.getMonth() + value[0]);
-        var start = dd.toDateString().slice(4);
-        dd = new Date(startDate.toUTCString());
-        dd.setMonth(dd.getMonth() + value[1]);
-        var end = dd.toDateString().slice(4);
-        return start + " - " + end;
-      } else {
-        dd.setMonth(dd.getMonth() + value);
-        return dd.toDateString().slice(4);
-      }
-    },
-  }).on('slide', slided).data('slider');
-  //this is just for styling
-  if (ranged) {
-    $("#ex13Slider").addClass("ranged");
+  var year_diff = 0;
+  var spread = 0;
+  if (!isFinite(startDate) || !isFinite(endDate)) {
+    console.log("Start or end date is infinite, cannot make slider")
+    dateSlider = $("#ex13").slider({enabled:false,min: 0,max: 0,value:0}).data('slider');
   } else {
-    $("#ex13Slider").addClass("discreet");
+    year_diff = endDate.getFullYear() - startDate.getFullYear();
+    spread = ((year_diff + 1) * 12.0) / (slider_num_ticks * 1.0);
+    //round to the nearest multiple of slider_num_steps
+    //Because of ceil, the last node may be > maxdate. (by 1x spread months)
+    spread = Math.ceil((spread) / slider_num_steps) * slider_num_steps;
+    for (var i = 0; i < (slider_num_ticks); i++) {
+      tickvals[i] = i * spread;
+      var dd = new Date(startDate.toUTCString());
+      dd.setMonth(dd.getMonth() + (i * spread));
+      ticknames[i] = "" + dd.toDateString().slice(-4);
+    }
+
+    if (ranged === undefined) { ranged = false; }
+    dateSlider = $("#ex13").slider({
+      ticks: tickvals,
+      ticks_labels: ticknames,
+      ticks_snap_bounds: 0,
+      min: 0,
+      max: (year_diff + 1) * 12,
+      step: 1,
+      range: ranged,
+      value: (ranged ? [3, 7] : 2),//This actually toggles range mode
+      formatter: function (value) {
+        var dd = new Date(startDate.toUTCString());
+        if (ranged) {
+          dd.setMonth(dd.getMonth() + value[0]);
+          var start = dd.toDateString().slice(4);
+          dd = new Date(startDate.toUTCString());
+          dd.setMonth(dd.getMonth() + value[1]);
+          var end = dd.toDateString().slice(4);
+          return start + " - " + end;
+        } else {
+          dd.setMonth(dd.getMonth() + value);
+          return value + " " + dd.toDateString().slice(4);
+        }
+      },
+    }).on('slide', slided).data('slider');
+    //this is just for styling
+    if (ranged) {
+      $("#ex13Slider").addClass("ranged");
+    } else {
+      $("#ex13Slider").addClass("discreet");
+    }
+    dateSlider.enable();
   }
+
 }
 
-CreateSlider(false);
-dateSlider.setValue(48);
+
+function ReCreateSlider() {
+  if (dateSlider !== undefined) {
+    dateSlider.destroy();
+  }
+  CreateSlider(isSliderRanged);
+}
 
 var isSliderRanged = false;
 $('#rangetoggle').change(function () {
@@ -114,8 +131,8 @@ function Update() {
     selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue());
     selectedDateMin = selectedDateMax;
   }
+  selectedDate = selectedDateMin;
   selected_method.SetDate(selectedDateMax, selectedDateMin);
-
   selected_method.Update();
 }
 
@@ -160,13 +177,13 @@ function ChangeData(dataName) {
       //yep, set and bail.
       InitChannelMixer(loadedData[i]);
       graphdata = loadedData[i];
-      
+
       startDate = new Date(graphdata.minDate);
       endDate = new Date(graphdata.maxDate);
-      selectedDate    = startDate;
+      selectedDate = startDate;
       selectedDateMin = startDate;
       selectedDateMax = startDate;
-      
+      ReCreateSlider();
       selected_method.SetData(graphdata);
       Update();
       return;
