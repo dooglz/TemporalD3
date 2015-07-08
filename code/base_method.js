@@ -40,14 +40,16 @@ Base_Method.prototype.SetDateBounds = function (min, max) {
 };
 
 Base_Method.prototype.SetDate = function (higher, lower) {
-  if (lower === undefined) {
-    lower = this.minDate;
-  }
-  this.discreet = (lower == higher);
-  if (this.discreet) {
-    var range = this.getRangeFromDiscreet(lower);
-    this.currentDateMin = range.min;
-    this.currentDateMax = range.max;
+  if(isFinite(higher) && isFinite(lower)){
+    if (lower === undefined) {
+      lower = this.minDate;
+    }
+    this.discreet = (lower == higher);
+    if (this.discreet) {
+      var range = this.getRangeFromDiscreet(lower);
+      this.currentDateMin = range.min;
+      this.currentDateMax = range.max;
+    }
   }
   this.currentDateMin = lower;
   this.currentDateMax = higher;

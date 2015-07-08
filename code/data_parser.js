@@ -187,13 +187,33 @@ function ParseData(data) {
         FillAttributeInfo(data.link_attributes_info, attribute, data.links);
       }
     }
+    //make sure targets and dates are in correct format
     data.links.forEach(function (o) {
       if (typeof (o.source) !== "number" || typeof (o.target) !== "number") {
-        console.warn("link target/surce is not a number, converting");
+        console.warn("link target/source is not a number, converting");
+      }
+      if (o.start !== undefined && !IsDate(o.start) && typeof (o.start) !== "number") {
+        console.warn("link start is not a date or number, converting");
+        o.start = parseInt(o.start);
+      }
+      if (o.end !== undefined && !IsDate(o.end) && typeof (o.end) !== "number") {
+        console.warn("link end is not a date or number, converting");
+        o.start = parseInt(o.start);
       }
       o.source = parseInt(o.source);
       o.target = parseInt(o.target);
     }, this);
+    data.nodes.forEach(function (o) {
+      if (o.start !== undefined && !IsDate(o.start) && typeof (o.start) !== "number") {
+        console.warn("node start is not a date or number, converting");
+        o.start = parseInt(o.start);
+      }
+      if (o.end !== undefined && !IsDate(o.end) && typeof (o.end) !== "number") {
+        console.warn("node end is not a date or number, converting");
+        o.start = parseInt(o.start);
+      }
+    }, this);
+    
     //grab node attributes
     data.node_keys = []
     if (data.nodes[0].attributes != undefined) {
@@ -336,7 +356,7 @@ function IsLinkEverAliveInRange(link, min, max) {
     if (link.end === undefined) {
       LinkDeathDay = Infinity
     } else {
-      LinkBirthday = new Date(link.end);
+      LinkDeathDay = new Date(link.end);
     }
   } else {
     LinkBirthday = new Date(link.date);
@@ -376,7 +396,7 @@ function IsLinkAliveAtTime(link, time) {
     if (link.end === undefined) {
       LinkDeathDay = Infinity
     } else {
-      LinkBirthday = new Date(link.end);
+      LinkDeathDay = new Date(link.end);
     }
   } else {
     LinkBirthday = new Date(link.date);

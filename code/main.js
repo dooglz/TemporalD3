@@ -118,20 +118,26 @@ function Update() {
   if (graphdata === undefined) {
     return;
   }
-
-  selectedDate = new Date(startDate.toUTCString());
-  if (isSliderRanged) {
-    selectedDateMin = new Date(startDate.toUTCString());
-    selectedDateMin.setMonth(selectedDate.getMonth() + dateSlider.getValue()[0]);
-    selectedDateMax = new Date(startDate.toUTCString());
-    selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue()[1]);
-  } else {
-    // selectedDateMin = startDate;
-    selectedDateMax = new Date(startDate.toUTCString());
-    selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue());
-    selectedDateMin = selectedDateMax;
+  if (isFinite(startDate) && isFinite(endDate)) {
+    selectedDate = new Date(startDate.toUTCString());
+    if (isSliderRanged) {
+      selectedDateMin = new Date(startDate.toUTCString());
+      selectedDateMin.setMonth(selectedDate.getMonth() + dateSlider.getValue()[0]);
+      selectedDateMax = new Date(startDate.toUTCString());
+      selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue()[1]);
+    } else {
+      // selectedDateMin = startDate;
+      selectedDateMax = new Date(startDate.toUTCString());
+      selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue());
+      selectedDateMin = selectedDateMax;
+    }
+    selectedDate = selectedDateMin;
+  }else{
+    selectedDate = Infinity;
+    selectedDateMax = Infinity;
+    selectedDateMin = Infinity;
   }
-  selectedDate = selectedDateMin;
+
   selected_method.SetDate(selectedDateMax, selectedDateMin);
   selected_method.Update();
 }
@@ -177,13 +183,24 @@ function ChangeData(dataName) {
       //yep, set and bail.
       InitChannelMixer(loadedData[i]);
       graphdata = loadedData[i];
-
-      startDate = new Date(graphdata.minDate);
-      endDate = new Date(graphdata.maxDate);
+      
+      if (!isFinite(graphdata.minDate)) {
+       startDate = graphdata.minDate;
+      }else{
+         startDate = new Date(graphdata.minDate);
+      }
+      if (!isFinite(graphdata.maxDate)){
+         endDate =graphdata.maxDate;
+      } else{
+         endDate = new Date(graphdata.maxDate);
+      }
+      
+     
       selectedDate = startDate;
       selectedDateMin = startDate;
       selectedDateMax = startDate;
       ReCreateSlider();
+      selected_method.SetDateBounds(startDate, endDate);
       selected_method.SetData(graphdata);
       Update();
       return;
