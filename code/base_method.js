@@ -70,6 +70,7 @@ Base_Method.prototype.Update = function () { };
 Base_Method.prototype.Load = function () { };
 Base_Method.prototype.Unload = function () { };
 Base_Method.prototype.Redraw = function (w, h) {
+    console.log("baseRedrawing");
   if (w !== undefined && h !== undefined) {
     this.width = w;
     this.height = h;

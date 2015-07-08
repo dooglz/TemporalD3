@@ -24,7 +24,7 @@ function Method_Simple() {
     //{ name: "Test TextBox", ptype: "textbox", pval: "" },
     { name: "Disable rest", ptype: "checkbox", pval: false },
     { name: "Clamp within Canvas", ptype: "checkbox", pval: false },
-    { name: "Cumulative", ptype: "checkbox", pval: true, func:function(){this.filteredLinks = undefined;}}
+    { name: "Cumulative", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; } }
   ];
   this.nodeChannels = [
     { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -76,11 +76,11 @@ Method_Simple.prototype.Update = function () {
       $.proxy(function (d) {
         var b;
         if (selected_method.getParam("Cumulative").pval) {
-          b =  IsLinkEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
-        }else{
-           b =  LinkCreatedInRange(d, this.currentDateMin, this.currentDateMax);
+          b = IsLinkEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
+        } else {
+          b = LinkCreatedInRange(d, this.currentDateMin, this.currentDateMax);
         }
-        if(b !== false && b !== true){
+        if (b !== false && b !== true) {
           console.error(b);
         }
         return b;
@@ -156,7 +156,14 @@ Method_Simple.prototype.Update = function () {
 
 // The page has been resized or some other event that requires a redraw
 Method_Simple.prototype.Redraw = function (w, h) {
-  Base_Method.prototype.Redraw.call(this);
+  if (w !== undefined && h !== undefined) {
+    this.width = w;
+    this.height = h;
+    this.halfWidth = w * 0.5;
+    this.halfHeight = h * 0.5;
+  }
+
+  console.log("Redrawing");
   // force = customLayout()
   this.forceLayout = d3.layout.force()
     .gravity(.25)
@@ -167,11 +174,14 @@ Method_Simple.prototype.Redraw = function (w, h) {
 
   var zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", this.zoomed.bind(this));
 
-  this.svg = d3.select("#chart").append("svg")
-    .attr("width", this.width)
+  if (this.svg === undefined) {
+    this.svg = d3.select("#chart").append("svg");
+    this.svgContainer = this.svg.append("g");
+  }
+  this.svg.attr("width", this.width)
     .attr("height", this.height)
     .call(zoom);
-  this.svgContainer = this.svg.append("g");
+
 };
 
 Method_Simple.prototype.zoomed = function () {
