@@ -74,11 +74,16 @@ Method_Simple.prototype.Update = function () {
     //filter data by date
     this.filteredLinks = this.data.links.filter(
       $.proxy(function (d) {
+        var b;
         if (selected_method.getParam("Cumulative").pval) {
-          return IsLinkEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
+          b =  IsLinkEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
         }else{
-          return LinkCreatedInRange(d, this.currentDateMin, this.currentDateMax);
+           b =  LinkCreatedInRange(d, this.currentDateMin, this.currentDateMax);
         }
+        if(b !== false && b !== true){
+          console.error(b);
+        }
+        return b;
         //return (this.currentDateMax >= new Date(d.date) && this.currentDateMin <= new Date(d.date));
       }, this));
     this.prev_currentDateMin = this.currentDateMin;
@@ -141,6 +146,7 @@ Method_Simple.prototype.Update = function () {
   this.forceLayout.resume();
   //restart simulation
   //force.stop();
+  //console.log("staring force %o, nodes: %o, links:%o",this.forceLayout,this.data.nodes,this.filteredLinks);
   this.forceLayout.nodes(this.data.nodes).links(this.filteredLinks).on("tick", this.Tick.bind(this)).start();
 };
 

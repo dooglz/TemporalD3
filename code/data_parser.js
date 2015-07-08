@@ -23,7 +23,7 @@ function IsNumber(numberString) {
   return ((numberRegEx.test(numberString)) && (!isNaN(parseFloat(numberString))));
 }
 
-function FillAttributesInfo(infoObj, keys, values) {
+function ProcessAttributesInfo(infoObj, keys, values) {
 
   for (var i in keys) {
     var attribute = keys[i];
@@ -35,7 +35,7 @@ function FillAttributesInfo(infoObj, keys, values) {
     if (attributeType == "string") {
       if (IsDate(sampleValue)) { attributeType = "date"; } else {
         if (IsNumber(sampleValue)) {
-          console.warn("Data attribute:'%s' is a valid number, but is encoded with qoutes, treating as String",attribute);
+          console.warn("Data attribute:'%s' is a valid number, but is encoded with qoutes, treating as String", attribute);
         } 
         //pure string
         attributeInfo.values = [];
@@ -83,23 +83,186 @@ function FillAttributesInfo(infoObj, keys, values) {
   }
 }
 
+
+function FillAttributeInfo(infoObj, attribute, values) {
+  //value:{type:"number",min_val:0,max_val:100,dynamic:false},
+  infoObj[attribute.name] = {};
+  var attributeType = attribute.type;
+  if (attributeType == "numeric") { attributeType = "number" };
+  infoObj[attribute.name].type = attributeType;
+  infoObj[attribute.name].dynamic = false;
+
+  if (attributeType == "string") {
+    if (IsNumber(sampleValue)) {
+      console.warn("Data attribute:'%s' is a valid number, but is encoded with qoutes, treating as String", attribute);
+    } 
+    //pure string
+    infoObj[attribute.name].values = [];
+    //we must find all values of this attribute so we can catagorize them
+    for (var j in values) {
+      //find the attribute in a specific node/links attribute list
+      var specificAttribute = ($.grep(values[j].attributes, function (e) { return e.name == attribute.name; }))[0];
+      if (specificStringAttribute === undefined) {
+        console.error("Error %o, %o", attribute, values[j]);
+      }
+      //add the value to our list of values. //todo make this a map, to remove dupes
+      if (specificStringAttribute.value != undefined) {
+        infoObj[attribute.name].values.push(specificStringAttribute.value);
+      } else if (specificStringAttribute.values != undefined) {
+        infoObj[attribute.name].dynamic = true;
+        //the value changes over time, add every different value.
+        for (var k = 0; k < specificStringAttribute.values.length; k++) {
+          infoObj[attribute.name].values.push(specificStringAttribute.values[k].value);
+        }
+      } else {
+        console.error("Attribute has no values %o, %o", attribute, specificAttribute);
+      }
+    }
+    infoObj[attribute.name].count = infoObj[attribute.name].values.length;
+  }
+
+  if (attributeType == "number" || attributeType == "date") {
+    var min_val = Infinity;
+    var max_val = -Infinity;
+
+    var nval;
+    for (var j in values) {
+      //find the attribute in a specific node/links attribute list
+      var specificAttribute = ($.grep(values[j].attributes, function (e) { return e.name == attribute.name; }))[0];
+      if (specificAttribute === undefined) {
+        console.error("Error %o, %o", attribute, values[j]);
+      }
+      //compare with min max
+      if (specificAttribute.value != undefined) {
+        nval = specificAttribute.value;
+        if (attributeType == "date") {
+          nval = new Date(nval).valueOf();
+        }
+        max_val = Math.max(max_val, nval);
+        min_val = Math.min(min_val, nval);
+      } else if (specificAttribute.values != undefined) {
+        //the value changes ver time, add every different value.
+        infoObj[attribute.name].dynamic = true;
+        for (var k = 0; k < specificAttribute.values.length; k++) {
+          nval = specificAttribute.values[k].value;
+          if (attributeType == "date") {
+            nval = new Date(nval).valueOf();
+          }
+          max_val = Math.max(max_val, nval);
+          min_val = Math.min(min_val, nval);
+        }
+      } else {
+        console.error("Attribute has no values %o, %o", attribute, specificAttribute);
+      }
+    }
+    if (attributeType == "date") {
+      min_val = new Date(min_val);
+      max_val = new Date(max_val);
+    }
+    infoObj[attribute.name].min_val = min_val;
+    infoObj[attribute.name].max_val = max_val;
+  }
+
+}
+
 function ParseData(data) {
-  if (data.nodes[0].hasOwnProperty('attributes')) {
+
+  data.link_attributes_info = {};
+  data.node_attributes_info = {};
+  if (data.edges !== undefined ||
+    data.nodes[0].hasOwnProperty('attributes') ||
+    data.links[0].hasOwnProperty('attributes')
+    ) {
+    
     //new format
-    console.error("New Json Format not yet supported");
-    return;
+    console.warn("New Json Format, probably loads of bugs");
+    
+    //grab link attributes
+    data.links = data.edges;
+    data.link_keys = []
+    if (data.links[0].attributes != undefined) {
+      for (var i = 0; i < data.links[0].attributes.length; i++) {
+        var attribute = data.links[0].attributes[i];
+        data.links_keys.push(attribute.name);
+        FillAttributeInfo(data.link_attributes_info, attribute, data.links);
+      }
+    }
+    data.links.forEach(function (o) {
+      if (typeof (o.source) !== "number" || typeof (o.target) !== "number") {
+        console.warn("link target/surce is not a number, converting");
+      }
+      o.source = parseInt(o.source);
+      o.target = parseInt(o.target);
+    }, this);
+    //grab node attributes
+    data.node_keys = []
+    if (data.nodes[0].attributes != undefined) {
+      for (var i = 0; i < data.nodes[0].attributes.length; i++) {
+        var attribute = data.nodes[0].attributes[i];
+        data.node_keys.push(attribute.name);
+        FillAttributeInfo(data.node_attributes_info, attribute, data.nodes);
+      }
+    }
   } else {
     //legacy format
     data.link_keys = Object.keys(data.links[0]);
     data.node_keys = Object.keys(data.nodes[0]);
     //source and target are not attributes
-    data.link_keys.splice(data.link_keys.indexOf("source"), 1);
-    data.link_keys.splice(data.link_keys.indexOf("target"), 1);
+    RemoveFromArray(data.link_keys, "source");
+    RemoveFromArray(data.link_keys, "target");
+    //we have to determin type ourselves
+    ProcessAttributesInfo(data.link_attributes_info, data.link_keys, data.links);
+    ProcessAttributesInfo(data.node_attributes_info, data.node_keys, data.nodes);
   }
-  data.link_attributes_info = {};
-  data.node_attributes_info = {};
-  FillAttributesInfo(data.link_attributes_info, data.link_keys, data.links);
-  FillAttributesInfo(data.node_attributes_info, data.node_keys, data.nodes);
+  
+  //we need to grab date ranges
+  var maxdate = -Infinity;
+  var minDate = Infinity;
+  data.nodes.forEach(function (o) {
+    var nval;
+    if (o.date !== undefined) {
+      nval = o.date
+      if (IsDate(nval)) { nval = new Date(nval).valueOf(); }
+      maxdate = Math.max(maxdate, nval);
+      minDate = Math.min(minDate, nval);
+    }
+    if (o.start !== undefined) {
+      nval = o.start;
+      if (IsDate(nval)) { nval = new Date(nval).valueOf(); }
+      maxdate = Math.max(maxdate, nval);
+      minDate = Math.min(minDate, nval);
+    }
+    if (o.end !== undefined) {
+      nval = o.end;
+      if (IsDate(nval)) { nval = new Date(nval).valueOf(); }
+      maxdate = Math.max(maxdate, nval);
+      minDate = Math.min(minDate, nval);
+    }
+  }, this);
+  data.links.forEach(function (o) {
+    var nval;
+    if (o.date !== undefined) {
+      nval = o.date
+      if (IsDate(nval)) { nval = new Date(nval).valueOf(); }
+      maxdate = Math.max(maxdate, nval);
+      minDate = Math.min(minDate, nval);
+    }
+    if (o.start !== undefined) {
+      nval = o.start;
+      if (IsDate(nval)) { nval = new Date(nval).valueOf(); }
+      maxdate = Math.max(maxdate, nval);
+      minDate = Math.min(minDate, nval);
+    }
+    if (o.end !== undefined) {
+      nval = o.end;
+      if (IsDate(nval)) { nval = new Date(nval).valueOf(); }
+      maxdate = Math.max(maxdate, nval);
+      minDate = Math.min(minDate, nval);
+    }
+  }, this);
+  data.maxdate = maxdate;
+  data.minDate = minDate;
+
 }
 
 function getNodeAttributeAsPercentage(data, node, attribute) {
@@ -136,7 +299,7 @@ function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute) {
 
   var index = keys.indexOf(attribute);
   if (index == -1) {
-    console.error((atype ? "node" : "link") + " has no attribute %o",attribute);
+    console.error((atype ? "node" : "link") + " has no attribute %o", attribute);
     return 0;
   }
 
@@ -156,29 +319,76 @@ function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute) {
     if (aindex == -1) { return 0; }
     return (aindex * 1.0) / (attributes_info.count * 1.0);
   } else {
-    console.error("unkown type! %o",attributes_info.type);
+    console.error("unkown type! %o", attributes_info.type);
   }
 }
 //true if link was created before range end AND died after range start
-function IsLinkEverAliveInRange(link, min, max){
+function IsLinkEverAliveInRange(link, min, max) {
   //todo take into account multiple births and deaths
-  var LinkBirthday = new Date(link.date);
-  var LinkDeathDay = Infinity
+  var LinkBirthday;
+  var LinkDeathDay;
+  if (link.date === undefined) {
+    if (link.start === undefined) {
+      LinkBirthday = new Date(0);
+    } else {
+      LinkBirthday = new Date(link.start);
+    }
+    if (link.end === undefined) {
+      LinkDeathDay = Infinity
+    } else {
+      LinkBirthday = new Date(link.end);
+    }
+  } else {
+    LinkBirthday = new Date(link.date);
+    LinkDeathDay = Infinity
+  }
+
   return (LinkBirthday <= max && LinkDeathDay >= min);
 }
 
 //true if link created during range
-function LinkCreatedInRange(link, min, max){
+function LinkCreatedInRange(link, min, max) {
+  var LinkBirthday;
+  if (link.date === undefined) {
+    if (link.start === undefined) {
+      return false;
+    } else {
+      LinkBirthday = new Date(link.start);
+    }
+  } else {
+    LinkBirthday = new Date(link.date);
+  }
   //todo take into account births and deaths
-  var LinkBirthday = new Date(link.date);
   return (max >= LinkBirthday && min <= LinkBirthday);
 }
 
 //true if time is between link start and end
-function IsLinkAliveAtTime(link, time){
+function IsLinkAliveAtTime(link, time) {
   //todo take into account multiple births and deaths
-  var LinkBirthday = new Date(link.date);
-  var LinkDeathDay = Infinity
+  var LinkBirthday;
+  var LinkDeathDay;
+  if (link.date === undefined) {
+    if (link.start === undefined) {
+      LinkBirthday = new Date(0);
+    } else {
+      LinkBirthday = new Date(link.start);
+    }
+    if (link.end === undefined) {
+      LinkDeathDay = Infinity
+    } else {
+      LinkBirthday = new Date(link.end);
+    }
+  } else {
+    LinkBirthday = new Date(link.date);
+    LinkDeathDay = Infinity
+  }
+
   return (LinkDeathDay >= time && LinkBirthday <= time);
-  return true;
+}
+
+function RemoveFromArray(array, removal) {
+  var tt = array.indexOf(removal);
+  if (tt != -1) {
+    array.splice(tt, 1);
+  }
 }

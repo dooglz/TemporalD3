@@ -9,16 +9,15 @@ var selectedDate = new Date("2011");
 var selectedDateMin = new Date("2011");
 var selectedDateMax = new Date("2011");
 //------------------------------------------
-var diffY = endDate.getFullYear() - startDate.getFullYear() + 1;
-var tickvals = [];
-var ticknames = [];
+
+
 var canvasWidth = $('#chart').width();
 var canvasHeight = $('#chart').height();
 var selected_method;
-for (var i = 0; i < diffY; i++) {
-  tickvals[i] = i * 12;
-  ticknames[i] = "" + (startDate.getFullYear() + i);
-}
+//-----
+var slider_num_ticks = 10;
+var slider_num_steps = 12;
+//-----
 
 $('#dateSliderInput').slider({
   formatter: function (value) {
@@ -32,6 +31,15 @@ function slided() {
 
 var dateSlider;
 function CreateSlider(ranged) {
+  
+  var diffY = endDate.getFullYear() - startDate.getFullYear() + 1;
+  var tickvals = [];
+  var ticknames = [];
+for (var i = 0; i < diffY; i++) {
+  tickvals[i] = i * 12;
+  ticknames[i] = "" + (startDate.getFullYear() + i);
+}
+
   if (ranged === undefined) { ranged = false; }
   dateSlider = $("#ex13").slider({
     ticks: tickvals,
@@ -128,6 +136,8 @@ var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "template", url: "data/template.json" },
   { name: "freeScaleTime-300-1.4", url: "data/freeScaleTime-300-1.4.json" },
   { name: "freeScaleTime-300-1.9", url: "data/freeScaleTime-300-1.9.json" },
+  { name: "graphTest2b", url: "data/graphTest2b.json" },
+  { name: "graphTest3b", url: "data/graphTest3b.json" },
 ];
 var loadedData = [];
 ChangeData("Les Miserables");
@@ -150,6 +160,13 @@ function ChangeData(dataName) {
       //yep, set and bail.
       InitChannelMixer(loadedData[i]);
       graphdata = loadedData[i];
+      
+      startDate = new Date(graphdata.minDate);
+      endDate = new Date(graphdata.maxDate);
+      selectedDate    = startDate;
+      selectedDateMin = startDate;
+      selectedDateMax = startDate;
+      
       selected_method.SetData(graphdata);
       Update();
       return;
