@@ -37,6 +37,10 @@ function CreateSlider(ranged) {
     console.log("Start or end date is infinite, cannot make slider")
     dateSlider = $("#ex13").slider({enabled:false,min: 0,max: 0,value:0}).data('slider');
   } else {
+    if(!IsDate(endDate)){
+      dateSlider = $("#ex13").slider({min: startDate,max: endDate,value:0}).data('slider');
+      return;
+    }
     year_diff = endDate.getFullYear() - startDate.getFullYear();
     spread = ((year_diff + 1) * 12.0) / (slider_num_ticks * 1.0);
     //round to the nearest multiple of slider_num_steps
@@ -118,7 +122,7 @@ function Update() {
   if (graphdata === undefined) {
     return;
   }
-  if (isFinite(startDate) && isFinite(endDate)) {
+  if (IsDate(startDate) && isFinite(startDate) && isFinite(endDate)) {
     selectedDate = new Date(startDate.toUTCString());
     if (isSliderRanged) {
       selectedDateMin = new Date(startDate.toUTCString());
@@ -161,6 +165,7 @@ var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "freeScaleTime-300-1.9", url: "data/freeScaleTime-300-1.9.json" },
   { name: "graphTest2b", url: "data/graphTest2b.json" },
   { name: "graphTest3b", url: "data/graphTest3b.json" },
+  { name: "graphTest3c.json", url: "data/graphTest3c.json" }
 ];
 var loadedData = [];
 ChangeData("Les Miserables");
@@ -185,20 +190,26 @@ function ChangeData(dataName) {
       graphdata = loadedData[i];
       
       if (!isFinite(graphdata.minDate)) {
-       startDate = graphdata.minDate;
+        startDate = graphdata.minDate;
       }else{
-         startDate = new Date(graphdata.minDate);
+         if(IsDate(graphdata.minDate)){
+          startDate = new Date(graphdata.minDate);
+         }
+         startDate = graphdata.minDate;
       }
       if (!isFinite(graphdata.maxDate)){
          endDate =graphdata.maxDate;
       } else{
+        if(IsDate(graphdata.maxDate)){
          endDate = new Date(graphdata.maxDate);
+        }
+         endDate =graphdata.maxDate;
       }
       
-     
       selectedDate = startDate;
       selectedDateMin = startDate;
       selectedDateMax = startDate;
+      console.log("Main setting mindate to: %o and maxdate to: %o",startDate,endDate);
       ReCreateSlider();
       selected_method.SetDateBounds(startDate, endDate);
       selected_method.SetData(graphdata);
