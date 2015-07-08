@@ -51,6 +51,7 @@ Method_One.prototype.Unload = function () {
   this.svgTranslation = undefined;
   this.graphLink = undefined;
   this.graphNode = undefined;
+   HideLoadingBar();
 };
 
 Method_One.prototype.foci = [
@@ -63,11 +64,11 @@ Method_One.prototype.foci = [
 
 
 Method_One.prototype.Loading = function () {
-  var gp = forceLayoutPercentDone(this.globalForceLayout);
+  var gp = this.forceLayoutPercentDone(this.globalForceLayout);
   var lp = this.LocalLayoutPercentDone;
   var str = "calculating global layout";
   if (gp == 100) { str = "calculating Local layout"; }
-  ShowLoadingBar((gp * 0.3) + (lp * 0.7), str);
+  ShowLoadingBar(Math.round((gp * 0.3) + (lp * 0.7)), str);
   if (gp + lp == 200) {
     clearTimeout(this.loadingtimerfunc);
     HideLoadingBar();
@@ -75,13 +76,13 @@ Method_One.prototype.Loading = function () {
 }
 
 Method_One.prototype.Recalculate = function () {
+    this.LocalLayoutPercentDone = 0;
   this.loadingtimerfunc = setInterval(this.Loading.bind(this), 300);
   //zero position of all nodes
   this.data.nodes.forEach(function (o, i, array) {
     o.px = o.py = o.x = o.y = 0;
   });
   this.CaluclateGlobalLayout();
-  this.CaluclateLocalLayouts();
 }
 
 Method_One.prototype.CaluclateGlobalLayout = function () {
@@ -95,14 +96,24 @@ Method_One.prototype.CaluclateGlobalLayout = function () {
     .nodes(this.data.nodes)
     .links(this.data.links)
     .on("tick", this.GlobalTick.bind(this))
-    .on('end', function () { console.log('ended!'); })
+    .on('end', $.proxy(function () { 
+      console.log('ended!');
+        this.CaluclateLocalLayouts(); 
+      },this))
     .start();
   console.log("Global force layout running");
   ShowLoadingBar(0, "calculating global layout");
 }
 
 Method_One.prototype.CaluclateLocalLayouts = function () {
-  this.LocalLayoutPercentDone = 10;
+  //how many layouts are we creating?
+  this.LocalLayouts = [];
+  var max = this.CountDiscreetStepsInRange(this.minDate,this.maxDate);
+  for (var i = 0; i < max; i++) {
+    this.LocalLayouts.push("LocalLayout");
+    this.LocalLayoutPercentDone = (i / max)*100.0;
+  }
+  this.LocalLayoutPercentDone = 100;
 }
 
 Method_One.prototype.GlobalTick = function (e) {
@@ -326,14 +337,15 @@ Method_One.prototype.LinkLength = function (d) {
     return 50;
   }
 };
+
 //------------------ Node Channels ----------------
 Method_One.prototype.NodeColour = function (d) {
   var channel = this.getNodeChannel("Node Colour");
   if (channel.inUse) {
     return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam)))).darker();
   } else {
-    return "black";
-  }
+    return d3.rgb(0,0,0);
+  } 
 };
 
 Method_One.prototype.NodeSize = function (d) {

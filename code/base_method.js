@@ -23,6 +23,8 @@ Base_Method.prototype.halfWidth = 506.5;
 Base_Method.prototype.halfHeight = 284;
 Base_Method.prototype.currentDateMax;
 Base_Method.prototype.currentDateMin;
+Base_Method.prototype.minDate;
+Base_Method.prototype.maxDate;
 Base_Method.prototype.discreet = false;
 ///Method constructor
 function Base_Method() {
@@ -157,6 +159,10 @@ Base_Method.prototype.getNodeChannel = function (name) {
   }
 };
 
+Base_Method.prototype.forceLayoutPercentDone = function (force) {
+  if (force.alpha() == 0) { return 100; }
+  return Math.round(((0.1 - force.alpha()) / 0.1) * 100);
+}
 
 Base_Method.prototype.getRangeFromDiscreet = function (discreetTime) {
   //base functionality is to round to the whole month
@@ -171,7 +177,10 @@ Base_Method.prototype.getRangeFromDiscreet = function (discreetTime) {
   return { min: mindate, max: maxdate };
 };
 
-function forceLayoutPercentDone(force) {
-  if (force.alpha() == 0) { return 100; }
-  return Math.round(((0.1 - force.alpha()) / 0.1) * 100);
+Base_Method.prototype.getDiscreetfromDate = function (date) {
+    return ((this.minDate - this.minDate.getYear())*12) + (this.minDate - this.minDate.getMonth());
+}
+
+Base_Method.prototype.CountDiscreetStepsInRange = function (min,max){
+  return ((max.getYear() - min.getYear())*12) + (max.getMonth() - min.getMonth());
 }
