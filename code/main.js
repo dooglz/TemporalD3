@@ -3,11 +3,11 @@
 //######################################################################
 //########    Date slider (more complex than it looks)
 //######################################################################
-var startDate = new Date("2007");
-var endDate = new Date("2016");
-var selectedDate = new Date("2011");
-var selectedDateMin = new Date("2011");
-var selectedDateMax = new Date("2011");
+var startDate;
+var endDate;
+var selectedDate;
+var selectedDateMin;
+var selectedDateMax;
 //------------------------------------------
 var canvasWidth = $('#chart').width();
 var canvasHeight = $('#chart').height();
@@ -24,6 +24,35 @@ $('#dateSliderInput').slider({
 });
 
 function slided() {
+
+  if (graphdata.date_type == "static") {
+    selectedDateMin = -Infinity;
+    selectedDateMax = Infinity;
+    selectedDate = 0;
+  } else if (graphdata.date_type == "date") {
+    selectedDate = new Date(startDate.toUTCString());
+    if (isSliderRanged) {
+      selectedDateMin = new Date(startDate.toUTCString());
+      selectedDateMin.setMonth(selectedDate.getMonth() + dateSlider.getValue()[0]);
+      selectedDateMax = new Date(startDate.toUTCString());
+      selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue()[1]);
+    } else {
+      selectedDateMax = new Date(startDate.toUTCString());
+      selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue());
+      selectedDateMin = selectedDateMax;
+    }
+    selectedDate = selectedDateMin;
+  } else if (graphdata.date_type == "number") {
+    if (isSliderRanged) {
+      selectedDateMin = dateSlider.getValue()[0]
+      selectedDateMax = dateSlider.getValue()[1]
+    } else {
+      selectedDateMax = dateSlider.getValue()[1]
+      selectedDateMin = selectedDateMax;
+    }
+    selectedDate = selectedDateMin;
+  }
+  selected_method.SetDate(selectedDateMax, selectedDateMin);
   Update();
 }
 
@@ -33,14 +62,11 @@ function CreateSlider(ranged) {
   var ticknames = [];
   var year_diff = 0;
   var spread = 0;
-  if (!isFinite(startDate) || !isFinite(endDate)) {
-    console.log("Start or end date is infinite, cannot make slider")
-    dateSlider = $("#ex13").slider({enabled:false,min: 0,max: 0,value:0}).data('slider');
+  if (graphdata.date_type == "static") {
+    dateSlider = $("#ex13").slider({ enabled: false, min: 0, max: 0, value: 0 }).data('slider');
+  } else if(graphdata.date_type == "number"){
+     dateSlider = $("#ex13").slider({ min: startDate, max: endDate, value: 0 }).data('slider');
   } else {
-    if(!IsDate(endDate)){
-      dateSlider = $("#ex13").slider({min: startDate,max: endDate,value:0}).data('slider');
-      return;
-    }
     year_diff = endDate.getFullYear() - startDate.getFullYear();
     spread = ((year_diff + 1) * 12.0) / (slider_num_ticks * 1.0);
     //round to the nearest multiple of slider_num_steps
@@ -89,7 +115,6 @@ function CreateSlider(ranged) {
 
 }
 
-
 function ReCreateSlider() {
   if (dateSlider !== undefined) {
     dateSlider.destroy();
@@ -122,27 +147,7 @@ function Update() {
   if (graphdata === undefined) {
     return;
   }
-  if (IsDate(startDate) && isFinite(startDate) && isFinite(endDate)) {
-    selectedDate = new Date(startDate.toUTCString());
-    if (isSliderRanged) {
-      selectedDateMin = new Date(startDate.toUTCString());
-      selectedDateMin.setMonth(selectedDate.getMonth() + dateSlider.getValue()[0]);
-      selectedDateMax = new Date(startDate.toUTCString());
-      selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue()[1]);
-    } else {
-      // selectedDateMin = startDate;
-      selectedDateMax = new Date(startDate.toUTCString());
-      selectedDateMax.setMonth(selectedDate.getMonth() + dateSlider.getValue());
-      selectedDateMin = selectedDateMax;
-    }
-    selectedDate = selectedDateMin;
-  }else{
-    selectedDate = Infinity;
-    selectedDateMax = Infinity;
-    selectedDateMin = Infinity;
-  }
 
-  selected_method.SetDate(selectedDateMax, selectedDateMin);
   selected_method.Update();
 }
 
@@ -189,27 +194,13 @@ function ChangeData(dataName) {
       InitChannelMixer(loadedData[i]);
       graphdata = loadedData[i];
       
-      if (!isFinite(graphdata.minDate)) {
-        startDate = graphdata.minDate;
-      }else{
-         if(IsDate(graphdata.minDate)){
-          startDate = new Date(graphdata.minDate);
-         }
-         startDate = graphdata.minDate;
-      }
-      if (!isFinite(graphdata.maxDate)){
-         endDate =graphdata.maxDate;
-      } else{
-        if(IsDate(graphdata.maxDate)){
-         endDate = new Date(graphdata.maxDate);
-        }
-         endDate =graphdata.maxDate;
-      }
-      
+      startDate = graphdata.minDate;
+      endDate = graphdata.maxDate;
       selectedDate = startDate;
       selectedDateMin = startDate;
       selectedDateMax = startDate;
-      console.log("Main setting mindate to: %o and maxdate to: %o",startDate,endDate);
+      
+      console.log("Main setting mindate to: %o and maxdate to: %o", startDate, endDate);
       ReCreateSlider();
       selected_method.SetDateBounds(startDate, endDate);
       selected_method.SetData(graphdata);

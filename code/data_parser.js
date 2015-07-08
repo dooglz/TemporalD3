@@ -1,7 +1,7 @@
 /*along with the actual data in the json file
  link_keys:["an","array","of all the property names of a link"]
  node_keys:["an","array","of all the property names  of a node"]
- 
+ date_type: either "date","numeric","static"
  link_attributes_info {
     value:{type:"number",min_val:0,max_val:100,dynamic:false},
     name:{type:"string",count:20,values[],dynamic:false},
@@ -13,8 +13,8 @@
 */
 
 function IsDate(datestring) {
-  //checks to see if string begins with "yyyy-mm-dd" and "01 < mm < 12"
-  var dateRegEx = /^\d{4}-(0\d|1[0-2])-\d{2}/;
+  //checks to see if string begins with "yyyy-mm-dd", "yyyy-m-dd" and "01 < mm < 12"
+  var dateRegEx = /^\d{4}-([1-9]|0\d|1[0-2])-([0-3][1-9]|[1-9])/;
   return ((dateRegEx.test(datestring)) && (new Date(datestring) !== "Invalid Date") && (!isNaN(new Date(datestring))));
 }
 function IsNumber(numberString) {
@@ -187,32 +187,30 @@ function ParseData(data) {
         FillAttributeInfo(data.link_attributes_info, attribute, data.links);
       }
     }
-    //make sure targets and dates are in correct format
+    
+    //get date format
+    if (data.links[0].start !== undefined) {
+      data.date_type = typeof (data.links[0].start);
+      if (data.date_type == "string" && IsDate(data.links[0].start)) {
+        data.date_type = "date";
+      }
+    } else if (data.links[0].end !== undefined) {
+      data.date_type = typeof (data.links[0].end);
+      if (data.date_type == "string" && IsDate(data.links[0].end)) {
+        data.date_type = "date";
+      }
+    } else {
+      data.date_type = "static";
+    }
+    
+    //make sure targets are in correct format
     data.links.forEach(function (o) {
       if (typeof (o.source) !== "number" || typeof (o.target) !== "number") {
         console.warn("link target/source is not a number, converting");
       }
-      if (o.start !== undefined && !IsDate(o.start) && typeof (o.start) !== "number") {
-        console.warn("link start is not a date or number, converting");
-        o.start = parseInt(o.start);
-      }
-      if (o.end !== undefined && !IsDate(o.end) && typeof (o.end) !== "number") {
-        console.warn("link end is not a date or number, converting");
-        o.start = parseInt(o.start);
-      }
       o.source = parseInt(o.source);
       o.target = parseInt(o.target);
-    }, this);
-    data.nodes.forEach(function (o) {
-      if (o.start !== undefined && !IsDate(o.start) && typeof (o.start) !== "number") {
-        console.warn("node start is not a date or number, converting");
-        o.start = parseInt(o.start);
-      }
-      if (o.end !== undefined && !IsDate(o.end) && typeof (o.end) !== "number") {
-        console.warn("node end is not a date or number, converting");
-        o.start = parseInt(o.start);
-      }
-    }, this);
+    }, this);  
     
     //grab node attributes
     data.node_keys = []
@@ -233,55 +231,78 @@ function ParseData(data) {
     //we have to determin type ourselves
     ProcessAttributesInfo(data.link_attributes_info, data.link_keys, data.links);
     ProcessAttributesInfo(data.node_attributes_info, data.node_keys, data.nodes);
+
+    //get date format
+    if (data.links[0].date !== undefined) {
+      data.date_type = typeof (data.links[0].date);
+      if (data.date_type == "string" && IsDate(data.links[0].date)) {
+        data.date_type = "date";
+      }
+    } else {
+      data.date_type = "static";
+    }
+    console.log("Determined date-type as %o, from sample %o", data.date_type, data.links[0].date);
   }
   
   //we need to grab date ranges
-  var maxdate = -Infinity;
-  var minDate = Infinity;
-  data.nodes.forEach(function (o) {
-    var nval;
-    if (o.date !== undefined) {
-      nval = o.date
-      if (IsDate(nval)) { nval = new Date(nval).valueOf(); }
-      maxdate = Math.max(maxdate, nval);
-      minDate = Math.min(minDate, nval);
+  var maxdate;
+  var minDate;
+  if (data.date_type == "static") {
+    maxdate = Infinity;
+    minDate = -Infinity;
+  } else if (data.date_type == "date" || data.date_type == "number") {
+    maxdate = -Infinity;
+    minDate = Infinity;
+    data.links.forEach(function (o) {
+      var nval;
+      if (o.date !== undefined) {
+        nval = o.date
+        if (data.date_type == "date") {
+          if (!IsDate(nval)) {
+            console.error("%o is not a valid date", nval);
+          }
+          nval = new Date(nval).valueOf();
+        }
+        maxdate = Math.max(maxdate, nval);
+        minDate = Math.min(minDate, nval);
+      }
+      if (o.start !== undefined) {
+        nval = o.start;
+        if (data.date_type == "date") {
+          if (!IsDate(nval)) {
+            console.error("%o is not a valid date", nval);
+          }
+          nval = new Date(nval).valueOf();
+        }
+        maxdate = Math.max(maxdate, nval);
+        minDate = Math.min(minDate, nval);
+      }
+      if (o.end !== undefined) {
+        nval = o.end;
+        if (data.date_type == "date") {
+          if (!IsDate(nval)) {
+            console.error("%o is not a valid date", nval);
+          }
+          nval = new Date(nval).valueOf();
+        }
+        maxdate = Math.max(maxdate, nval);
+        minDate = Math.min(minDate, nval);
+      }
+    }, this);
+    if (data.date_type == "date") {
+      console.log(maxdate, minDate);
+      maxdate = new Date(maxdate);
+      minDate = new Date(minDate);
     }
-    if (o.start !== undefined) {
-      nval = o.start;
-      if (IsDate(nval)) { nval = new Date(nval).valueOf(); }
-      maxdate = Math.max(maxdate, nval);
-      minDate = Math.min(minDate, nval);
-    }
-    if (o.end !== undefined) {
-      nval = o.end;
-      if (IsDate(nval)) { nval = new Date(nval).valueOf(); }
-      maxdate = Math.max(maxdate, nval);
-      minDate = Math.min(minDate, nval);
-    }
-  }, this);
-  data.links.forEach(function (o) {
-    var nval;
-    if (o.date !== undefined) {
-      nval = o.date
-      if (IsDate(nval)) { nval = new Date(nval).valueOf(); }
-      maxdate = Math.max(maxdate, nval);
-      minDate = Math.min(minDate, nval);
-    }
-    if (o.start !== undefined) {
-      nval = o.start;
-      if (IsDate(nval)) { nval = new Date(nval).valueOf(); }
-      maxdate = Math.max(maxdate, nval);
-      minDate = Math.min(minDate, nval);
-    }
-    if (o.end !== undefined) {
-      nval = o.end;
-      if (IsDate(nval)) { nval = new Date(nval).valueOf(); }
-      maxdate = Math.max(maxdate, nval);
-      minDate = Math.min(minDate, nval);
-    }
-  }, this);
+  } else {
+    console.error(data.date_type);
+  }
+  if (maxdate == "Invalid Date" || minDate == "Invalid Date") {
+    console.error(data.date_type);
+  }
   data.maxDate = maxdate;
   data.minDate = minDate;
+
 
 }
 
@@ -344,6 +365,7 @@ function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute) {
 }
 //true if link was created before range end AND died after range start
 function IsLinkEverAliveInRange(link, min, max) {
+  if (graphdata.date_type == "static") { return true; }
   //todo take into account multiple births and deaths
   var LinkBirthday;
   var LinkDeathDay;

@@ -35,22 +35,20 @@ function Base_Method() {
 }
 
 Base_Method.prototype.SetDateBounds = function (min, max) {
-  console.log("setting mindate to: %o and maxdate to: %o",min,max);
+  console.log("setting mindate to: %o and maxdate to: %o", min, max);
   this.minDate = min;
   this.maxDate = max;
 };
 
 Base_Method.prototype.SetDate = function (higher, lower) {
-  if(isFinite(higher) && isFinite(lower)){
-    if (lower === undefined) {
-      lower = this.minDate;
-    }
-    this.discreet = (lower == higher);
-    if (this.discreet) {
-      var range = this.getRangeFromDiscreet(lower);
-      this.currentDateMin = range.min;
-      this.currentDateMax = range.max;
-    }
+  if (lower === undefined) {
+    lower = this.minDate;
+  }
+  this.discreet = (lower == higher);
+  if (this.discreet) {
+    var range = this.getRangeFromDiscreet(lower);
+    this.currentDateMin = range.min;
+    this.currentDateMax = range.max;
   }
   this.currentDateMin = lower;
   this.currentDateMax = higher;
@@ -71,7 +69,7 @@ Base_Method.prototype.Update = function () { };
 Base_Method.prototype.Load = function () { };
 Base_Method.prototype.Unload = function () { };
 Base_Method.prototype.Redraw = function (w, h) {
-    console.log("baseRedrawing");
+  console.log("baseRedrawing");
   if (w !== undefined && h !== undefined) {
     this.width = w;
     this.height = h;
@@ -182,9 +180,9 @@ Base_Method.prototype.getRangeFromDiscreet = function (discreetTime) {
 };
 
 Base_Method.prototype.getDiscreetfromDate = function (date) {
-    return ((this.minDate - this.minDate.getYear())*12) + (this.minDate - this.minDate.getMonth());
+  return ((this.minDate - this.minDate.getYear()) * 12) + (this.minDate - this.minDate.getMonth());
 }
 
-Base_Method.prototype.CountDiscreetStepsInRange = function (min,max){
-  return ((max.getYear() - min.getYear())*12) + (max.getMonth() - min.getMonth());
+Base_Method.prototype.CountDiscreetStepsInRange = function (min, max) {
+  return ((max.getYear() - min.getYear()) * 12) + (max.getMonth() - min.getMonth());
 }
