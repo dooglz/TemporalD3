@@ -3,10 +3,10 @@
     background: #f9ffcf;
 }
 .container {
-  max-width: 2560px; /* or 950px */
+  max-width: 1094px; /* or 950px */
 }
 .container.superwide{
-  max-width: 2560px; /* or 950px */
+  max-width: 1094px; /* or 950px */
   width: 100%;
 }
 .box{
