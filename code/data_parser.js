@@ -189,28 +189,27 @@ function ParseData(data) {
     }
     
     //get date format
-    if (data.links[0].start !== undefined) {
-      data.date_type = typeof (data.links[0].start);
+    var date_sample;
+    if (data.links[0].start !== undefined || data.links[0].end !== undefined) {
+      if (data.links[0].start !== undefined) {
+        date_sample = data.links[0].start;
+      } else {
+        date_sample = data.links[0].end;
+      }
+      data.date_type = typeof (date_sample);
       if (data.date_type == "string") {
-        if (IsDate(data.links[0].start)) {
+        if (IsDate(date_sample)) {
           data.date_type = "date";
         } else {
           console.error("Unkown date type");
           data.date_type = "static";
         }
       }
-      console.log("Determined date-type as %o, from sample %o", data.date_type, data.links[0].start);
-    } else if (data.links[0].end !== undefined) {
-      data.date_type = typeof (data.links[0].end);
-      if (data.date_type == "string" && IsDate(data.links[0].end)) {
-        data.date_type = "date";
-      }
-      console.log("Determined date-type as %o, from sample %o", data.date_type, data.links[0].end);
     } else {
       data.date_type = "static";
     }
-     
-    
+    console.log("Determined date-type as %o, from sample %o", data.date_type, date_sample);
+
     //make sure targets are in correct format
     data.links.forEach(function (o) {
       if (typeof (o.source) !== "number" || typeof (o.target) !== "number") {
@@ -309,7 +308,6 @@ function ParseData(data) {
       }
     }, this);
     if (data.date_type == "date") {
-      console.log(maxdate, minDate);
       maxdate = new Date(maxdate);
       minDate = new Date(minDate);
     }

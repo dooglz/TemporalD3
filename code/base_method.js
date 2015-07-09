@@ -35,7 +35,7 @@ function Base_Method() {
 }
 
 Base_Method.prototype.SetDateBounds = function (min, max) {
-  console.log("setting mindate to: %o and maxdate to: %o", min, max);
+  //console.log("setting mindate to: %o and maxdate to: %o", min, max);
   this.minDate = min;
   this.maxDate = max;
 };

@@ -64,6 +64,11 @@ Method_Simple.prototype.foci = [
   { x: 200, y: 346 }
 ];
 
+Method_Simple.prototype.SetData = function (d) {
+  this.data = d;
+  this.filteredLinks = undefined;
+};
+
 //######################################################################
 //########    Main Update
 //######################################################################
@@ -204,7 +209,7 @@ Method_Simple.prototype.Tick = function (e) {
     var k = .1 * e.alpha;
 
     this.data.nodes.forEach($.proxy(function (o, i, array) {
-      var point = Math.round((this.foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam,this.currentDateMin, this.currentDateMax));
+      var point = Math.round((this.foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam, this.currentDateMin, this.currentDateMax));
       o.y += ((this.halfHeight + this.foci[point].y) - o.y) * k;
       o.x += ((this.halfWidth + this.foci[point].x) - o.x) * k;
     }, this));
@@ -246,14 +251,14 @@ Method_Simple.prototype.Tick = function (e) {
 
 Method_Simple.prototype.RedoLinks = function () {
   if (this.graphLink === undefined) { return; }
-  console.log("method: re-doing links");
+ // console.log("method: re-doing links");
   this.graphLink.style("stroke", this.Linkcolour.bind(this)).style("stroke-width", this.LinkWidth.bind(this));
   this.forceLayout.start();
 };
 
 Method_Simple.prototype.RedoNodes = function () {
   if (this.graphLink === undefined) { return; }
-  console.log("method: re-doing nodes");
+  //console.log("method: re-doing nodes");
   this.graphNode.style("fill", this.NodeColour.bind(this)).attr("r", this.NodeSize.bind(this));
 };
 
@@ -263,7 +268,7 @@ var fill = d3.scale.category20().domain(d3.range(0, 20));
 Method_Simple.prototype.Linkcolour = function (d) {
   var channel = this.getLinkChannel("Link Colour");
   if (channel.inUse) {
-    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam,this.currentDateMin, this.currentDateMax)))).darker();
+    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)))).darker();
   } else {
     return "black";
   }
@@ -272,7 +277,7 @@ Method_Simple.prototype.Linkcolour = function (d) {
 Method_Simple.prototype.LinkWidth = function (d) {
   var channel = this.getLinkChannel("Link Width");
   if (channel.inUse) {
-    return (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam,this.currentDateMin, this.currentDateMax)) + "px";
+    return (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)) + "px";
   } else {
     return "1.5px";
   }
@@ -281,7 +286,7 @@ Method_Simple.prototype.LinkWidth = function (d) {
 Method_Simple.prototype.LinkLength = function (d) {
   var channel = this.getLinkChannel("Link Length");
   if (channel.inUse) {
-    return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam,this.currentDateMin, this.currentDateMax);
+    return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
   } else {
     return 50;
   }
@@ -290,7 +295,7 @@ Method_Simple.prototype.LinkLength = function (d) {
 Method_Simple.prototype.NodeColour = function (d) {
   var channel = this.getNodeChannel("Node Colour");
   if (channel.inUse) {
-    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam,this.currentDateMin, this.currentDateMax)))).darker();
+    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)))).darker();
   } else {
     return "black";
   }
@@ -299,7 +304,7 @@ Method_Simple.prototype.NodeColour = function (d) {
 Method_Simple.prototype.NodeSize = function (d) {
   var channel = this.getNodeChannel("Node Size");
   if (channel.inUse) {
-    return (this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam,this.currentDateMin, this.currentDateMax);
+    return (this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
   } else {
     return this.default_radius - .75;
   }

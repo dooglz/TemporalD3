@@ -204,11 +204,11 @@ function ChangeData(dataName) {
       selectedDate = startDate;
       selectedDateMin = startDate;
       selectedDateMax = startDate;
-      
-      console.log("Main setting mindate to: %o and maxdate to: %o", startDate, endDate);
+     // console.log("Main setting mindate to: %o and maxdate to: %o", startDate, endDate);
       ReCreateSlider();
       selected_method.SetDateBounds(startDate, endDate);
       selected_method.SetData(graphdata);
+      slided();
       Update();
       return;
     }
