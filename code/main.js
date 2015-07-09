@@ -427,7 +427,7 @@ $("#methodpicker").on('change', function () {
 
 function VerifyMethodParmeters(method) {
   var mustHaveParams = ["name", "ptype", "pval"];
-  var acceptedParams = ["slider", "checkbox", "textbox"];
+  var acceptedParams = ["slider", "checkbox", "textbox", "button"];
 
   for (var i in method.parameters) {
     var param = method.parameters[i];
@@ -545,7 +545,18 @@ function changeMethod(methodName) {
           });
         } (param, input);
         break;
-
+        
+      case "button":
+        var boxDiv = $("<a class='btn btn-sm btn-success' href='#' role='button'>"+param.name+"</a>");
+        newdiv.append(boxDiv)
+        newdiv.css('text-align', 'center');
+        ! function outer(pp, bb) {
+          boxDiv.click(function inner() {
+            selected_method.ParamChanged(pp);
+          });
+        } (param, boxDiv);
+        break;
+        
       default:
         console.error("Unkown method parameter type : " + param.name + " - " + param.ptype);
         break;

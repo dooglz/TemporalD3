@@ -22,7 +22,8 @@ function Method_One() {
   this.parameters = [
     { name: "Disable rest", ptype: "checkbox", pval: false },
     { name: "Clamp within Canvas", ptype: "checkbox", pval: false },
-    { name: "Cumulative", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; } }
+    { name: "Cumulative", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; } },
+    { name: "Recalculate Layout", ptype: "button", pval: false, func: function () { this.Recalculate(); } }
   ];
   this.nodeChannels = [
     { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -62,6 +63,10 @@ Method_One.prototype.foci = [
   { x: 200, y: 346 }
 ];
 
+Method_One.prototype.SetData = function (d) {
+  this.data = d;
+  this.filteredLinks = undefined;
+};
 
 Method_One.prototype.Loading = function () {
   var gp = this.forceLayoutPercentDone(this.globalForceLayout);
@@ -216,7 +221,24 @@ Method_One.prototype.Update = function () {
 // The page has been resized or some other event that requires a redraw
 Method_One.prototype.Redraw = function (w, h) {
   return;
-  Base_Method.prototype.Redraw.call(this);
+  if (w !== undefined && h !== undefined) {
+    this.width = w;
+    this.height = h;
+    this.halfWidth = w * 0.5;
+    this.halfHeight = h * 0.5;
+  }
+  
+  if (this.svg === undefined) {
+    this.svg = d3.select("#chart").append("svg");
+    this.svgContainer = this.svg.append("g");
+  }
+  this.svg.attr("width", this.width)
+    .attr("height", this.height)
+    .call(zoom);
+    
+  console.log("Redrawing");
+  return;
+  
   // force = customLayout()
   this.forceLayout = d3.layout.force()
     .gravity(.25)
@@ -227,11 +249,6 @@ Method_One.prototype.Redraw = function (w, h) {
 
   var zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", this.zoomed.bind(this));
 
-  this.svg = d3.select("#chart").append("svg")
-    .attr("width", this.width)
-    .attr("height", this.height)
-    .call(zoom);
-  this.svgContainer = this.svg.append("g");
 };
 
 Method_One.prototype.zoomed = function () {
@@ -255,7 +272,7 @@ Method_One.prototype.Tick = function (e) {
     var k = .1 * e.alpha;
 
     this.data.nodes.forEach($.proxy(function (o, i, array) {
-      var point = Math.round((this.foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam));
+      var point = Math.round((this.foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam, this.currentDateMin, this.currentDateMax));
       o.y += ((this.halfHeight + this.foci[point].y) - o.y) * k;
       o.x += ((this.halfWidth + this.foci[point].x) - o.x) * k;
     }, this));
@@ -297,14 +314,14 @@ Method_One.prototype.Tick = function (e) {
 
 Method_One.prototype.RedoLinks = function () {
   if (this.graphLink === undefined) { return; }
-  console.log("method: re-doing links");
+ // console.log("method: re-doing links");
   this.graphLink.style("stroke", this.Linkcolour.bind(this)).style("stroke-width", this.LinkWidth.bind(this));
   this.forceLayout.start();
 };
 
 Method_One.prototype.RedoNodes = function () {
   if (this.graphLink === undefined) { return; }
-  console.log("method: re-doing nodes");
+ // console.log("method: re-doing nodes");
   this.graphNode.style("fill", this.NodeColour.bind(this)).attr("r", this.NodeSize.bind(this));
 };
 
@@ -314,7 +331,7 @@ var fill = d3.scale.category20().domain(d3.range(0, 20));
 Method_One.prototype.Linkcolour = function (d) {
   var channel = this.getLinkChannel("Link Colour");
   if (channel.inUse) {
-    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam)))).darker();
+    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)))).darker();
   } else {
     return "black";
   }
@@ -323,7 +340,7 @@ Method_One.prototype.Linkcolour = function (d) {
 Method_One.prototype.LinkWidth = function (d) {
   var channel = this.getLinkChannel("Link Width");
   if (channel.inUse) {
-    return (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam)) + "px";
+    return (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)) + "px";
   } else {
     return "1.5px";
   }
@@ -332,7 +349,7 @@ Method_One.prototype.LinkWidth = function (d) {
 Method_One.prototype.LinkLength = function (d) {
   var channel = this.getLinkChannel("Link Length");
   if (channel.inUse) {
-    return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam);
+    return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
   } else {
     return 50;
   }
@@ -342,16 +359,16 @@ Method_One.prototype.LinkLength = function (d) {
 Method_One.prototype.NodeColour = function (d) {
   var channel = this.getNodeChannel("Node Colour");
   if (channel.inUse) {
-    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam)))).darker();
+    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)))).darker();
   } else {
-    return d3.rgb(0, 0, 0);
+    return "black";
   }
 };
 
 Method_One.prototype.NodeSize = function (d) {
   var channel = this.getNodeChannel("Node Size");
   if (channel.inUse) {
-    return (this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam);
+    return (this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
   } else {
     return this.default_radius - .75;
   }
