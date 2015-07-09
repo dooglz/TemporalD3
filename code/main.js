@@ -144,6 +144,39 @@ $('#rangetoggle').change(function () {
   isSliderRanged = val;
 });      
 
+
+var isSliderAnimated = false;
+var animationtimeout;
+$('#animationtoggle').change(function () {
+  var val = $(this).prop('checked');
+  if (val == isSliderAnimated) { return; }
+  if (val) {
+    animationtimeout = setInterval(Animate, 300);
+  } else {
+     clearTimeout(animationtimeout);
+  }
+  isSliderAnimated = val;
+});  
+
+var updown = false;
+function Animate(){
+  if (dateSlider === undefined || !dateSlider.isEnabled()){
+    return;
+  }
+  var current = dateSlider.getValue();
+   if (isSliderRanged) {
+      selectedDateMin = dateSlider.getValue()[0]
+      selectedDateMax = dateSlider.getValue()[1]
+    } else {
+      if(current == dateSlider.getAttribute("max")){
+        updown = false;
+      }else if(current == dateSlider.getAttribute("min")){
+        updown = true;
+      }
+      dateSlider.setValue(current + (updown ? 1 : -1),true,true);
+    }
+}
+
 //######################################################################
 //########    Main Update functions
 //######################################################################
@@ -153,7 +186,6 @@ function Update() {
   if (graphdata === undefined) {
     return;
   }
-
   selected_method.Update();
 }
 
