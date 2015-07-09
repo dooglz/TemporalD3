@@ -321,9 +321,6 @@ function ParseData(data) {
   }
   data.maxDate = maxdate;
   data.minDate = minDate;
-
-
-
 }
 
 function getNodeAttributeAsPercentage(data, node, attribute) {
@@ -345,7 +342,15 @@ function getAttributeAsPercentage(data, nodeOrLink, attribute) {
   }
 
 }
-function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute) {
+
+function getAttributeValue(atype, data, nodeOrLink, attribute, selecteddateMin,selecteddateMax){
+  if(selecteddateMin === undefined){
+    selecteddateMin = data.minDate;
+  }
+  if(selecteddateMax === undefined){
+    selecteddateMax = data.maxDate;
+  }
+  
   var keys;
   var attributes_info;
   if (atype) {
@@ -368,7 +373,61 @@ function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute) {
     console.error("can find attribute info: %o", attribute);
     return 0;
   }
+  //try old attribute storage first
   var attribute_value = nodeOrLink[attribute];
+  //try new storage if oldtorage fails
+  if(attribute_value == undefined && nodeOrLink.attributes !=undefined){
+      //find attributes{} is attributes[]
+      attribute_value = ($.grep(nodeOrLink.attributes, function (e) { return e.name == attribute; }));
+      //did we find it?
+      if(attribute_value !== undefined && attribute_value.length == 1){
+        attribute_value = attribute_value[0];
+        //does it have one single value?
+        if(attribute_value.value !== undefined){
+           return attribute_value.value;
+        }else if(attribute_value.values !== undefined){
+          //many values, by time
+          for (var i = 0; i < attribute_value.values.length; i++) {
+            var thisvalue = attribute_value.values[i];
+            if((thisvalue.start === undefined || thisvalue.start <= selecteddateMax) && (thisvalue.end === undefined || thisvalue.end >= selecteddateMin)){
+              return thisvalue.value;
+            }
+          }
+          console.error("Attribute had no value within range",attribute,nodeOrLink,selecteddateMin,selecteddateMax);
+          return null;
+        }
+      }else{
+        console.error("couldn't find attribute ",attribute,nodeOrLink);
+      } 
+  }
+  //fnal check
+  if(attribute_value == undefined){
+    console.error("couldn't find attribute value ",attribute,nodeOrLink);
+    return 0;
+  }
+  return attribute_value;
+}
+
+function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute, selecteddateMin, selecteddateMax) {
+  var keys;
+  var attributes_info;
+  if (atype) {
+    //node
+    keys = data.node_keys;
+    attributes_info = data.node_attributes_info[attribute];
+  } else {
+    //link
+    keys = data.link_keys;
+    attributes_info = data.link_attributes_info[attribute];
+  }
+
+  if (attributes_info === undefined) {
+    console.error("can find attribute info: %o", attribute);
+    return 0;
+  }
+  
+  var attribute_value = getAttributeValue(atype, data, nodeOrLink, attribute, selecteddateMin,selecteddateMax);
+
   if (attributes_info.type == "number") {
     // console.log("number - val:"+attribute_value + " %: "+attribute_value / (attributes_info.max_val - attributes_info.min_val));
     return attribute_value / (attributes_info.max_val - attributes_info.min_val);

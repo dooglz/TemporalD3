@@ -204,7 +204,7 @@ Method_Simple.prototype.Tick = function (e) {
     var k = .1 * e.alpha;
 
     this.data.nodes.forEach($.proxy(function (o, i, array) {
-      var point = Math.round((this.foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam));
+      var point = Math.round((this.foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam,this.currentDateMin, this.currentDateMax));
       o.y += ((this.halfHeight + this.foci[point].y) - o.y) * k;
       o.x += ((this.halfWidth + this.foci[point].x) - o.x) * k;
     }, this));
@@ -263,7 +263,7 @@ var fill = d3.scale.category20().domain(d3.range(0, 20));
 Method_Simple.prototype.Linkcolour = function (d) {
   var channel = this.getLinkChannel("Link Colour");
   if (channel.inUse) {
-    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam)))).darker();
+    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam,this.currentDateMin, this.currentDateMax)))).darker();
   } else {
     return "black";
   }
@@ -272,7 +272,7 @@ Method_Simple.prototype.Linkcolour = function (d) {
 Method_Simple.prototype.LinkWidth = function (d) {
   var channel = this.getLinkChannel("Link Width");
   if (channel.inUse) {
-    return (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam)) + "px";
+    return (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam,this.currentDateMin, this.currentDateMax)) + "px";
   } else {
     return "1.5px";
   }
@@ -281,7 +281,7 @@ Method_Simple.prototype.LinkWidth = function (d) {
 Method_Simple.prototype.LinkLength = function (d) {
   var channel = this.getLinkChannel("Link Length");
   if (channel.inUse) {
-    return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam);
+    return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam,this.currentDateMin, this.currentDateMax);
   } else {
     return 50;
   }
@@ -290,7 +290,7 @@ Method_Simple.prototype.LinkLength = function (d) {
 Method_Simple.prototype.NodeColour = function (d) {
   var channel = this.getNodeChannel("Node Colour");
   if (channel.inUse) {
-    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam)))).darker();
+    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam,this.currentDateMin, this.currentDateMax)))).darker();
   } else {
     return "black";
   }
@@ -299,7 +299,7 @@ Method_Simple.prototype.NodeColour = function (d) {
 Method_Simple.prototype.NodeSize = function (d) {
   var channel = this.getNodeChannel("Node Size");
   if (channel.inUse) {
-    return (this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam);
+    return (this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam,this.currentDateMin, this.currentDateMax);
   } else {
     return this.default_radius - .75;
   }
