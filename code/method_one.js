@@ -90,7 +90,17 @@ Method_One.prototype.Recalculate = function () {
   this.CaluclateGlobalLayout();
 }
 
+Method_One.prototype.GlobalLayoutDone = function () {
+  //copy positions
+  this.data.nodes.forEach(function (o) {
+    CopyAttributes(o, ["x", "y"], ["gx", "gy"]);
+  }, this);
+  console.log('Global layout Complete!');
+  this.CaluclateLocalLayouts();
+}
+
 Method_One.prototype.CaluclateGlobalLayout = function () {
+  this.ShowGlobalLayout();
   //create a new force layout
   this.globalForceLayout = d3.layout.force()
     .gravity(.25)
@@ -101,10 +111,7 @@ Method_One.prototype.CaluclateGlobalLayout = function () {
     .nodes(this.data.nodes)
     .links(this.data.links)
     .on("tick", this.GlobalTick.bind(this))
-    .on('end', $.proxy(function () {
-      console.log('ended!');
-      this.CaluclateLocalLayouts();
-    }, this))
+    .on('end', this.GlobalLayoutDone.bind(this))
     .start();
   console.log("Global force layout running");
   ShowLoadingBar(0, "calculating global layout");
@@ -114,6 +121,7 @@ Method_One.prototype.CaluclateLocalLayouts = function () {
   //how many layouts are we creating?
   this.LocalLayouts = [];
   var max = this.CountDiscreetStepsInRange(this.minDate, this.maxDate);
+  console.log("Creating %o local layouts", max);
   for (var i = 0; i < max; i++) {
     this.LocalLayouts.push("LocalLayout");
     this.LocalLayoutPercentDone = (i / max) * 100.0;
@@ -129,11 +137,56 @@ Method_One.prototype.GlobalTick = function (e) {
       var point = Math.round((this.foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam));
       o.y += ((this.halfHeight + this.foci[point].y) - o.y) * k;
       o.x += ((this.halfWidth + this.foci[point].x) - o.x) * k;
+      o.gx = o.x;
+      o.gy = o.y;
     }, this));
+  }else{
+       this.data.nodes.forEach(function(o){   
+        o.gx = o.x;
+        o.gy = o.y;
+      });
   }
+  this.globalgraphNodes
+  .attr("cx",function (d) {return d.gx;})
+  .attr("cy",function (d) {return d.gy;});
+  this.globalgraphLinks
+  .attr("x1", function (d) {return d.source.gx;})
+  .attr("y1", function (d) {return d.source.gy;})
+  .attr("x2", function (d) {return d.target.gx;})
+  .attr("y2", function (d) {return d.target.gy;});
 };
 
+this.globalgraphNodes;
+this.globalgraphLinks; 
+Method_One.prototype.ShowGlobalLayout = function () {
+  //Create Links
+  this.globalgraphLinks = this.svgContainer.selectAll("line").data(this.data.links);
+  this.globalgraphLinks.enter().append("line")
+    .style("stroke", "black")
+    .style("stroke-width", this.LinkWidth.bind(this));
+   this.globalgraphLinks
+    .attr("x1", function (d) { return d.source.gx; })
+    .attr("y1", function (d) { return d.source.gy; })
+    .attr("x2",function (d) { return d.target.gx; })
+    .attr("y2", function (d) { return d.target.gy; });
+  this.globalgraphLinks.exit().remove();
 
+  //Create nodes
+  this.globalgraphNodes = this.svgContainer.selectAll("circle").data(this.data.nodes);
+  this.globalgraphNodes.enter()
+    .append("circle")
+    .attr("r", this.NodeSize.bind(this))
+    .style("fill", this.NodeColour.bind(this))
+    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
+  this.globalgraphNodes
+    .attr("cx", function (d) { return d.gx; })
+    .attr("cy", function (d) { return d.gy; })
+  this.globalgraphNodes.exit().remove();
+}
+Method_One.prototype.HideGlobalLayout = function () {
+  this.globalgraphLinks.remove();
+  this.globalgraphNodes.remove();
+}
 //######################################################################
 //########    Main Update
 //######################################################################
@@ -157,7 +210,6 @@ Method_One.prototype.Update = function () {
 
   this.nodeTooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
   this.graphLinkTooltip = d3.select("body").append("div").attr("class", "tooltip link").style("opacity", 0);
-  
 
   //Create Links
   this.graphLink = this.svgContainer.selectAll("line").data(this.filteredLinks);
@@ -220,22 +272,23 @@ Method_One.prototype.Update = function () {
 
 // The page has been resized or some other event that requires a redraw
 Method_One.prototype.Redraw = function (w, h) {
-  return;
+
   if (w !== undefined && h !== undefined) {
     this.width = w;
     this.height = h;
     this.halfWidth = w * 0.5;
     this.halfHeight = h * 0.5;
   }
-  
+
   if (this.svg === undefined) {
     this.svg = d3.select("#chart").append("svg");
     this.svgContainer = this.svg.append("g");
   }
+  var zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", this.zoomed.bind(this));
   this.svg.attr("width", this.width)
     .attr("height", this.height)
     .call(zoom);
-    
+
   console.log("Redrawing");
   return;
   
@@ -247,7 +300,7 @@ Method_One.prototype.Redraw = function (w, h) {
     .linkDistance(this.LinkLength.bind(this))
     .size([this.width, this.height]);
 
-  var zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", this.zoomed.bind(this));
+ 
 
 };
 
@@ -314,14 +367,14 @@ Method_One.prototype.Tick = function (e) {
 
 Method_One.prototype.RedoLinks = function () {
   if (this.graphLink === undefined) { return; }
- // console.log("method: re-doing links");
+  // console.log("method: re-doing links");
   this.graphLink.style("stroke", this.Linkcolour.bind(this)).style("stroke-width", this.LinkWidth.bind(this));
   this.forceLayout.start();
 };
 
 Method_One.prototype.RedoNodes = function () {
   if (this.graphLink === undefined) { return; }
- // console.log("method: re-doing nodes");
+  // console.log("method: re-doing nodes");
   this.graphNode.style("fill", this.NodeColour.bind(this)).attr("r", this.NodeSize.bind(this));
 };
 

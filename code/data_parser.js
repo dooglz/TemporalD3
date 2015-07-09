@@ -511,3 +511,11 @@ function RemoveFromArray(array, removal) {
     array.splice(tt, 1);
   }
 }
+
+function CopyAttributes(obj, sources, destiantions){
+  for (var i = 0; i < sources.length; i++) {
+    var source = sources[i];
+    var dest = destiantions[i];
+    obj[dest] = obj[source];
+  }
+}
