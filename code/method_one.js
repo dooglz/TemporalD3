@@ -91,12 +91,7 @@ Method_One.prototype.Recalculate = function () {
 }
 
 Method_One.prototype.GlobalLayoutDone = function () {
-  //copy positions
-  this.data.nodes.forEach(function (o) {
-    CopyAttributes(o, ["x", "y"], ["gx", "gy"]);
-  }, this);
-  console.log('Global layout Complete!');
-  this.CaluclateLocalLayouts();
+ 
 }
 
 Method_One.prototype.CaluclateGlobalLayout = function () {
@@ -110,11 +105,28 @@ Method_One.prototype.CaluclateGlobalLayout = function () {
     .size([this.width, this.height])
     .nodes(this.data.nodes)
     .links(this.data.links)
-    .on("tick", this.GlobalTick.bind(this))
-    .on('end', this.GlobalLayoutDone.bind(this))
-    .start();
+    .on("tick", this.GlobalTick.bind(this));
+    
   console.log("Global force layout running");
-  ShowLoadingBar(0, "calculating global layout");
+  
+  this.globalForceLayout.start();
+  var globalMaxTicks = 1000000;
+  var globalMaxTime = 400;
+  var timeout = true;
+  setTimeout(function(){ timeout = false; console.log("global timeout");}, globalMaxTime);
+  for (var i = globalMaxTicks; (i > 0 && timeout); --i){
+    //this.globalForceLayout.resume();
+    this.globalForceLayout.tick();
+  } 
+  this.globalForceLayout.stop();
+  
+  console.log("Global force layout done");
+   //copy positions
+  this.data.nodes.forEach(function (o) {
+    CopyAttributes(o, ["x", "y"], ["gx", "gy"]);
+  }, this);
+  console.log('Global layout Complete!');
+  this.CaluclateLocalLayouts();
 }
 
 Method_One.prototype.CaluclateLocalLayouts = function () {
@@ -130,6 +142,7 @@ Method_One.prototype.CaluclateLocalLayouts = function () {
 }
 
 Method_One.prototype.GlobalTick = function (e) {
+     console.log("Global force layout tick");
   var channel = this.getNodeChannel("Gravity Point");
   if (channel.inUse) {
     var k = .1 * e.alpha;
