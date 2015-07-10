@@ -93,7 +93,7 @@ Method_One.prototype.Recalculate = function () {
 Method_One.prototype.GlobalLayoutDone = function () {
  
 }
-
+  var timeout = true;
 Method_One.prototype.CaluclateGlobalLayout = function () {
   this.ShowGlobalLayout();
   //create a new force layout
@@ -110,12 +110,11 @@ Method_One.prototype.CaluclateGlobalLayout = function () {
   console.log("Global force layout running");
   
   this.globalForceLayout.start();
-  var globalMaxTicks = 1000000;
-  var globalMaxTime = 400;
-  var timeout = true;
-  setTimeout(function(){ timeout = false; console.log("global timeout");}, globalMaxTime);
-  for (var i = globalMaxTicks; (i > 0 && timeout); --i){
-    //this.globalForceLayout.resume();
+  var globalMaxTicks = 10000;
+  var globalMaxTime = 2500; //2.5 seconds
+  var startTime = new Date();
+  for (var i = globalMaxTicks; (i > 0 && ((new Date() -startTime) < globalMaxTime)); --i){
+    this.globalForceLayout.resume();
     this.globalForceLayout.tick();
   } 
   this.globalForceLayout.stop();
@@ -142,7 +141,6 @@ Method_One.prototype.CaluclateLocalLayouts = function () {
 }
 
 Method_One.prototype.GlobalTick = function (e) {
-     console.log("Global force layout tick");
   var channel = this.getNodeChannel("Gravity Point");
   if (channel.inUse) {
     var k = .1 * e.alpha;
