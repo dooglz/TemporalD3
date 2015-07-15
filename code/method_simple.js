@@ -110,10 +110,10 @@ Method_Simple.prototype.Update = function () {
         }
         if (b) {
           //check node exists
-          var source = IsNumber(d.target) ? this.data.nodes[d.target]: d.target;
-          var target = IsNumber(d.source) ? this.data.nodes[d.source]: d.source;
-          if ( $.inArray(source, this.filteredNodes) == -1 || $.inArray(target, this.filteredNodes) == -1) {
-           // console.warn("Link with no node! ",this.data.nodes[d.target]);
+          var source = IsNumber(d.target) ? this.data.nodes[d.target] : d.target;
+          var target = IsNumber(d.source) ? this.data.nodes[d.source] : d.source;
+          if ($.inArray(source, this.filteredNodes) == -1 || $.inArray(target, this.filteredNodes) == -1) {
+            //console.warn("Link with no node! ",this.data.nodes[d.target]);
             return false;
           }
           return true;

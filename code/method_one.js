@@ -16,6 +16,16 @@ Method_One.prototype.forceLayout;
 Method_One.prototype.graphLink;
 Method_One.prototype.graphNode;
 
+// Subticks are how many times the graph should tick inbetween page updates.
+// High subtick counts will block all JS timers, and can freeze the page.
+// A subtick of 1 means yeild to other 'threads' after every tick.
+Method_One.prototype.globalForceLayoutMaxSubTicks = 10;
+Method_One.prototype.globalForceLayoutMaxTicks = 7000;
+Method_One.prototype.globalForceLayoutMaxTime = 4000; //4 seconds
+Method_One.prototype.localLayoutMaxSubTicks = 50;
+Method_One.prototype.localLayoutMaxTicks = 800;
+Method_One.prototype.localLayoutMaxTime = 2500; //2.5 seconds
+  
 //Method constructor
 function Method_One() {
   this.name = "Method One";
@@ -76,7 +86,7 @@ Method_One.prototype.Loading = function () {
   var str = "";
   if (gp < 100) {
     ShowLoadingBar(Math.round(gp), "calculating global layout");
-  } else if (lp < 101) {
+  } else if (lp < 100) {
     ShowLoadingBar(Math.round(lp), "calculating Local layout");
   } else {
     clearTimeout(this.loadingtimerfunc);
@@ -127,15 +137,13 @@ Method_One.prototype.CaluclateGlobalLayout = function () {
   console.log("Global force layout running");
 
   this.globalForceLayout.start();
-  this.globalForceLayoutMaxTicks = 7000;
-  this.globalForceLayoutMaxTime = 4000; //2.5 seconds
+
   this.globalForceLayoutStartTime = new Date();
   this.globalForceLayoutTickCount = 0;
   this.globalForceLayoutLoopTimeout = setInterval(this.CaluclateGlobalLayoutLoop.bind(this), 1);
 }
 
 Method_One.prototype.CaluclateGlobalLayoutLoop = function () {
-  this.globalForceLayoutTickCount++;
   this.GlobalLayoutPercentDone = ((new Date() - this.globalForceLayoutStartTime) / this.globalForceLayoutMaxTime) * 100.0;
   if (this.globalForceLayoutTickCount > this.globalForceLayoutMaxTicks || this.GlobalLayoutPercentDone >= 100) {
     clearTimeout(this.globalForceLayoutLoopTimeout);
@@ -144,8 +152,11 @@ Method_One.prototype.CaluclateGlobalLayoutLoop = function () {
     this.GlobalLayoutDone();
     return;
   }
-  this.globalForceLayout.resume();
-  this.globalForceLayout.tick();
+  for (var i = 0; i < this.globalForceLayoutMaxSubTicks; i++) {
+    this.globalForceLayout.resume();
+    this.globalForceLayout.tick();
+  }
+  this.globalForceLayoutTickCount += this.globalForceLayoutMaxSubTicks;
 }
 
 Method_One.prototype.GlobalTick = function (e) {
@@ -226,8 +237,6 @@ Method_One.prototype.CaluclateLocalLayouts = function () {
     local.maxDate = dd.max;
     this.LocalLayouts.push(local);
   }
-  this.localLayoutMaxTicks = 3000;
-  this.localLayoutMaxTime = 2500; //2.5 seconds
   this.localLayoutLoopTimeout = setInterval(this.CaluclateLocalLayoutLoop.bind(this), 1);
 }
 
@@ -243,22 +252,23 @@ Method_One.prototype.CaluclateLocalLayoutLoop = function () {
   if (local.done === true) {
     //copy positions
     this.data.nodes.forEach(function (o) {
-      CopyAttributesIntoArray(o, ["x", "y"], ["lx", "ly"],local.discreet);
+      CopyAttributesIntoArray(o, ["x", "y"], ["lx", "ly"], local.discreet);
     }, this);
     //next
     this.LocalLayoutTickCount++;
-
   } else if (local.done === false) {
     //keep processing this layout
-    local.TickCount++;
-    //todo add in time
-    if (local.TickCount > this.localLayoutMaxTicks) {
-      local.done === true;
+    
+    if (local.TickCount > this.localLayoutMaxTicks || (new Date() - local.startTime) > this.localLayoutMaxTime) {
+      console.log("Finished Local Layout %o, ticks:%o", this.LocalLayoutTickCount, local.TickCount);
+      local.done = true;
       local.ForceLayout.stop();
     } else {
-      local.ForceLayout.resume();
-      local.ForceLayout.tick();
-      console.log("ticking",this.LocalLayoutTickCount);
+      for (var i = 0; i < this.localLayoutMaxSubTicks; i++) {
+        local.ForceLayout.resume();
+        local.ForceLayout.tick();
+      }
+      local.TickCount += this.localLayoutMaxSubTicks;
     }
   } else {
     //new layout, set it up
@@ -279,6 +289,7 @@ Method_One.prototype.CaluclateLocalLayoutLoop = function () {
       .links(this.data.links)
       .on("tick", this.LocalTick.bind(this));
     local.ForceLayout.start();
+    local.startTime = new Date();
   }
 
 }

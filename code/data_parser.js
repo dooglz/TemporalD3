@@ -188,12 +188,6 @@ function ParseData(data) {
       }
     }
     
-    /*
-         || (data.links[0].attributes[0] !== undefined && 
-        data.links[0].attributes[0].values[0] !== undefined && (
-        data.links[0].attributes[0].values[0].start !== undefined || 
-        data.links[0].attributes[0].values[0].end !== undefined)
-    */
     if(data.date_type !== undefined){
       console.log("Json file specified date-type as %o", data.date_type);
     }else{
@@ -260,198 +254,36 @@ function ParseData(data) {
     console.log("Determined date-type as %o, from sample %o", data.date_type, data.links[0].date);
   }
   
+  //check all links are valid
+  data.links.forEach(function (o) {
+    if (o.source >= data.nodes.length || o.target >= data.nodes.length) {
+      console.error("Link %o, has source or target to non-existant node!", o);
+      o.source = 0;
+      o.target = 1;
+    }
+  });
   //we need to grab date ranges
-  var maxdate;
-  var minDate;
+  var range = { min:Infinity, max: -Infinity};
   if (data.date_type == "static") {
-    maxdate = Infinity;
-    minDate = -Infinity;
-    data.links.forEach(function (o) {
-      if (o.source >= data.nodes.length || o.target >= data.nodes.length) {
-        console.error("Link %o, has source or target to non-existant node!", o);
-        o.source = 0;
-        o.target = 1;
-      }});
+    range.max = Infinity;
+    range.min = -Infinity;
   } else if (data.date_type == "date" || data.date_type == "number") {
-    maxdate = -Infinity;
-    minDate = Infinity;
-    data.links.forEach(function (o) {
-      if (o.source >= data.nodes.length || o.target >= data.nodes.length) {
-        console.error("Link %o, has source or target to non-existant node!", o);
-        o.source = 0;
-        o.target = 1;
-      }
-      var nval;
-      if (o.date !== undefined) {
-        nval = o.date
-        if (data.date_type == "date") {
-          if (!IsDate(nval)) {
-            console.error("%o is not a valid date", nval);
-          }
-          nval = new Date(nval).valueOf();
-        }
-        maxdate = Math.max(maxdate, nval);
-        minDate = Math.min(minDate, nval);
-      }
-      if (o.start !== undefined) {
-        nval = o.start;
-        if (data.date_type == "date") {
-          if (!IsDate(nval)) {
-            console.error("%o is not a valid date", nval);
-          }
-          nval = new Date(nval).valueOf();
-        }
-        maxdate = Math.max(maxdate, nval);
-        minDate = Math.min(minDate, nval);
-      }
-      if (o.end !== undefined) {
-        nval = o.end;
-        if (data.date_type == "date") {
-          if (!IsDate(nval)) {
-            console.error("%o is not a valid date", nval);
-          }
-          nval = new Date(nval).valueOf();
-        }
-        maxdate = Math.max(maxdate, nval);
-        minDate = Math.min(minDate, nval);
-      }
-      if (o.attributes !== undefined) {
-        for (var f = 0; f < o.attributes.length; f++) {
-          var attribute = o.attributes[f];
-          if (attribute.value !== undefined) {
-            nval = attribute.value;
-            if (data.date_type == "date") {
-              if (!IsDate(nval)) {
-                console.error("%o is not a valid date", nval);
-              }
-              nval = new Date(nval).valueOf();
-            }
-            maxdate = Math.max(maxdate, nval);
-            minDate = Math.min(minDate, nval);
-          } else if (attribute.values !== undefined) {
-            for (var q = 0; q < attribute.values.length; q++) {
-              if (attribute.values[q].start !== undefined) {
-                nval = attribute.values[q].start
-                if (data.date_type == "date") {
-                  if (!IsDate(nval)) {
-                    console.error("%o is not a valid date", nval);
-                  }
-                  nval = new Date(nval).valueOf();
-                }
-                maxdate = Math.max(maxdate, nval);
-                minDate = Math.min(minDate, nval);
-              }
-              if (attribute.values[q].end !== undefined) {
-                nval = attribute.values[q].end
-                if (data.date_type == "date") {
-                  if (!IsDate(nval)) {
-                    console.error("%o is not a valid date", nval);
-                  }
-                  nval = new Date(nval).valueOf();
-                }
-                maxdate = Math.max(maxdate, nval);
-                minDate = Math.min(minDate, nval);
-              }
-            }
-          }
-        }
-      }
-    }, this);
+    range = getMinMaxDateOfAttriutes(data.date_type, data.links);
+    range = getMinMaxDateOfAttriutes(data.date_type, data.nodes,range.min,range.max);
+    console.log(range);
     if (data.date_type == "date") {
-      maxdate = new Date(maxdate);
-      minDate = new Date(minDate);
+      range.max = new Date(range.max);
+      range.min = new Date(range.min);
     }
   } else {
-    console.error(data.date_type);
+    console.error("Can't get date range from unkown date type");
   }
-  
-  if (data.date_type == "date" || data.date_type == "number") {
-    data.nodes.forEach(function (o) {
-     var nval;
-     if (o.date !== undefined) {
-        nval = o.date
-        if (data.date_type == "date") {
-          if (!IsDate(nval)) {
-            console.error("%o is not a valid date", nval);
-          }
-          nval = new Date(nval).valueOf();
-        }
-        maxdate = Math.max(maxdate, nval);
-        minDate = Math.min(minDate, nval);
-      }
-      if (o.start !== undefined) {
-        nval = o.start;
-        if (data.date_type == "date") {
-          if (!IsDate(nval)) {
-            console.error("%o is not a valid date", nval);
-          }
-          nval = new Date(nval).valueOf();
-        }
-        maxdate = Math.max(maxdate, nval);
-        minDate = Math.min(minDate, nval);
-      }
-      if (o.end !== undefined) {
-        nval = o.end;
-        if (data.date_type == "date") {
-          if (!IsDate(nval)) {
-            console.error("%o is not a valid date", nval);
-          }
-          nval = new Date(nval).valueOf();
-        }
-        maxdate = Math.max(maxdate, nval);
-        minDate = Math.min(minDate, nval);
-      }
-      if (o.attributes !== undefined) {
-        for (var f = 0; f < o.attributes.length; f++) {
-          var attribute = o.attributes[f];
-          if (attribute.value !== undefined) {
-            nval = attribute.value;
-            if (data.date_type == "date") {
-              if (!IsDate(nval)) {
-                console.error("%o is not a valid date", nval);
-              }
-              nval = new Date(nval).valueOf();
-            }
-            maxdate = Math.max(maxdate, nval);
-            minDate = Math.min(minDate, nval);
-          } else if (attribute.values !== undefined) {
-            for (var q = 0; q < attribute.values.length; q++) {
-              if (attribute.values[q].start !== undefined) {
-                nval = attribute.values[q].start
-                if (data.date_type == "date") {
-                  if (!IsDate(nval)) {
-                    console.error("%o is not a valid date", nval);
-                  }
-                  nval = new Date(nval).valueOf();
-                }
-                maxdate = Math.max(maxdate, nval);
-                minDate = Math.min(minDate, nval);
-              }
-              if (attribute.values[q].end !== undefined) {
-                nval = attribute.values[q].end
-                if (data.date_type == "date") {
-                  if (!IsDate(nval)) {
-                    console.error("%o is not a valid date", nval);
-                  }
-                  nval = new Date(nval).valueOf();
-                }
-                maxdate = Math.max(maxdate, nval);
-                minDate = Math.min(minDate, nval);
-              }
-            }
-          }
-        }
-      }
-    });
-   }
 
-  
-  
-  if (maxdate == "Invalid Date" || minDate == "Invalid Date") {
+  if (range.max == "Invalid Date" || range.min == "Invalid Date") {
     console.error(data.date_type);
   }
-  data.maxDate = maxdate;
-  data.minDate = minDate;
+  data.maxDate = range.max;
+  data.minDate = range.min;
 }
 
 function getNodeAttributeAsPercentage(data, node, attribute,minDate,maxDate) {
@@ -667,4 +499,71 @@ function CopyAttributesIntoArray(obj, sources, destinations,index){
     }
     obj[dest][index] = obj[source];
   }
+}
+
+function getMinMaxDateOfAttriutes(date_type, nodesOrlinks, minV, maxV) {
+  if (minV === undefined) {
+    minV = Infinity;
+  }
+  if (maxV === undefined) {
+    maxV = -Infinity;
+  }
+  var range = { min: minV, max: maxV };
+
+  if (date_type == "static") {
+    range.max = Infinity;
+    range.min = -Infinity;
+    return range;
+  }
+
+  nodesOrlinks.forEach(function (o) {
+    if (o.date !== undefined) {
+      range = getMinMaxDateOfValue(range.min, range.max, date_type, o.date);
+    }
+    if (o.start !== undefined) {
+      range = getMinMaxDateOfValue(range.min, range.max, date_type, o.start);
+    }
+    if (o.end !== undefined) {
+      range = getMinMaxDateOfValue(range.min, range.max, date_type, o.end);
+    }
+    if (o.attributes !== undefined) {
+      for (var f = 0; f < o.attributes.length; f++) {
+        var attribute = o.attributes[f];
+        if (attribute.value !== undefined) {
+          //single static value
+          range = getMinMaxDateOfValue(range.min, range.max, date_type, attribute.value);
+        } else if (attribute.values !== undefined) {
+          //multiple values
+          for (var q = 0; q < attribute.values.length; q++) {
+            if (attribute.values[q].start !== undefined) {
+              range = getMinMaxDateOfValue(range.min, range.max, date_type, attribute.values[q].start);
+            }
+            if (attribute.values[q].end !== undefined) {
+              range = getMinMaxDateOfValue(range.min, range.max, date_type, attribute.values[q].end);
+            }
+          }
+        } else {
+          console.error("Attribute with no value %o, node/link: %o", attribute, o);
+        }
+      }
+    }
+  });
+
+  return range;
+}
+
+function getMinMaxDateOfValue(minV, maxV, date_type, value) {
+
+  if (date_type == "date") {
+    value = convertDateToNumber(value);
+  }
+  maxV = Math.max(maxV, value);
+  minV = Math.min(minV, value);
+  return { min: minV, max: maxV };
+}
+function convertDateToNumber(date) {
+  if (!IsDate(date)) {
+    console.error("%o is not a valid date", date);
+  }
+  return (new Date(date).valueOf());
 }
