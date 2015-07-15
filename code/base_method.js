@@ -184,8 +184,17 @@ Base_Method.prototype.getRangeFromDiscreet = function (discreetTime) {
   return { min: mindate, max: maxdate };
 };
 
-Base_Method.prototype.getDiscreetfromDate = function (date) {
-  return ((this.minDate - this.minDate.getYear()) * 12) + (this.minDate - this.minDate.getMonth());
+Base_Method.prototype.getDiscreetfromDate = function (date, date_type) {
+  if (date_type === undefined) {
+    date_type = "date";
+  }
+  if (date_type == "date") {
+    return ((date.getYear() - this.minDate.getYear()) * 12) + (date.getMonth() - this.minDate.getMonth());
+  } else if (date_type == "number") {
+    return date;
+  } else {
+    return null;
+  }
 }
 
 Base_Method.prototype.getDateRangeFromDiscreet = function (discreet, date_type) {

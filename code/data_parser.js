@@ -553,7 +553,6 @@ function getMinMaxDateOfAttriutes(date_type, nodesOrlinks, minV, maxV) {
 }
 
 function getMinMaxDateOfValue(minV, maxV, date_type, value) {
-
   if (date_type == "date") {
     value = convertDateToNumber(value);
   }

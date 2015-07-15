@@ -32,7 +32,8 @@ function Method_One() {
   this.parameters = [
     { name: "Disable rest", ptype: "checkbox", pval: false },
     { name: "Clamp within Canvas", ptype: "checkbox", pval: false },
-    { name: "Cumulative", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; } },
+    { name: "Cumulative Links", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } },
+    { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } },
     { name: "Recalculate Layout", ptype: "button", pval: false, func: function () { this.Recalculate(); } }
   ];
   this.nodeChannels = [
@@ -78,8 +79,14 @@ Method_One.prototype.foci = [
 Method_One.prototype.SetData = function (d) {
   this.data = d;
   this.filteredLinks = undefined;
+  this.filteredNodes = undefined;
+  if (this.done) {
+    this.RedoNodes();
+    this.RedoLinks();
+    // this.ShowLocalLayout();
+  }
 };
-
+Method_One.prototype.done = false;
 Method_One.prototype.Loading = function () {
   var gp = this.GlobalLayoutPercentDone;//this.forceLayoutPercentDone(this.globalForceLayout);
   var lp = this.LocalLayoutPercentDone;
@@ -91,11 +98,13 @@ Method_One.prototype.Loading = function () {
   } else {
     clearTimeout(this.loadingtimerfunc);
     HideLoadingBar();
+    this.CalculationDone();
   }
   // $('#progressContainer').hide().show(0);
 }
 
 Method_One.prototype.Recalculate = function () {
+  Method_One.prototype.done = false;
   this.LocalLayoutPercentDone = 0;
   this.loadingtimerfunc = setInterval(this.Loading.bind(this), 100);
   //zero position of all nodes
@@ -103,6 +112,10 @@ Method_One.prototype.Recalculate = function () {
     o.px = o.py = o.x = o.y = 0;
   });
   this.CaluclateGlobalLayout();
+}
+
+Method_One.prototype.CalculationDone = function () {
+  Method_One.prototype.done = true;
 }
 
 //######################################################################
@@ -153,7 +166,7 @@ Method_One.prototype.CaluclateGlobalLayoutLoop = function () {
     return;
   }
   for (var i = 0; i < this.globalForceLayoutMaxSubTicks; i++) {
-    this.globalForceLayout.resume();
+    // this.globalForceLayout.resume();
     this.globalForceLayout.tick();
   }
   this.globalForceLayoutTickCount += this.globalForceLayoutMaxSubTicks;
@@ -219,7 +232,7 @@ Method_One.prototype.HideGlobalLayout = function () {
 }
 
 //######################################################################
-//########    Local Layout
+//########    Local Layout calculations
 //######################################################################
 Method_One.prototype.CaluclateLocalLayouts = function () {
   SetLoadingBarColour("#b233b7");
@@ -265,7 +278,7 @@ Method_One.prototype.CaluclateLocalLayoutLoop = function () {
       local.ForceLayout.stop();
     } else {
       for (var i = 0; i < this.localLayoutMaxSubTicks; i++) {
-        local.ForceLayout.resume();
+        //local.ForceLayout.resume();
         local.ForceLayout.tick();
       }
       local.TickCount += this.localLayoutMaxSubTicks;
@@ -274,10 +287,12 @@ Method_One.prototype.CaluclateLocalLayoutLoop = function () {
     //new layout, set it up
     local.TickCount = 0;
     local.done = false;
-    //zero position of all nodes
-    this.data.nodes.forEach(function (o, i, array) {
-      o.px = o.py = o.x = o.y = 0;
-    });
+    //zero position of all nodes, if this is first run
+    if (this.LocalLayoutTickCount == 0) {
+      this.data.nodes.forEach(function (o, i, array) {
+        o.px = o.py = o.x = o.y = 0;
+      });
+    }//else, use same positions from last run
     //create a new force layout
     local.ForceLayout = d3.layout.force()
       .gravity(.25)
@@ -315,82 +330,100 @@ Method_One.prototype.LocalTick = function (e) {
 };
 
 //######################################################################
+//########    Local Layout visulisations
+//######################################################################
+this.localgraphNodes;
+this.localgraphLinks;
+Method_One.prototype.ShowLocalLayout = function () {
+  if (this.currentDateMin === undefined) { this.currentDateMin = 0; }
+  var discreet = this.getDiscreetfromDate(this.currentDateMin, this.data.date_type);
+  if (!this.done && (this.LocalLayouts === undefined || this.LocalLayouts[discreet] === undefined || !this.LocalLayouts[discreet].done)) {
+    // console.log(discreet + " not done yet");
+    return;
+  }
+  //filter
+  if (this.filteredNodes === undefined || this.filteredLinks === undefined
+    || this.prev_currentDateMin != this.currentDateMin
+    || this.prev_currentDateMax != this.currentDateMax) {
+    //filter nodes by date
+    this.filteredNodes = this.data.nodes.filter(
+      $.proxy(function (d) {
+        var b;
+        if (selected_method.getParam("Cumulative Nodes").pval) {
+          b = IsNodeEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
+        } else {
+          b = NodeCreatedInRange(d, this.currentDateMin, this.currentDateMax);
+        }
+        if (b !== false && b !== true) {
+          console.error(b);
+        }
+        return b;
+      }, this));
+    //filter links by date
+    this.filteredLinks = this.data.links.filter(
+      $.proxy(function (d) {
+        var b;
+        if (selected_method.getParam("Cumulative Links").pval) {
+          b = IsLinkEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
+        } else {
+          b = LinkCreatedInRange(d, this.currentDateMin, this.currentDateMax);
+        }
+        if (b !== false && b !== true) {
+          console.error(b);
+        }
+        if (b) {
+          //check node exists
+          var source = IsNumber(d.target) ? this.data.nodes[d.target] : d.target;
+          var target = IsNumber(d.source) ? this.data.nodes[d.source] : d.source;
+          if ($.inArray(source, this.filteredNodes) == -1 || $.inArray(target, this.filteredNodes) == -1) {
+            //console.warn("Link with no node! ",this.data.nodes[d.target]);
+            return false;
+          }
+          return true;
+        }
+        return false;
+      }, this));
+
+    this.prev_currentDateMin = this.currentDateMin;
+    this.prev_currentDateMax = this.currentDateMax;
+  }
+  
+  //Create Links
+ 
+  this.localgraphLinks = this.svgContainer.selectAll("line").data(this.filteredLinks);
+  this.localgraphLinks.enter().append("line").style("stroke", "black");
+  this.localgraphLinks
+    .attr("x1", function (d) { return d.source.lx[discreet]; })
+    .attr("y1", function (d) { return d.source.ly[discreet]; })
+    .attr("x2", function (d) { return d.target.lx[discreet]; })
+    .attr("y2", function (d) { return d.target.ly[discreet]; })
+    .style("stroke-width", this.LinkWidth.bind(this));
+  this.localgraphLinks.exit().remove();
+
+  //Create nodes
+  this.localgraphNodes = this.svgContainer.selectAll("circle").data(this.filteredNodes);
+  this.localgraphNodes.enter().append("circle");
+  this.localgraphNodes
+    .attr("cx", function (d) { return d.lx[discreet]; })
+    .attr("cy", function (d) { return d.ly[discreet]; })
+    .attr("r", this.NodeSize.bind(this))
+    .style("fill", this.NodeColour.bind(this))
+    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
+  this.localgraphNodes.exit().remove();
+}
+
+Method_One.prototype.HideLocalLayout = function () {
+  this.localgraphNodes.remove();
+  this.localgraphLinks.remove();
+}
+//######################################################################
 //########    Main Update
 //######################################################################
 
 Method_One.prototype.Update = function () {
-  return;
   Base_Method.prototype.Update.call(this);
-  if (this.filteredLinks === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
-    //filter data by date
-    this.filteredLinks = this.data.links.filter(
-      $.proxy(function (d) {
-        if (selected_method.getParam("Cumulative").pval) {
-          return IsLinkEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
-        } else {
-          return LinkCreatedInRange(d, this.currentDateMin, this.currentDateMax);
-        }
-      }, this));
-    this.prev_currentDateMin = this.currentDateMin;
-    this.prev_currentDateMax = this.currentDateMax;
-  }
-
-  this.nodeTooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
-  this.graphLinkTooltip = d3.select("body").append("div").attr("class", "tooltip link").style("opacity", 0);
-
-  //Create Links
-  this.graphLink = this.svgContainer.selectAll("line").data(this.filteredLinks);
-  this.graphLink.enter().append("line")
-    .style("stroke", this.Linkcolour.bind(this))
-    .style("stroke-width", this.LinkWidth.bind(this));
-  //add hover tooltip
-  this.graphLink.on("mouseover", $.proxy(function (d) {
-    var str = "";
-    this.data.link_keys.forEach(function (o) {
-      str += o + ": " + d[o] + "<br/>";
-    });
-    this.graphLinkTooltip.transition().duration(200).style("opacity", .9);
-    this.graphLinkTooltip.html(str)
-      .style("left", (d3.event.pageX) + "px")
-      .style("top", (d3.event.pageY - 28) + "px");
-  }, this));
-  this.graphLink.on("mouseout", $.proxy(function (d) {
-    this.graphLinkTooltip.transition().duration(500).style("opacity", 0);
-  }, this));    
-  //when a link is no longer in the set, remove it from the graph.
-  this.graphLink.exit().remove();
-
-  //Create nodes
-  this.graphNode = this.svgContainer.selectAll("circle")
-    .data(this.data.nodes);
-  this.graphNode.enter()
-    .append("circle")
-    .attr("r", this.NodeSize.bind(this))
-    .style("fill", this.NodeColour.bind(this))
-    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
-  //add hover tooltip
-  this.graphNode.on("mouseover", $.proxy(function (d) {
-    var str = "";
-    this.data.node_keys.forEach(function (o) {
-      str += o + ": " + d[o] + "<br/>";
-    });
-    this.nodeTooltip.transition().duration(200).style("opacity", .9);
-    this.nodeTooltip.html(str)
-      .style("left", (d3.event.pageX) + "px")
-      .style("top", (d3.event.pageY - 28) + "px");
-  }, this));
-  this.graphNode.on("mouseout", $.proxy(function (d) {
-    this.nodeTooltip.transition().duration(500).style("opacity", 0);
-  }, this)); 
-    
-  //  .call(forceLayout.drag);
-  this.graphNode.exit().remove();
-
-  //force a tick
-  this.forceLayout.resume();
-  //restart simulation
-  //force.stop();
-  this.forceLayout.nodes(this.data.nodes).links(this.filteredLinks).on("tick", this.Tick.bind(this)).start();
+  this.ShowLocalLayout();
+  return;
 };
 
 //######################################################################
@@ -418,17 +451,6 @@ Method_One.prototype.Redraw = function (w, h) {
 
   console.log("Redrawing");
   return;
-  
-  // force = customLayout()
-  this.forceLayout = d3.layout.force()
-    .gravity(.25)
-    .charge(-840)
-    .friction(0.3)
-    .linkDistance(this.LinkLength.bind(this))
-    .size([this.width, this.height]);
-
-
-
 };
 
 Method_One.prototype.zoomed = function () {
@@ -437,56 +459,6 @@ Method_One.prototype.zoomed = function () {
   this.svgContainer.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
 };
 
-//######################################################################
-//########    Force layout tick
-//######################################################################
-
-Method_One.prototype.Tick = function (e) {
-  return;
-  if (selected_method.getParam("Disable rest").pval) {
-    //forceLayout.resume();
-    this.forceLayout.alpha(Math.max(this.forceLayout.alpha(), 0.1));
-  }
-  var channel = this.getNodeChannel("Gravity Point");
-  if (channel.inUse) {
-    var k = .1 * e.alpha;
-
-    this.data.nodes.forEach($.proxy(function (o, i, array) {
-      var point = Math.round((this.foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam, this.currentDateMin, this.currentDateMax));
-      o.y += ((this.halfHeight + this.foci[point].y) - o.y) * k;
-      o.x += ((this.halfWidth + this.foci[point].x) - o.x) * k;
-    }, this));
-  }
-
-  this.graphNode.attr("cx", $.proxy(function (d) {
-    if (this.getParam("Clamp within Canvas").pval) {
-      return d.x = Math.max(this.default_radius, Math.min(canvasWidth - this.default_radius, d.x));
-    } else {
-      return d.x;
-    }
-  }, this))
-    .attr("cy", $.proxy(function (d) {
-      if (this.getParam("Clamp within Canvas").pval) {
-        return d.y = Math.max(this.default_radius, Math.min(canvasHeight - this.default_radius, d.y));
-      } else {
-        return d.y;
-      }
-    }, this));
-
-  this.graphLink.attr("x1", function (d) {
-    //  console.log("d: %o,",d);
-    return d.source.x;
-  })
-    .attr("y1", function (d) {
-      return d.source.y;
-    })
-    .attr("x2", function (d) {
-      return d.target.x;
-    })
-    .attr("y2", function (d) {
-      return d.target.y;
-    });
-};
 
 //######################################################################
 //########    Channel Mapping Functions
