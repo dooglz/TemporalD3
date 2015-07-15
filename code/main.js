@@ -569,10 +569,18 @@ function changeMethod(methodName) {
   selected_method.SetData(graphdata);
   Update();
 }
+
 var progressbar = $("#progressbar");
 var progressContainer = $("#progressContainer").detach();
-
 var progressbarVisible = false;
+
+function SetLoadingBarColour(colour) {
+  if(colour === undefined){
+    colour = "#337ab7";
+  }
+  progressbar.css("background-color", colour);
+}
+
 function ShowLoadingBar(percent, message) {
   if (!progressbarVisible) {
     $('#Slidercontainer').append(progressContainer);
@@ -581,6 +589,7 @@ function ShowLoadingBar(percent, message) {
   progressbar.css('width', percent + '%');
   progressbar.html(percent + "% " + message);
 }
+
 function HideLoadingBar() {
   progressContainer.detach();
   progressbarVisible = false;

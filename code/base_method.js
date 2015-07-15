@@ -186,6 +186,20 @@ Base_Method.prototype.getDiscreetfromDate = function (date) {
   return ((this.minDate - this.minDate.getYear()) * 12) + (this.minDate - this.minDate.getMonth());
 }
 
+Base_Method.prototype.getDateRangeFromDiscreet = function (discreet) {
+  var mind = new Date(this.minDate);
+  mind.setDate(1);
+  mind.setMonth(mind.getMonth()+discreet);
+  var maxd = new Date(mind);
+  maxd.setMonth(maxd.getMonth()+1);
+  return {min:mind,max:maxd}
+}
+Base_Method.prototype.getDateFromDiscreet = function (discreet) {
+  var dd = new Date(this.minDate);
+  dd.setDate(1);
+  dd.setMonth(dd.getMonth()+discreet);
+  return dd;
+}
 Base_Method.prototype.CountDiscreetStepsInRange = function (min, max) {
   return ((max.getYear() - min.getYear()) * 12) + (max.getMonth() - min.getMonth());
 }

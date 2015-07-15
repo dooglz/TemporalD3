@@ -69,20 +69,23 @@ Method_One.prototype.SetData = function (d) {
 };
 
 Method_One.prototype.Loading = function () {
-  var gp = this.forceLayoutPercentDone(this.globalForceLayout);
+  var gp = this.GlobalLayoutPercentDone;//this.forceLayoutPercentDone(this.globalForceLayout);
   var lp = this.LocalLayoutPercentDone;
-  var str = "calculating global layout";
-  if (gp == 100) { str = "calculating Local layout"; }
-  ShowLoadingBar(Math.round((gp * 0.3) + (lp * 0.7)), str);
-  if (gp + lp == 200) {
+  var str = "";
+  if (gp < 100) {
+    ShowLoadingBar(Math.round(gp), "calculating global layout");
+  } else if (lp < 101) {
+    ShowLoadingBar(Math.round(lp), "calculating Local layout");
+  } else {
     clearTimeout(this.loadingtimerfunc);
     HideLoadingBar();
   }
+  // $('#progressContainer').hide().show(0);
 }
 
 Method_One.prototype.Recalculate = function () {
   this.LocalLayoutPercentDone = 0;
-  this.loadingtimerfunc = setInterval(this.Loading.bind(this), 300);
+  this.loadingtimerfunc = setInterval(this.Loading.bind(this), 100);
   //zero position of all nodes
   this.data.nodes.forEach(function (o, i, array) {
     o.px = o.py = o.x = o.y = 0;
@@ -91,10 +94,20 @@ Method_One.prototype.Recalculate = function () {
 }
 
 Method_One.prototype.GlobalLayoutDone = function () {
- 
+  console.log("Global force layout done");
+
+  //copy positions
+  this.data.nodes.forEach(function (o) {
+    CopyAttributes(o, ["x", "y"], ["gx", "gy"]);
+  }, this);
+  console.log('Global layout Complete!');
+  this.CaluclateLocalLayouts();
 }
-  var timeout = true;
+
+var timeout = true;
 Method_One.prototype.CaluclateGlobalLayout = function () {
+  SetLoadingBarColour();
+  this.GlobalLayoutPercentDone = 0;
   this.ShowGlobalLayout();
   //create a new force layout
   this.globalForceLayout = d3.layout.force()
@@ -106,35 +119,44 @@ Method_One.prototype.CaluclateGlobalLayout = function () {
     .nodes(this.data.nodes)
     .links(this.data.links)
     .on("tick", this.GlobalTick.bind(this));
-    
+
   console.log("Global force layout running");
-  
+
   this.globalForceLayout.start();
-  var globalMaxTicks = 10000;
-  var globalMaxTime = 2500; //2.5 seconds
-  var startTime = new Date();
-  for (var i = globalMaxTicks; (i > 0 && ((new Date() -startTime) < globalMaxTime)); --i){
-    this.globalForceLayout.resume();
-    this.globalForceLayout.tick();
-  } 
-  this.globalForceLayout.stop();
-  
-  console.log("Global force layout done");
-   //copy positions
-  this.data.nodes.forEach(function (o) {
-    CopyAttributes(o, ["x", "y"], ["gx", "gy"]);
-  }, this);
-  console.log('Global layout Complete!');
-  this.CaluclateLocalLayouts();
+  this.globalForceLayoutMaxTicks = 7000;
+  this.globalForceLayoutMaxTime = 4000; //2.5 seconds
+  this.globalForceLayoutStartTime = new Date();
+  this.globalForceLayoutTickCount = 0;
+  this.globalForceLayoutLoopTimeout = setInterval(this.CaluclateGlobalLayoutLoop.bind(this), 1);
+}
+
+Method_One.prototype.CaluclateGlobalLayoutLoop = function () {
+  this.globalForceLayoutTickCount++;
+  this.GlobalLayoutPercentDone = ((new Date() - this.globalForceLayoutStartTime) / this.globalForceLayoutMaxTime) * 100.0;
+  if (this.globalForceLayoutTickCount > this.globalForceLayoutMaxTicks || this.GlobalLayoutPercentDone >= 100) {
+    clearTimeout(this.globalForceLayoutLoopTimeout);
+    this.GlobalLayoutPercentDone = 100;
+    this.globalForceLayout.stop();
+    this.GlobalLayoutDone();
+    return;
+  }
+  this.globalForceLayout.resume();
+  this.globalForceLayout.tick();
 }
 
 Method_One.prototype.CaluclateLocalLayouts = function () {
+  SetLoadingBarColour("#b233b7");
   //how many layouts are we creating?
   this.LocalLayouts = [];
   var max = this.CountDiscreetStepsInRange(this.minDate, this.maxDate);
   console.log("Creating %o local layouts", max);
   for (var i = 0; i < max; i++) {
-    this.LocalLayouts.push("LocalLayout");
+    var local = {};
+    local.discreet = i;
+    var dd = this.getDateRangeFromDiscreet(i);
+    local.minDate = dd.min;
+    local.maxDate = dd.max;
+    this.LocalLayouts.push(local);
     this.LocalLayoutPercentDone = (i / max) * 100.0;
   }
   this.LocalLayoutPercentDone = 100;
@@ -151,34 +173,34 @@ Method_One.prototype.GlobalTick = function (e) {
       o.gx = o.x;
       o.gy = o.y;
     }, this));
-  }else{
-       this.data.nodes.forEach(function(o){   
-        o.gx = o.x;
-        o.gy = o.y;
-      });
+  } else {
+    this.data.nodes.forEach(function (o) {
+      o.gx = o.x;
+      o.gy = o.y;
+    });
   }
   this.globalgraphNodes
-  .attr("cx",function (d) {return d.gx;})
-  .attr("cy",function (d) {return d.gy;});
+    .attr("cx", function (d) { return d.gx; })
+    .attr("cy", function (d) { return d.gy; });
   this.globalgraphLinks
-  .attr("x1", function (d) {return d.source.gx;})
-  .attr("y1", function (d) {return d.source.gy;})
-  .attr("x2", function (d) {return d.target.gx;})
-  .attr("y2", function (d) {return d.target.gy;});
+    .attr("x1", function (d) { return d.source.gx; })
+    .attr("y1", function (d) { return d.source.gy; })
+    .attr("x2", function (d) { return d.target.gx; })
+    .attr("y2", function (d) { return d.target.gy; });
 };
 
 this.globalgraphNodes;
-this.globalgraphLinks; 
+this.globalgraphLinks;
 Method_One.prototype.ShowGlobalLayout = function () {
   //Create Links
   this.globalgraphLinks = this.svgContainer.selectAll("line").data(this.data.links);
   this.globalgraphLinks.enter().append("line")
     .style("stroke", "black")
     .style("stroke-width", this.LinkWidth.bind(this));
-   this.globalgraphLinks
+  this.globalgraphLinks
     .attr("x1", function (d) { return d.source.gx; })
     .attr("y1", function (d) { return d.source.gy; })
-    .attr("x2",function (d) { return d.target.gx; })
+    .attr("x2", function (d) { return d.target.gx; })
     .attr("y2", function (d) { return d.target.gy; });
   this.globalgraphLinks.exit().remove();
 
@@ -311,7 +333,7 @@ Method_One.prototype.Redraw = function (w, h) {
     .linkDistance(this.LinkLength.bind(this))
     .size([this.width, this.height]);
 
- 
+
 
 };
 
