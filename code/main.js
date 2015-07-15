@@ -217,7 +217,9 @@ var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "graphTest3c.json", url: "data/graphTest3c.json"}, 
   {name: "circleGraph50-2.json", url: "data/circleGraph50-2.json"},
    {name: "oscillatingValuesNodes.json", url: "data/oscillatingValuesNodes.json"},
-   { name: "oscillatingValuesNodesEdges3.json", url: "data/oscillatingValuesNodesEdges3.json" }
+   { name: "oscillatingValuesNodesEdges3.json", url: "data/oscillatingValuesNodesEdges3.json" },
+   { name: "NodesLife.json", url: "data/NodesLife.json" }
+  
 ];
 
 

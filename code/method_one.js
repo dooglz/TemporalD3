@@ -63,6 +63,8 @@ Method_One.prototype.foci = [
   { x: 200, y: 346 }
 ];
 
+//######################################################################
+
 Method_One.prototype.SetData = function (d) {
   this.data = d;
   this.filteredLinks = undefined;
@@ -93,9 +95,11 @@ Method_One.prototype.Recalculate = function () {
   this.CaluclateGlobalLayout();
 }
 
+//######################################################################
+//########    Global Layout
+//######################################################################
 Method_One.prototype.GlobalLayoutDone = function () {
   console.log("Global force layout done");
-
   //copy positions
   this.data.nodes.forEach(function (o) {
     CopyAttributes(o, ["x", "y"], ["gx", "gy"]);
@@ -142,24 +146,6 @@ Method_One.prototype.CaluclateGlobalLayoutLoop = function () {
   }
   this.globalForceLayout.resume();
   this.globalForceLayout.tick();
-}
-
-Method_One.prototype.CaluclateLocalLayouts = function () {
-  SetLoadingBarColour("#b233b7");
-  //how many layouts are we creating?
-  this.LocalLayouts = [];
-  var max = this.CountDiscreetStepsInRange(this.minDate, this.maxDate);
-  console.log("Creating %o local layouts", max);
-  for (var i = 0; i < max; i++) {
-    var local = {};
-    local.discreet = i;
-    var dd = this.getDateRangeFromDiscreet(i);
-    local.minDate = dd.min;
-    local.maxDate = dd.max;
-    this.LocalLayouts.push(local);
-    this.LocalLayoutPercentDone = (i / max) * 100.0;
-  }
-  this.LocalLayoutPercentDone = 100;
 }
 
 Method_One.prototype.GlobalTick = function (e) {
@@ -220,6 +206,103 @@ Method_One.prototype.HideGlobalLayout = function () {
   this.globalgraphLinks.remove();
   this.globalgraphNodes.remove();
 }
+
+//######################################################################
+//########    Local Layout
+//######################################################################
+Method_One.prototype.CaluclateLocalLayouts = function () {
+  SetLoadingBarColour("#b233b7");
+  //how many layouts are we creating?
+  this.LocalLayouts = [];
+  var max = this.CountDiscreetStepsInRange(this.minDate, this.maxDate);
+  console.log("Creating %o local layouts", max);
+  this.LocalLayoutPercentDone = 0;
+  this.LocalLayoutTickCount = 0;
+  for (var i = 0; i < max; i++) {
+    var local = {};
+    local.discreet = i;
+    var dd = this.getDateRangeFromDiscreet(i);
+    local.minDate = dd.min;
+    local.maxDate = dd.max;
+    this.LocalLayouts.push(local);
+  }
+  this.localLayoutMaxTicks = 3000;
+  this.localLayoutMaxTime = 2500; //2.5 seconds
+  this.localLayoutLoopTimeout = setInterval(this.CaluclateLocalLayoutLoop.bind(this), 1);
+}
+
+Method_One.prototype.CaluclateLocalLayoutLoop = function () {
+  this.LocalLayoutPercentDone = (this.LocalLayoutTickCount / this.LocalLayouts.length) * 100.0;
+  if (this.LocalLayoutPercentDone >= 100) {
+    clearTimeout(this.localLayoutLoopTimeout);
+    this.LocalLayoutPercentDone = 100;
+    this.LocalLayoutDone();
+    return;
+  }
+  var local = this.LocalLayouts[this.LocalLayoutTickCount];
+  if (local.done === true) {
+    //copy positions
+    this.data.nodes.forEach(function (o) {
+      CopyAttributesIntoArray(o, ["x", "y"], ["lx", "ly"],local.discreet);
+    }, this);
+    //next
+    this.LocalLayoutTickCount++;
+
+  } else if (local.done === false) {
+    //keep processing this layout
+    local.TickCount++;
+    //todo add in time
+    if (local.TickCount > this.localLayoutMaxTicks) {
+      local.done === true;
+      local.ForceLayout.stop();
+    } else {
+      local.ForceLayout.resume();
+      local.ForceLayout.tick();
+      console.log("ticking",this.LocalLayoutTickCount);
+    }
+  } else {
+    //new layout, set it up
+    local.TickCount = 0;
+    local.done = false;
+    //zero position of all nodes
+    this.data.nodes.forEach(function (o, i, array) {
+      o.px = o.py = o.x = o.y = 0;
+    });
+    //create a new force layout
+    local.ForceLayout = d3.layout.force()
+      .gravity(.25)
+      .charge(-840)
+      .friction(0.3)
+      .linkDistance(this.LinkLength.bind(this))
+      .size([this.width, this.height])
+      .nodes(this.data.nodes)
+      .links(this.data.links)
+      .on("tick", this.LocalTick.bind(this));
+    local.ForceLayout.start();
+  }
+
+}
+Method_One.prototype.CaluclateLocalLayoutInnerLoop = function () {
+  var local = this.LocalLayouts[this.LocalLayoutTickCount];
+  //this.GlobalLayoutPercentDone = ((new Date() - this.globalForceLayoutStartTime) / this.globalForceLayoutMaxTime) * 100.0;
+}
+
+Method_One.prototype.LocalLayoutDone = function () {
+  console.log("Local layouts done");
+}
+
+Method_One.prototype.LocalTick = function (e) {
+  var channel = this.getNodeChannel("Gravity Point");
+  if (channel.inUse) {
+    var k = .1 * e.alpha;
+    this.data.nodes.forEach($.proxy(function (o, i, array) {
+      var point = Math.round((this.foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam));
+      o.y += ((this.halfHeight + this.foci[point].y) - o.y) * k;
+      o.x += ((this.halfWidth + this.foci[point].x) - o.x) * k;
+    }, this));
+  }
+};
+
 //######################################################################
 //########    Main Update
 //######################################################################

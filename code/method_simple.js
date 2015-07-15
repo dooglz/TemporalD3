@@ -24,7 +24,7 @@ function Method_Simple() {
     //{ name: "Test TextBox", ptype: "textbox", pval: "" },
     { name: "Disable rest", ptype: "checkbox", pval: false },
     { name: "Clamp within Canvas", ptype: "checkbox", pval: false },
-    { name: "Cumulative", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; } }
+    { name: "Cumulative", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } }
   ];
   this.nodeChannels = [
     { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -67,8 +67,9 @@ Method_Simple.prototype.foci = [
 Method_Simple.prototype.SetData = function (d) {
   this.data = d;
   this.filteredLinks = undefined;
-      this.RedoNodes();
-    this.RedoLinks();
+  this.filteredNodes = undefined;
+  this.RedoNodes();
+  this.RedoLinks();
 };
 
 //######################################################################
@@ -77,8 +78,25 @@ Method_Simple.prototype.SetData = function (d) {
 
 Method_Simple.prototype.Update = function () {
   Base_Method.prototype.Update.call(this);
-  if (this.filteredLinks === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
-    //filter data by date
+
+
+
+  if (this.filteredNodes === undefined || this.filteredLinks === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
+    //filter nodes by date
+    this.filteredNodes = this.data.nodes.filter(
+      $.proxy(function (d) {
+        var b;
+        if (selected_method.getParam("Cumulative").pval) {
+          b = IsNodeEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
+        } else {
+          b = NodeCreatedInRange(d, this.currentDateMin, this.currentDateMax);
+        }
+        if (b !== false && b !== true) {
+          console.error(b);
+        }
+        return b;
+      }, this));
+    //filter links by date
     this.filteredLinks = this.data.links.filter(
       $.proxy(function (d) {
         var b;
@@ -90,9 +108,19 @@ Method_Simple.prototype.Update = function () {
         if (b !== false && b !== true) {
           console.error(b);
         }
-        return b;
-        //return (this.currentDateMax >= new Date(d.date) && this.currentDateMin <= new Date(d.date));
+        if (b) {
+          //check node exists
+          var source = IsNumber(d.target) ? this.data.nodes[d.target]: d.target;
+          var target = IsNumber(d.source) ? this.data.nodes[d.source]: d.source;
+          if ( $.inArray(source, this.filteredNodes) == -1 || $.inArray(target, this.filteredNodes) == -1) {
+           // console.warn("Link with no node! ",this.data.nodes[d.target]);
+            return false;
+          }
+          return true;
+        }
+        return false;
       }, this));
+
     this.prev_currentDateMin = this.currentDateMin;
     this.prev_currentDateMax = this.currentDateMax;
   }
@@ -126,7 +154,7 @@ Method_Simple.prototype.Update = function () {
 
   //Create nodes
   this.graphNode = this.svgContainer.selectAll("circle")
-    .data(this.data.nodes);
+    .data(this.filteredNodes);
   this.graphNode.enter()
     .append("circle")
     .attr("r", this.NodeSize.bind(this))
@@ -155,7 +183,7 @@ Method_Simple.prototype.Update = function () {
   //restart simulation
   //force.stop();
   //console.log("staring force %o, nodes: %o, links:%o",this.forceLayout,this.data.nodes,this.filteredLinks);
-  this.forceLayout.nodes(this.data.nodes).links(this.filteredLinks).on("tick", this.Tick.bind(this)).start();
+  this.forceLayout.nodes(this.filteredNodes).links(this.filteredLinks).on("tick", this.Tick.bind(this)).start();
 };
 
 //######################################################################
@@ -254,11 +282,11 @@ Method_Simple.prototype.Tick = function (e) {
 
 Method_Simple.prototype.RedoLinks = function () {
   if (this.graphLink === undefined) { return; }
- // console.log("method: re-doing links");
+  // console.log("method: re-doing links");
   this.graphLink.style("stroke", this.Linkcolour.bind(this))
-  .style("stroke-width", this.LinkWidth.bind(this)) 
-  .style("stroke-dasharray", this.LinkDash.bind(this));
-     
+    .style("stroke-width", this.LinkWidth.bind(this))
+    .style("stroke-dasharray", this.LinkDash.bind(this));
+
   this.forceLayout.start();
 };
 
@@ -283,8 +311,8 @@ Method_Simple.prototype.Linkcolour = function (d) {
 Method_Simple.prototype.LinkWidth = function (d) {
   var channel = this.getLinkChannel("Link Width");
   if (channel.inUse) {
-    var q = (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)) 
-    if(q == 0){
+    var q = (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax))
+    if (q == 0) {
       q = "0.5";
     }
     return q + "px";
@@ -297,7 +325,7 @@ Method_Simple.prototype.LinkDash = function (d) {
   var channel = this.getLinkChannel("Link Width");
   if (channel.inUse) {
     var q = getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
-    if(q == 0){
+    if (q == 0) {
       return "10";
     }
   }

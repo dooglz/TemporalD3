@@ -575,6 +575,9 @@ function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute, selected
   }
 }
 //true if link was created before range end AND died after range start
+function IsNodeEverAliveInRange(node, min, max) {
+  return IsLinkEverAliveInRange(node, min, max);
+}
 function IsLinkEverAliveInRange(link, min, max) {
   if (graphdata.date_type == "static") { return true; }
   //todo take into account multiple births and deaths
@@ -595,10 +598,12 @@ function IsLinkEverAliveInRange(link, min, max) {
     LinkBirthday = new Date(link.date);
     LinkDeathDay = Infinity
   }
-
   return (LinkBirthday <= max && LinkDeathDay >= min);
 }
 
+function NodeCreatedInRange(node, min, max) {
+  return LinkCreatedInRange(node, min, max);
+}
 //true if link created during range
 function LinkCreatedInRange(link, min, max) {
   var LinkBirthday;
