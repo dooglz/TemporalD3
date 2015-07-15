@@ -225,14 +225,14 @@ Method_One.prototype.CaluclateLocalLayouts = function () {
   SetLoadingBarColour("#b233b7");
   //how many layouts are we creating?
   this.LocalLayouts = [];
-  var max = this.CountDiscreetStepsInRange(this.minDate, this.maxDate);
+  var max = this.CountDiscreetStepsInRange(this.minDate, this.maxDate, this.data.date_type);
   console.log("Creating %o local layouts", max);
   this.LocalLayoutPercentDone = 0;
   this.LocalLayoutTickCount = 0;
   for (var i = 0; i < max; i++) {
     var local = {};
     local.discreet = i;
-    var dd = this.getDateRangeFromDiscreet(i);
+    var dd = this.getDateRangeFromDiscreet(i, this.data.date_type);
     local.minDate = dd.min;
     local.maxDate = dd.max;
     this.LocalLayouts.push(local);

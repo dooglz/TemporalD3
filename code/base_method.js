@@ -52,8 +52,8 @@ Base_Method.prototype.SetDate = function (higher, lower) {
   }
   this.currentDateMin = lower;
   this.currentDateMax = higher;
-      this.RedoNodes();
-    this.RedoLinks();
+  this.RedoNodes();
+  this.RedoLinks();
 };
 
 Base_Method.prototype.SetData = function (d) {
@@ -169,7 +169,7 @@ Base_Method.prototype.forceLayoutPercentDone = function (force) {
 }
 
 Base_Method.prototype.getRangeFromDiscreet = function (discreetTime) {
-  if(this.data.date_type == "number" || this.data.date_type == "static"){
+  if (this.data.date_type == "number" || this.data.date_type == "static") {
     return { min: discreetTime, max: discreetTime };
   }
   //base functionality is to round to the whole month
@@ -188,20 +188,49 @@ Base_Method.prototype.getDiscreetfromDate = function (date) {
   return ((this.minDate - this.minDate.getYear()) * 12) + (this.minDate - this.minDate.getMonth());
 }
 
-Base_Method.prototype.getDateRangeFromDiscreet = function (discreet) {
-  var mind = new Date(this.minDate);
-  mind.setDate(1);
-  mind.setMonth(mind.getMonth()+discreet);
-  var maxd = new Date(mind);
-  maxd.setMonth(maxd.getMonth()+1);
-  return {min:mind,max:maxd}
+Base_Method.prototype.getDateRangeFromDiscreet = function (discreet, date_type) {
+  if (date_type === undefined) {
+    date_type = "date";
+  }
+  if (date_type == "date") {
+    var mind = new Date(this.minDate);
+    mind.setDate(1);
+    mind.setMonth(mind.getMonth() + discreet);
+    var maxd = new Date(mind);
+    maxd.setMonth(maxd.getMonth() + 1);
+    return { min: mind, max: maxd }
+  } else if (date_type == "number") {
+    return { min: Math.max(discreet, this.minDate), max: Math.min(discreet + 1, this.maxDate) };
+  } else {
+    return { min: null, max: null };
+  }
 }
-Base_Method.prototype.getDateFromDiscreet = function (discreet) {
-  var dd = new Date(this.minDate);
-  dd.setDate(1);
-  dd.setMonth(dd.getMonth()+discreet);
-  return dd;
+Base_Method.prototype.getDateFromDiscreet = function (discreet, date_type) {
+  if (date_type === undefined) {
+    date_type = "date";
+  }
+  if (date_type == "date") {
+    var dd = new Date(this.minDate);
+    dd.setDate(1);
+    dd.setMonth(dd.getMonth() + discreet);
+    return dd;
+  } else if (date_type == "number") {
+    return discreet;
+  } else {
+    return null;
+  }
 }
-Base_Method.prototype.CountDiscreetStepsInRange = function (min, max) {
-  return ((max.getYear() - min.getYear()) * 12) + (max.getMonth() - min.getMonth());
+Base_Method.prototype.CountDiscreetStepsInRange = function (min, max, date_type) {
+  if (date_type === undefined) {
+    date_type = "date";
+  }
+  if (date_type == "date") {
+    return ((max.getYear() - min.getYear()) * 12) + (max.getMonth() - min.getMonth());
+  } else if (date_type == "number") {
+    max = Math.min(max, this.maxDate);
+    min = Math.max(min, this.minDate);
+    return (max - this.minDate) - (min - this.minDate);
+  } else {
+    return 0;
+  }
 }
