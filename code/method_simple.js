@@ -67,6 +67,8 @@ Method_Simple.prototype.foci = [
 Method_Simple.prototype.SetData = function (d) {
   this.data = d;
   this.filteredLinks = undefined;
+      this.RedoNodes();
+    this.RedoLinks();
 };
 
 //######################################################################
@@ -103,7 +105,8 @@ Method_Simple.prototype.Update = function () {
   this.graphLink = this.svgContainer.selectAll("line").data(this.filteredLinks);
   this.graphLink.enter().append("line")
     .style("stroke", this.Linkcolour.bind(this))
-    .style("stroke-width", this.LinkWidth.bind(this));
+    .style("stroke-width", this.LinkWidth.bind(this))
+    .style("stroke-dasharray", this.LinkDash.bind(this));
   //add hover tooltip
   this.graphLink.on("mouseover", $.proxy(function (d) {
     var str = "";
@@ -252,7 +255,10 @@ Method_Simple.prototype.Tick = function (e) {
 Method_Simple.prototype.RedoLinks = function () {
   if (this.graphLink === undefined) { return; }
  // console.log("method: re-doing links");
-  this.graphLink.style("stroke", this.Linkcolour.bind(this)).style("stroke-width", this.LinkWidth.bind(this));
+  this.graphLink.style("stroke", this.Linkcolour.bind(this))
+  .style("stroke-width", this.LinkWidth.bind(this)) 
+  .style("stroke-dasharray", this.LinkDash.bind(this));
+     
   this.forceLayout.start();
 };
 
@@ -277,11 +283,27 @@ Method_Simple.prototype.Linkcolour = function (d) {
 Method_Simple.prototype.LinkWidth = function (d) {
   var channel = this.getLinkChannel("Link Width");
   if (channel.inUse) {
-    return (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)) + "px";
+    var q = (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)) 
+    if(q == 0){
+      q = "0.5";
+    }
+    return q + "px";
   } else {
     return "1.5px";
   }
 };
+
+Method_Simple.prototype.LinkDash = function (d) {
+  var channel = this.getLinkChannel("Link Width");
+  if (channel.inUse) {
+    var q = getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
+    if(q == 0){
+      return "10";
+    }
+  }
+  return "0";
+};
+
 
 Method_Simple.prototype.LinkLength = function (d) {
   var channel = this.getLinkChannel("Link Length");

@@ -364,6 +364,89 @@ function ParseData(data) {
   } else {
     console.error(data.date_type);
   }
+  
+  if (data.date_type == "date" || data.date_type == "number") {
+    data.nodes.forEach(function (o) {
+     var nval;
+     if (o.date !== undefined) {
+        nval = o.date
+        if (data.date_type == "date") {
+          if (!IsDate(nval)) {
+            console.error("%o is not a valid date", nval);
+          }
+          nval = new Date(nval).valueOf();
+        }
+        maxdate = Math.max(maxdate, nval);
+        minDate = Math.min(minDate, nval);
+      }
+      if (o.start !== undefined) {
+        nval = o.start;
+        if (data.date_type == "date") {
+          if (!IsDate(nval)) {
+            console.error("%o is not a valid date", nval);
+          }
+          nval = new Date(nval).valueOf();
+        }
+        maxdate = Math.max(maxdate, nval);
+        minDate = Math.min(minDate, nval);
+      }
+      if (o.end !== undefined) {
+        nval = o.end;
+        if (data.date_type == "date") {
+          if (!IsDate(nval)) {
+            console.error("%o is not a valid date", nval);
+          }
+          nval = new Date(nval).valueOf();
+        }
+        maxdate = Math.max(maxdate, nval);
+        minDate = Math.min(minDate, nval);
+      }
+      if (o.attributes !== undefined) {
+        for (var f = 0; f < o.attributes.length; f++) {
+          var attribute = o.attributes[f];
+          if (attribute.value !== undefined) {
+            nval = attribute.value;
+            if (data.date_type == "date") {
+              if (!IsDate(nval)) {
+                console.error("%o is not a valid date", nval);
+              }
+              nval = new Date(nval).valueOf();
+            }
+            maxdate = Math.max(maxdate, nval);
+            minDate = Math.min(minDate, nval);
+          } else if (attribute.values !== undefined) {
+            for (var q = 0; q < attribute.values.length; q++) {
+              if (attribute.values[q].start !== undefined) {
+                nval = attribute.values[q].start
+                if (data.date_type == "date") {
+                  if (!IsDate(nval)) {
+                    console.error("%o is not a valid date", nval);
+                  }
+                  nval = new Date(nval).valueOf();
+                }
+                maxdate = Math.max(maxdate, nval);
+                minDate = Math.min(minDate, nval);
+              }
+              if (attribute.values[q].end !== undefined) {
+                nval = attribute.values[q].end
+                if (data.date_type == "date") {
+                  if (!IsDate(nval)) {
+                    console.error("%o is not a valid date", nval);
+                  }
+                  nval = new Date(nval).valueOf();
+                }
+                maxdate = Math.max(maxdate, nval);
+                minDate = Math.min(minDate, nval);
+              }
+            }
+          }
+        }
+      }
+    });
+   }
+
+  
+  
   if (maxdate == "Invalid Date" || minDate == "Invalid Date") {
     console.error(data.date_type);
   }

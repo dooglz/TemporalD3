@@ -52,6 +52,8 @@ Base_Method.prototype.SetDate = function (higher, lower) {
   }
   this.currentDateMin = lower;
   this.currentDateMax = higher;
+      this.RedoNodes();
+    this.RedoLinks();
 };
 
 Base_Method.prototype.SetData = function (d) {
