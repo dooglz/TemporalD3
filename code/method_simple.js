@@ -24,7 +24,8 @@ function Method_Simple() {
     //{ name: "Test TextBox", ptype: "textbox", pval: "" },
     { name: "Disable rest", ptype: "checkbox", pval: false },
     { name: "Clamp within Canvas", ptype: "checkbox", pval: false },
-    { name: "Cumulative", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } }
+    { name: "Cumulative Links", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } },
+    { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } }
   ];
   this.nodeChannels = [
     { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -78,15 +79,12 @@ Method_Simple.prototype.SetData = function (d) {
 
 Method_Simple.prototype.Update = function () {
   Base_Method.prototype.Update.call(this);
-
-
-
   if (this.filteredNodes === undefined || this.filteredLinks === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
     //filter nodes by date
     this.filteredNodes = this.data.nodes.filter(
       $.proxy(function (d) {
         var b;
-        if (selected_method.getParam("Cumulative").pval) {
+        if (selected_method.getParam("Cumulative Nodes").pval) {
           b = IsNodeEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
         } else {
           b = NodeCreatedInRange(d, this.currentDateMin, this.currentDateMax);
@@ -100,7 +98,7 @@ Method_Simple.prototype.Update = function () {
     this.filteredLinks = this.data.links.filter(
       $.proxy(function (d) {
         var b;
-        if (selected_method.getParam("Cumulative").pval) {
+        if (selected_method.getParam("Cumulative Links").pval) {
           b = IsLinkEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
         } else {
           b = LinkCreatedInRange(d, this.currentDateMin, this.currentDateMax);
@@ -124,8 +122,17 @@ Method_Simple.prototype.Update = function () {
     this.prev_currentDateMin = this.currentDateMin;
     this.prev_currentDateMax = this.currentDateMax;
   }
-
+  
+  if(this.nodeTooltip !== undefined){
+    $(".tooltip").remove();
+    this.nodeTooltip = undefined;
+  }
   this.nodeTooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
+  
+  if(this.graphLinkTooltip !== undefined){
+    $(".tooltip.link").remove();
+    this.graphLinkTooltip = undefined;
+  }
   this.graphLinkTooltip = d3.select("body").append("div").attr("class", "tooltip link").style("opacity", 0);
   
 
