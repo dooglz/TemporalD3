@@ -175,41 +175,50 @@ function ParseData(data) {
     ) {
     
     //new format
-    console.warn("New Json Format, probably loads of bugs");
+    console.warn("New Json Format");
     
     //grab link attributes
     data.links = data.edges;
-    data.link_keys = []
-    if (data.links[0].attributes != undefined) {
+    data.link_keys = [];
+    if (data.links[0].attributes !== undefined) {
       for (var i = 0; i < data.links[0].attributes.length; i++) {
         var attribute = data.links[0].attributes[i];
-        data.links_keys.push(attribute.name);
+        data.link_keys.push(attribute.name);
         FillAttributeInfo(data.link_attributes_info, attribute, data.links);
       }
     }
     
-    //get date format
-    var date_sample;
-    if (data.links[0].start !== undefined || data.links[0].end !== undefined) {
-      if (data.links[0].start !== undefined) {
-        date_sample = data.links[0].start;
-      } else {
-        date_sample = data.links[0].end;
-      }
-      data.date_type = typeof (date_sample);
-      if (data.date_type == "string") {
-        if (IsDate(date_sample)) {
-          data.date_type = "date";
+    /*
+         || (data.links[0].attributes[0] !== undefined && 
+        data.links[0].attributes[0].values[0] !== undefined && (
+        data.links[0].attributes[0].values[0].start !== undefined || 
+        data.links[0].attributes[0].values[0].end !== undefined)
+    */
+    if(data.date_type !== undefined){
+      console.log("Json file specified date-type as %o", data.date_type);
+    }else{
+      //get date format
+      var date_sample;
+      if (data.links[0].start !== undefined || data.links[0].end !== undefined) {
+        if (data.links[0].start !== undefined) {
+          date_sample = data.links[0].start;
         } else {
-          console.error("Unkown date type");
-          data.date_type = "static";
+          date_sample = data.links[0].end;
         }
+        data.date_type = typeof (date_sample);
+        if (data.date_type == "string") {
+          if (IsDate(date_sample)) {
+            data.date_type = "date";
+          } else {
+            console.error("Unkown date type");
+            data.date_type = "static";
+          }
+        }
+      } else {
+        data.date_type = "static";
       }
-    } else {
-      data.date_type = "static";
+      console.log("Determined date-type as %o, from sample %o", data.date_type, date_sample);
     }
-    console.log("Determined date-type as %o, from sample %o", data.date_type, date_sample);
-
     //make sure targets are in correct format
     data.links.forEach(function (o) {
       if (typeof (o.source) !== "number" || typeof (o.target) !== "number") {
@@ -306,6 +315,47 @@ function ParseData(data) {
         maxdate = Math.max(maxdate, nval);
         minDate = Math.min(minDate, nval);
       }
+      if (o.attributes !== undefined) {
+        for (var f = 0; f < o.attributes.length; f++) {
+          var attribute = o.attributes[f];
+          if (attribute.value !== undefined) {
+            nval = attribute.value;
+            if (data.date_type == "date") {
+              if (!IsDate(nval)) {
+                console.error("%o is not a valid date", nval);
+              }
+              nval = new Date(nval).valueOf();
+            }
+            maxdate = Math.max(maxdate, nval);
+            minDate = Math.min(minDate, nval);
+          } else if (attribute.values !== undefined) {
+            for (var q = 0; q < attribute.values.length; q++) {
+              if (attribute.values[q].start !== undefined) {
+                nval = attribute.values[q].start
+                if (data.date_type == "date") {
+                  if (!IsDate(nval)) {
+                    console.error("%o is not a valid date", nval);
+                  }
+                  nval = new Date(nval).valueOf();
+                }
+                maxdate = Math.max(maxdate, nval);
+                minDate = Math.min(minDate, nval);
+              }
+              if (attribute.values[q].end !== undefined) {
+                nval = attribute.values[q].end
+                if (data.date_type == "date") {
+                  if (!IsDate(nval)) {
+                    console.error("%o is not a valid date", nval);
+                  }
+                  nval = new Date(nval).valueOf();
+                }
+                maxdate = Math.max(maxdate, nval);
+                minDate = Math.min(minDate, nval);
+              }
+            }
+          }
+        }
+      }
     }, this);
     if (data.date_type == "date") {
       maxdate = new Date(maxdate);
@@ -321,19 +371,19 @@ function ParseData(data) {
   data.minDate = minDate;
 }
 
-function getNodeAttributeAsPercentage(data, node, attribute) {
+function getNodeAttributeAsPercentage(data, node, attribute,minDate,maxDate) {
   return getNLAttributeAsPercentage(true, data, node, attribute);
 }
-function getLinkAttributeAsPercentage(data, link, attribute) {
-  return getNLAttributeAsPercentage(false, data, link, attribute);
+function getLinkAttributeAsPercentage(data, link, attribute,minDate,maxDate) {
+  return getNLAttributeAsPercentage(false, data, link, attribute,minDate,maxDate);
 }
-function getAttributeAsPercentage(data, nodeOrLink, attribute) {
+function getAttributeAsPercentage(data, nodeOrLink, attribute,minDate,maxDate) {
   if (data.node_keys.indexOf(attribute) != -1) {
     //node
-    return getNLAttributeAsPercentage(true, data, nodeOrLink, attribute);
+    return getNLAttributeAsPercentage(true, data, nodeOrLink, attribute,minDate,maxDate);
   } else if (data.link_keys.indexOf(attribute) != -1) {
     //link
-    return getNLAttributeAsPercentage(false, data, nodeOrLink, attribute);
+    return getNLAttributeAsPercentage(false, data, nodeOrLink, attribute,minDate,maxDate);
   } else {
     console.error("coudn't determine type of attribute: %o", attribute);
     return 0;
@@ -387,8 +437,9 @@ function getAttributeValue(atype, data, nodeOrLink, attribute, selecteddateMin,s
           //many values, by time
           for (var i = 0; i < attribute_value.values.length; i++) {
             var thisvalue = attribute_value.values[i];
-            if((thisvalue.start === undefined || thisvalue.start <= selecteddateMax) && (thisvalue.end === undefined || thisvalue.end >= selecteddateMin)){
+            if((thisvalue.start !== undefined && thisvalue.start <= selecteddateMax) && (thisvalue.end !== undefined && thisvalue.end >= selecteddateMin)){
               return thisvalue.value;
+              
             }
           }
           console.error("Attribute had no value within range",attribute,nodeOrLink,selecteddateMin,selecteddateMax);
@@ -512,10 +563,20 @@ function RemoveFromArray(array, removal) {
   }
 }
 
-function CopyAttributes(obj, sources, destiantions){
+function CopyAttributes(obj, sources, destinations){
   for (var i = 0; i < sources.length; i++) {
     var source = sources[i];
-    var dest = destiantions[i];
+    var dest = destinations[i];
     obj[dest] = obj[source];
+  }
+}
+function CopyAttributesIntoArray(obj, sources, destinations,index){
+  for (var i = 0; i < sources.length; i++) {
+    var source = sources[i];
+    var dest = destinations[i];
+    if(obj[dest] === undefined){
+      obj[dest] = [];
+    }
+    obj[dest][index] = obj[source];
   }
 }

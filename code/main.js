@@ -63,6 +63,7 @@ function slided() {
 
 var dateSlider;
 function CreateSlider(ranged) {
+      if (ranged === undefined) { ranged = false; }
   var tickvals = [];
   var ticknames = [];
   var year_diff = 0;
@@ -71,13 +72,21 @@ function CreateSlider(ranged) {
     dateSlider = $("#ex13").slider({ enabled: false, min: 0, max: 0, value: 0 }).data('slider');
   } else if (graphdata.date_type == "number") {
     spread = (endDate - startDate) / slider_num_ticks;
-    spread = Math.ceil((spread) / slider_num_steps) * slider_num_steps;
+    spread = Math.ceil((spread) / 1.0) * 1.0;
     for (var i = 0; i < (slider_num_ticks); i++) {
       tickvals[i] = i * spread;
       ticknames[i] = "" + tickvals[i];
     }
-    dateSlider = $("#ex13").slider({ticks: tickvals,ticks_labels: ticknames,
-    ticks_snap_bounds: 0,min: startDate, max: endDate, value: 0 }).on('slide', slided).data('slider');
+    dateSlider = $("#ex13").slider({
+      ticks: tickvals,
+      ticks_labels: ticknames,
+      ticks_snap_bounds: 0,
+      min: startDate,
+      max: endDate,
+      step: 1,
+      range: ranged,
+      value: 0 }
+      ).on('change', slided).data('slider');
   } else {
     year_diff = endDate.getFullYear() - startDate.getFullYear();
     spread = ((year_diff + 1) * 12.0) / (slider_num_ticks * 1.0);
@@ -88,8 +97,6 @@ function CreateSlider(ranged) {
       tickvals[i] = i * spread;
       ticknames[i] = SliderVarToDate((i * spread)).toDateString().slice(-4);
     }
-
-    if (ranged === undefined) { ranged = false; }
     dateSlider = $("#ex13").slider({
       ticks: tickvals,
       ticks_labels: ticknames,
@@ -109,15 +116,15 @@ function CreateSlider(ranged) {
           return SliderVarToDate(value).toDateString().slice(4);
         }
       },
-    }).on('slide', slided).data('slider');
-    //this is just for styling
+    }).on('change', slided).data('slider');
+  }
+      //this is just for styling
     if (ranged) {
       $("#ex13Slider").addClass("ranged");
     } else {
       $("#ex13Slider").addClass("discreet");
     }
     dateSlider.enable();
-  }
 
 }
 
@@ -207,8 +214,13 @@ var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "freeScaleTime-300-1.9", url: "data/freeScaleTime-300-1.9.json" },
   { name: "graphTest2b", url: "data/graphTest2b.json" },
   { name: "graphTest3b", url: "data/graphTest3b.json" },
-  { name: "graphTest3c.json", url: "data/graphTest3c.json" }
+  { name: "graphTest3c.json", url: "data/graphTest3c.json"}, 
+  {name: "circleGraph50-2.json", url: "data/circleGraph50-2.json"},
+   {name: "oscillatingValuesNodes.json", url: "data/oscillatingValuesNodes.json"},
+   { name: "oscillatingValuesNodesEdges3.json", url: "data/oscillatingValuesNodesEdges3.json" }
 ];
+
+
 var loadedData = [];
 ChangeData("Les Miserables");
 //dropdown selector ------------
@@ -587,6 +599,7 @@ function ShowLoadingBar(percent, message) {
     progressbarVisible = true;
   }
   progressbar.css('width', percent + '%');
+  progressbar.css('transition', "width .1s ease");
   progressbar.html(percent + "% " + message);
 }
 
