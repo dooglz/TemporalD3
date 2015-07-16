@@ -628,3 +628,17 @@ function HideLoadingBar() {
   progressContainer.detach();
   progressbarVisible = false;
 }
+
+//######################################################################
+//########    Junk
+//######################################################################
+
+$('#fullscreentoggle').change(function () {
+  var val = $(this).prop('checked');
+  if (val) {
+    $('.container.superwide').css("max-width","90%");
+  } else {
+    $('.container.superwide').css("max-width","1094px");
+  }
+  resize();
+});  
