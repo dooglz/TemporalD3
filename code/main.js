@@ -630,6 +630,42 @@ function HideLoadingBar() {
 }
 
 //######################################################################
+//########    save button
+//######################################################################
+var pngscale = 4.0;
+$('#savebtn').click(function () {
+  //cnvert svg to base64 text
+  var html = d3.select("svg")
+        .attr("version", 1.1)
+        .attr("xmlns", "http://www.w3.org/2000/svg")
+        .node().parentNode.innerHTML;
+  var imgsrc = 'data:image/svg+xml;base64,'+ btoa(html);
+  
+  //setup canvas
+  var w = $("#chart").width();
+  var h = $("#chart").height();
+  $("#canvas").width( w*pngscale).height(h*pngscale);
+  var canvas = document.querySelector("#canvas");
+	var context = canvas.getContext("2d");
+  context.canvas.width = w*pngscale;
+  context.canvas.height = h*pngscale;
+  
+  var image = new Image;
+  image.src = imgsrc;
+  image.onload = function() {
+    //draw to canvas
+	  context.drawImage(image, 0, 0, w*pngscale, h*pngscale);
+    //convert  to png
+    var canvasdata = canvas.toDataURL("image/png");
+    //download
+	  var a = document.createElement("a");
+	  a.download = graphdata.displayName+"_"+selected_method.name+"_"+selectedDate.toString()+".png";
+	  a.href = canvasdata;
+	  a.click();
+  };
+});
+
+//######################################################################
 //########    Junk
 //######################################################################
 
