@@ -79,6 +79,7 @@ Method_Simple.prototype.SetData = function (d) {
 
 Method_Simple.prototype.Update = function () {
   Base_Method.prototype.Update.call(this);
+  if (this.data == null) { return; }
   if (this.filteredNodes === undefined || this.filteredLinks === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
     //filter nodes by date
     this.filteredNodes = this.data.nodes.filter(
@@ -122,14 +123,14 @@ Method_Simple.prototype.Update = function () {
     this.prev_currentDateMin = this.currentDateMin;
     this.prev_currentDateMax = this.currentDateMax;
   }
-  
-  if(this.nodeTooltip !== undefined){
+
+  if (this.nodeTooltip !== undefined) {
     $(".tooltip").remove();
     this.nodeTooltip = undefined;
   }
   this.nodeTooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
-  
-  if(this.graphLinkTooltip !== undefined){
+
+  if (this.graphLinkTooltip !== undefined) {
     $(".tooltip.link").remove();
     this.graphLinkTooltip = undefined;
   }

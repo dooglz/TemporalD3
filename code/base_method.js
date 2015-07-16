@@ -100,7 +100,7 @@ Base_Method.prototype.ParamChanged = function (param) {
     if (i != -1) {
       console.log("Parameter:%o is now:%o", this.parameters[i].name, this.parameters[i].pval);
       if (this.parameters[i].func !== undefined) {
-        this.parameters[i].func.bind(this)();
+        this.parameters[i].func.bind(this)(this.parameters[i].pval);
       }
     } else {
       console.error("Unkown parameter changed! %o", param);

@@ -16,6 +16,12 @@ var selected_method;
 var slider_num_ticks = 10;
 var slider_num_steps = 12;
 //-----
+$(document).ready(function(){
+  ChangeData("Les Miserables");
+  changeMethod(m_simple);
+ }) 
+
+
 
 $('#dateSliderInput').slider({
   formatter: function (value) {
@@ -57,7 +63,9 @@ function slided() {
     }
     selectedDate = selectedDateMin;
   }
-  selected_method.SetDate(selectedDateMax, selectedDateMin);
+  if(selected_method !== null){
+    selected_method.SetDate(selectedDateMax, selectedDateMin);
+  }
   Update();
 }
 
@@ -193,7 +201,9 @@ function Update() {
   if (graphdata === undefined) {
     return;
   }
-  selected_method.Update();
+  if (selected_method !== null) {
+    selected_method.Update();
+  }
 }
 
 $(window).resize(resize);
@@ -207,7 +217,7 @@ function resize() {
 //######################################################################
 //########    Data Picking, Validating, Loading
 //######################################################################
-var graphdata;
+var graphdata = null;
 var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "Napier Publications", url: "data/napierPublications.json" },
   { name: "freeScaleTime-300-1.4", url: "data/freeScaleTime-300-1.4.json" },
@@ -223,7 +233,7 @@ var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
 
 
 var loadedData = [];
-ChangeData("Les Miserables");
+
 //dropdown selector ------------
 $("#datapicker").html("");
 for (i = 0; i < stockData.length; i++) {
@@ -241,7 +251,9 @@ function ChangeData(dataName) {
   for (i = 0; i < loadedData.length; i++) {
     if (loadedData[i].displayName == dataName) {
       //yep, set and bail.
-      InitChannelMixer(loadedData[i]);
+      if(selected_method !== null){
+        InitChannelMixer(loadedData[i]);
+      }
       graphdata = loadedData[i];
       
       startDate = graphdata.minDate;
@@ -251,8 +263,10 @@ function ChangeData(dataName) {
       selectedDateMax = startDate;
      // console.log("Main setting mindate to: %o and maxdate to: %o", startDate, endDate);
       ReCreateSlider();
-      selected_method.SetDateBounds(startDate, endDate);
-      selected_method.SetData(graphdata);
+      if(selected_method !== null){
+        selected_method.SetDateBounds(startDate, endDate);
+        selected_method.SetData(graphdata);
+      }
       slided();
       Update();
       return;
@@ -426,8 +440,7 @@ var m_simple = new Method_Simple();
 methods.push(m_simple);
 var m_one = new Method_One();
 methods.push(m_one);
-var selected_method;
-changeMethod(m_simple);
+var selected_method = null;
 
 //dropdown selector ------------
 $("#methodpicker").html("");
@@ -483,7 +496,7 @@ function changeMethod(methodName) {
     if (methodName == selected_method) { return; }
     selected_method = methodName;
   }
-  if (oldMethod !== undefined) {
+  if (oldMethod !== undefined && oldMethod !== null) {
     oldMethod.Unload();
   }
 
@@ -580,8 +593,15 @@ function changeMethod(methodName) {
   Readchannels();
   resize();
   selected_method.SetData(graphdata);
+  if(graphdata !== null){
+    slided();
+  }
   Update();
 }
+
+//######################################################################
+//########    Progress Bar
+//######################################################################
 
 var progressbar = $("#progressbar");
 var progressContainer = $("#progressContainer").detach();

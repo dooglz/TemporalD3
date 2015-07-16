@@ -22,19 +22,23 @@ Method_One.prototype.graphNode;
 Method_One.prototype.globalForceLayoutMaxSubTicks = 10;
 Method_One.prototype.globalForceLayoutMaxTicks = 7000;
 Method_One.prototype.globalForceLayoutMaxTime = 4000; //4 seconds
+//Allow Settle: Stop if layout reaches a settled state before maxticks are reached
+Method_One.prototype.globalForceLayoutAllowSettle = false;
+
 Method_One.prototype.localLayoutMaxSubTicks = 50;
 Method_One.prototype.localLayoutMaxTicks = 800;
 Method_One.prototype.localLayoutMaxTime = 2500; //2.5 seconds
-  
+Method_One.prototype.localLayoutAllowSettle = true;
 //Method constructor
 function Method_One() {
   this.name = "Method One";
   this.parameters = [
     { name: "Disable rest", ptype: "checkbox", pval: false },
-    { name: "Clamp within Canvas", ptype: "checkbox", pval: false },
+    { name: "Recalculate Layout", ptype: "button", pval: false, func: function () { this.Recalculate(); }},
     { name: "Cumulative Links", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } },
     { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } },
-    { name: "Recalculate Layout", ptype: "button", pval: false, func: function () { this.Recalculate(); } }
+    { name: "Global: Allow Settle", ptype: "checkbox", pval: false, func: function (val) { this.globalForceLayoutAllowSettle = val; } },
+    { name: "Local: Allow Settle", ptype: "checkbox", pval: true, func: function (val) { this.localLayoutAllowSettle = val;} },
   ];
   this.nodeChannels = [
     { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -158,7 +162,8 @@ Method_One.prototype.CaluclateGlobalLayout = function () {
 
 Method_One.prototype.CaluclateGlobalLayoutLoop = function () {
   this.GlobalLayoutPercentDone = ((new Date() - this.globalForceLayoutStartTime) / this.globalForceLayoutMaxTime) * 100.0;
-  if (this.globalForceLayoutTickCount > this.globalForceLayoutMaxTicks || this.GlobalLayoutPercentDone >= 100) {
+  if (this.globalForceLayoutTickCount > this.globalForceLayoutMaxTicks || this.GlobalLayoutPercentDone >= 100
+    || (this.globalForceLayoutAllowSettle && this.globalForceLayout.alpha() == 0)) {
     clearTimeout(this.globalForceLayoutLoopTimeout);
     this.GlobalLayoutPercentDone = 100;
     this.globalForceLayout.stop();
@@ -166,7 +171,9 @@ Method_One.prototype.CaluclateGlobalLayoutLoop = function () {
     return;
   }
   for (var i = 0; i < this.globalForceLayoutMaxSubTicks; i++) {
-    // this.globalForceLayout.resume();
+    if(!this.globalForceLayoutAllowSettle){
+     this.globalForceLayout.resume();
+    }
     this.globalForceLayout.tick();
   }
   this.globalForceLayoutTickCount += this.globalForceLayoutMaxSubTicks;
@@ -272,13 +279,17 @@ Method_One.prototype.CaluclateLocalLayoutLoop = function () {
   } else if (local.done === false) {
     //keep processing this layout
     
-    if (local.TickCount > this.localLayoutMaxTicks || (new Date() - local.startTime) > this.localLayoutMaxTime) {
+    if (local.TickCount > this.localLayoutMaxTicks || (new Date() - local.startTime) > this.localLayoutMaxTime
+      || (this.localLayoutAllowSettle && local.ForceLayout.alpha() == 0)) {
       console.log("Finished Local Layout %o, ticks:%o", this.LocalLayoutTickCount, local.TickCount);
       local.done = true;
       local.ForceLayout.stop();
     } else {
       for (var i = 0; i < this.localLayoutMaxSubTicks; i++) {
-        //local.ForceLayout.resume();
+        
+        if(!this.localLayoutAllowSettle){
+          local.ForceLayout.resume();
+        }
         local.ForceLayout.tick();
       }
       local.TickCount += this.localLayoutMaxSubTicks;
