@@ -21,8 +21,9 @@
 			});
 //
 			//jQuery.getJSON("http://github.com/api/v2/json/commits/list/" + options["username"] + "/" + options["repo"] + "/" + options["branch"] + "?callback=?", function(data) {
-			console.log("https://api.github.com/repos/" + options["username"] + "/" + options["repo"] + "/commits");
-jQuery.getJSON("https://api.github.com/repos/" + options["username"] + "/" + options["repo"] + "/commits", function(data) {
+      var apiUrl = "https://api.github.com/repos/" + options["username"] + "/" + options["repo"] + "/commits";
+			console.log(apiUrl);
+      $.getJSON(apiUrl, function(data) {
 				$.each(data, function(idx, commit) {
 					
 					// Don't show the first "offset" entries.
@@ -48,7 +49,6 @@ jQuery.getJSON("https://api.github.com/repos/" + options["username"] + "/" + opt
 					obj.append(html);
 				});
 			});
-
 		});
 	};
 

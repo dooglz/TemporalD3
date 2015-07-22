@@ -42,6 +42,9 @@
               <a href="#" data-toggle="modal" data-target="#myModal">Changes</a>
             </li>
             <li>
+              <a href="#" data-toggle="modal" data-target="#myModal2">File Format</a>
+            </li>
+            <li>
               <a href="#" onclick="$('#navcontainer').remove();$('body').css('padding-top','0');">hide navbar</a>
             </li>
           </ul>
@@ -74,11 +77,10 @@
         <div class="col-sm-3">
           <h2>Info</h2>
           <h3>
-            <a class='btn btn-success' href='#' role='button'id="savebtn">Save Img</a>
+            <a class='btn btn-success' href='#' role='button' id="savebtn">Save Img</a>
             <span class="label label-primary" id="infoBox1">Placeholder</span>
             <span class="label label-info" id="infoBox2">Placeholder</span>
             <span class="label label-primary" id="infoBox3">Placeholder</span>
-            
           </h3>
         </div>
         <div class="col-sm-3">
@@ -169,6 +171,20 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" id="myModal2" role="dialog">
+      <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+                  <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <a href="fileformat.html" target="_blank">Click here to open this document in a new window</a>
+        </div>
+          <div class="modal-body" style="overflow:auto; max-height:500px;">
+            <div id="FileFormatDocArea" style="width:100%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-------- Page End ----------->
     <script src="js/jquery-2.1.4.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -179,6 +195,7 @@
     <script src="js/github-commit-history.js"></script>
     <script src="js/mustache.js"></script>
     <script src="js/d3.js" charset="utf-8"></script>
+    <script src="js/showdown.js"></script>
     <script src="code/custom.js"></script>
     <script src="code/base_method.js"></script>
     <script src="code/method_one.js"></script>
@@ -187,13 +204,19 @@
     <script src="code/main.js"></script>
     <script type="text/javascript">
       $( document ).ready(function() {
-          		$('#commitHistory').GithubCommitHistory( {
-          			username: "dooglz",
-          			repo: "TemporalD3",
-          			limit: 10, 
-          			offset: 0
-          		})
-          	});
+        $('#commitHistory').GithubCommitHistory( {
+    			username: "dooglz",
+    			repo: "TemporalD3",
+    			limit: 10, 
+    			offset: 0
+        });
+        var convert = new showdown.Converter().makeHtml;
+        var preview = $("#FileFormatDocArea");
+        $.get( "docs/FileFormat.md", function( data ) {
+          console.log("Loaded fileformat Markup");
+          preview.html(convert(data));
+        });
+      });
     </script>
     <canvas id="canvas" style="display:none"></canvas>
     <canvas id="canvas2" style="display:none"></canvas>
