@@ -45,6 +45,9 @@
               <a href="#" data-toggle="modal" data-target="#myModal2">File Format</a>
             </li>
             <li>
+              <a href="#" data-toggle="modal" data-target="#dataModal">Data Upload</a>
+            </li>
+            <li>
               <a href="#" onclick="$('#navcontainer').remove();$('body').css('padding-top','0');">hide navbar</a>
             </li>
           </ul>
@@ -173,14 +176,34 @@
     </div>
     <div class="modal fade" id="myModal2" role="dialog">
       <div class="modal-dialog modal-lg">
-
         <div class="modal-content">
-                  <div class="modal-header">
+          <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <a href="fileformat.html" target="_blank">Click here to open this document in a new window</a>
-        </div>
+          </div>
           <div class="modal-body" style="overflow:auto; max-height:500px;">
             <div id="FileFormatDocArea" style="width:100%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="dataModal" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Data Upload and Validator</h4>
+          </div>
+          <div class="modal-body" style="overflow:auto; max-height:500px;">
+            <div id="dataModalArea" style="width:100%;">
+              <input type="file" id="file" name="file" />
+              <output id="filelist"></output>
+              <hr>
+              <a class='btn btn-warning' href='#' role='button' id="dataparsebtn" disabled>Parse</a>
+              <a class='btn btn-success' href='#' role='button' id="dataloadbtn" disabled data-dismiss="modal">Load in Ui</a>
+              <hr>
+              <div id="dataParseResults"></div>
+            </div>
           </div>
         </div>
       </div>

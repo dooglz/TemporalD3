@@ -230,21 +230,25 @@ var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "oscillatingValuesNodesEdges3.json", url: "data/oscillatingValuesNodesEdges3.json" },
   { name: "NodesLife.json", url: "data/NodesLife.json" }
 ];
-
+UpdateDataPicker();
 
 var loadedData = [];
 
 //dropdown selector ------------
-$("#datapicker").html("");
-for (i = 0; i < stockData.length; i++) {
-  $("#datapicker").append("<option>" + stockData[i].name + "</option>");
-}
 
 $("#datapicker").on('change', function () {
   ChangeData($("#datapicker").val());
   Update();
 });
 
+function UpdateDataPicker(){
+  for (i = 0; i < stockData.length; i++) {
+    if( $("#datapicker").find(":contains('"+stockData[i].name+"')" ).length == 0){
+      $("#datapicker").append("<option>" + stockData[i].name + "</option>");
+    }
+  }
+  $("#datapicker").selectpicker('refresh');
+}
 function ChangeData(dataName) {
   //loaded?
   console.log("changing Data to: " + dataName);
@@ -294,9 +298,12 @@ function ChangeData(dataName) {
       console.log("Loaded");
       newData.url = url;
       newData.displayName = dataName;
-      ParseData(newData);
-      loadedData.push(newData);
-      ChangeData(dataName);
+      if(ParseData(newData)){
+        loadedData.push(newData);
+        ChangeData(dataName);
+      }else{
+        window.alert("Parse error!");
+      }
     }
   });
 }
@@ -666,6 +673,86 @@ $('#savebtn').click(function () {
 });
 
 //######################################################################
+//########    File Uploader
+//######################################################################
+
+InitUploadUi();
+
+
+function InitUploadUi() {
+  // Check for the various File API support.
+  if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
+    alert('The File APIs are not fully supported in this browser.');
+    return;
+  }
+  $('#file').change(OnUploadFile);
+}
+var customDataToParse = undefined;
+function OnUploadFile(){
+  $("#dataparsebtn").attr("disabled", "disabled");
+  $("#dataloadbtn").attr("disabled", "disabled");
+  $("#dataParseResults").html("");
+  customDataToParse = undefined;
+
+  if(this.files.length != 1 || this.files[0] === undefined){
+    console.error("Error reading file");
+    $("#filelist").html("Error reading file");
+    return;
+  }
+  var f = this.files[0];
+  if(f.type != ""){
+    console.error("File doesn't look like json! "+(f.type || 'n/a'));
+    $("#filelist").html("File doesn't look like json! "+(f.type || 'n/a'));
+    return;
+  }
+
+  var infoString = '<li><strong>' + f.name + '</strong> ' + f.size + ' bytes, last modified: ' +
+    (f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a') + '</li>';
+  console.log(f);
+  $("#filelist").html(infoString);
+
+  var reader = new FileReader();
+  reader.onload = (function (theFile) {
+    return function (e) {
+      if (IsJson(e.target.result)) {
+        $("#dataParseResults").html("Json file Loaded");
+        customDataToParse = JSON.parse(e.target.result);
+        customDataToParse.url = f.name;
+        customDataToParse.displayName = "Custom: " + f.name;
+        console.log(customDataToParse);
+        $("#dataparsebtn").removeAttr("disabled");
+      } else {
+        console.error("Error reading Json file");
+        $("#filelist").append("<br>Error reading Json file");
+      }
+    };
+  })(f);
+
+  reader.readAsText(f);
+}
+
+$('#dataparsebtn').click(function () {
+  console.log("custom parsing");
+  $("#dataloadbtn").attr("disabled", "disabled");
+  $("#dataParseResults").html("");
+  if (customDataToParse === undefined) {
+    return;
+  }
+  if (ParseData(customDataToParse)) {
+    $("#dataloadbtn").removeAttr("disabled");
+    $("#dataParseResults").html("Parse Complete<br>Todo:show results");
+  }
+});
+
+$('#dataloadbtn').click(function () {
+  if (customDataToParse === undefined) {
+    return;
+  }
+  loadedData.push(customDataToParse);
+  stockData.push({ name: customDataToParse.displayName, url: customDataToParse.url });
+  UpdateDataPicker();
+});
+//######################################################################
 //########    Junk
 //######################################################################
 
@@ -677,4 +764,13 @@ $('#fullscreentoggle').change(function () {
     $('.container.superwide').css("max-width","1094px");
   }
   resize();
-});  
+});
+  
+function IsJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}

@@ -277,13 +277,16 @@ function ParseData(data) {
     }
   } else {
     console.error("Can't get date range from unkown date type");
+    return false;
   }
 
   if (range.max == "Invalid Date" || range.min == "Invalid Date") {
     console.error(data.date_type);
+    return false;
   }
   data.maxDate = range.max;
   data.minDate = range.min;
+  return true;
 }
 
 function getNodeAttributeAsPercentage(data, node, attribute,minDate,maxDate) {
