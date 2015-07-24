@@ -1,3 +1,4 @@
+/* global Handlebars */
 /// <reference path="../typings/jquery/jquery.d.ts"/>
 /// <reference path="../typings/d3/d3.d.ts"/>
 //######################################################################
@@ -687,7 +688,9 @@ function InitUploadUi() {
   }
   $('#file').change(OnUploadFile);
 }
+
 var customDataToParse = undefined;
+
 function OnUploadFile(){
   $("#dataparsebtn").attr("disabled", "disabled");
   $("#dataloadbtn").attr("disabled", "disabled");
@@ -730,6 +733,9 @@ function OnUploadFile(){
 
   reader.readAsText(f);
 }
+var dataParseOutputTemplate = $("#dataParseResults").html();
+var dataParsetemplate = Handlebars.compile(dataParseOutputTemplate);
+$("#dataParseResults").html("");
 
 $('#dataparsebtn').click(function () {
   console.log("custom parsing");
@@ -740,7 +746,8 @@ $('#dataparsebtn').click(function () {
   }
   if (ParseData(customDataToParse)) {
     $("#dataloadbtn").removeAttr("disabled");
-    $("#dataParseResults").html("Parse Complete<br>Todo:show results");
+    var rendered = dataParsetemplate(customDataToParse);
+    $("#dataParseResults").html(rendered);
   }
 });
 
@@ -752,6 +759,7 @@ $('#dataloadbtn').click(function () {
   stockData.push({ name: customDataToParse.displayName, url: customDataToParse.url });
   UpdateDataPicker();
 });
+
 //######################################################################
 //########    Junk
 //######################################################################

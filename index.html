@@ -202,7 +202,35 @@
               <a class='btn btn-warning' href='#' role='button' id="dataparsebtn" disabled>Parse</a>
               <a class='btn btn-success' href='#' role='button' id="dataloadbtn" disabled data-dismiss="modal">Load in Ui</a>
               <hr>
-              <div id="dataParseResults"></div>
+              <div id="dataParseResults">
+                <div class="col-sm-8">Total Nodes:
+                  <strong>{{nodes.length}}</strong>
+                  <br>Total Links:<strong>{{links.length}}</strong>
+                  <br>Date Type:<strong>{{date_type}}</strong>
+                  <br>Min Date:<strong>{{formattedMinDate }}</strong>
+                  <br>Max Date:<strong>{{formattedMaxDate}}</strong>
+                </div>
+                {{#if node_keys}}
+                  <div class="col-sm-8">
+                    <h4>Node Attributes</h4>
+                    {{#each node_attributes_info}}
+                      <strong>{{@key}}</strong> - Type: {{this.type}} - Dynamic: {{this.dynamic}}<br>
+                      Min: {{min_val}}<br>
+                      Max: {{max_val}}<br>
+                    {{/each}}
+                  </div>
+                {{/if}}
+                {{#if link_keys}}
+                  <div class="col-sm-8"> 
+                    <h4>Link Attributes</h4>
+                    {{#each link_attributes_info}}
+                      <strong>{{@key}}</strong> - Type: {{this.type}} - Dynamic: {{this.dynamic}}<br>
+                      Min: {{min_val}}<br>
+                      Max: {{max_val}}<br>
+                    {{/each}}
+                  </div>
+                {{/if}}
+              </div>
             </div>
           </div>
         </div>
@@ -217,6 +245,7 @@
     <script src="js/jquery.md5.js"></script>
     <script src="js/github-commit-history.js"></script>
     <script src="js/mustache.js"></script>
+    <script src="js/handlebars.js"></script>
     <script src="js/d3.js" charset="utf-8"></script>
     <script src="js/showdown.js"></script>
     <script src="code/custom.js"></script>

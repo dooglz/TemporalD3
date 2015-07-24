@@ -286,6 +286,8 @@ function ParseData(data) {
   }
   data.maxDate = range.max;
   data.minDate = range.min;
+  data.formattedMaxDate = (data.date_type == "date" ? data.maxDate.toDateString() : data.maxDate);
+  data.formattedMinDate = (data.date_type == "date" ? data.minDate.toDateString()  : data.minDate );
   return true;
 }
 
