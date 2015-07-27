@@ -278,3 +278,17 @@ Base_Method.prototype.StandardLinkFilter = function (d) {
   }
   return false;
 }
+
+// Doesn't check to see if link has nodes to connect to.
+Base_Method.prototype.QuickLinkFilter = function (d) {
+  var b;
+  if (selected_method.getParam("Cumulative Links").pval) {
+    b = IsLinkEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
+  } else {
+    b = LinkCreatedInRange(d, this.currentDateMin, this.currentDateMax);
+  }
+  if (b !== false && b !== true) {
+    console.error(b);
+  }
+  return b;
+}

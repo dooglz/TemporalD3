@@ -39,7 +39,7 @@ function Method_One() {
     { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } },
     { name: "Global: Allow Settle", ptype: "checkbox", pval: false, func: function (val) { this.globalForceLayoutAllowSettle = val; } },
     { name: "Local: Allow Settle", ptype: "checkbox", pval: true, func: function (val) { this.localLayoutAllowSettle = val; } },
-    { name: "Show Global", ptype: "button", pval: false, func: function () {this.ShowLocalLayout("g"); } }
+    { name: "Show Global", ptype: "button", pval: false, func: function () { this.ShowLocalLayout("g"); } }
   ];
   this.nodeChannels = [
     { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -240,17 +240,16 @@ Method_One.prototype.CaluclateLocalLayoutLoop = function () {
     this.LocalLayoutTickCount++;
   } else if (local.done === false) {
     //keep processing this layout
-    
-    if (local.TickCount > this.localLayoutMaxTicks || (new Date() - local.startTime) > this.localLayoutMaxTime
-      || (this.localLayoutAllowSettle && local.ForceLayout.alpha() == 0)) {
+    if (local.TickCount > this.localLayoutMaxTicks  || (this.localLayoutAllowSettle && local.ForceLayout.alpha() == 0) 
+      || (new Date() - local.startTime) > this.localLayoutMaxTime) {
       console.log("Finished Local Layout %o, ticks:%o", this.LocalLayoutTickCount, local.TickCount);
       local.done = true;
       local.ForceLayout.stop();
     } else {
+      if (!this.localLayoutAllowSettle) {
+        local.ForceLayout.resume();
+      }
       for (var i = 0; i < this.localLayoutMaxSubTicks; i++) {
-        if (!this.localLayoutAllowSettle) {
-          local.ForceLayout.resume();
-        }
         local.ForceLayout.tick();
       }
       local.TickCount += this.localLayoutMaxSubTicks;
@@ -260,29 +259,35 @@ Method_One.prototype.CaluclateLocalLayoutLoop = function () {
     local.TickCount = 0;
     local.done = false;
     //zero position of all nodes, if this is first run
+    /*
     if (this.LocalLayoutTickCount == 0) {
       this.data.nodes.forEach(function (o, i, array) {
-        o.px = o.py = o.x = o.y = 0;
+        //o.px = o.py = o.x = o.y = 0;
+        //use global positions
       });
     }//else, use same positions from last run
+    */
     //create a new force layout
+    //reqiured to set these for the filters to work
+    this.currentDateMin = local.minDate;
+    this.currentDateMax = local.maxDate;
+    var n = this.data.nodes.filter($.proxy(this.StandardNodeFilter, this));
+    var l = this.data.links.filter($.proxy(this.QuickLinkFilter, this));
     local.ForceLayout = d3.layout.force()
       .gravity(.25)
       .charge(-840)
       .friction(0.3)
       .linkDistance(this.LinkLength.bind(this))
       .size([this.width, this.height])
-      .nodes(this.data.nodes)
-      .links(this.data.links)
+    // .nodes(this.data.nodes)
+      .nodes(n)
+    //.links(this.data.links)
+      .links(l)
       .on("tick", this.LocalTick.bind(this));
     local.ForceLayout.start();
     local.startTime = new Date();
   }
 
-}
-Method_One.prototype.CaluclateLocalLayoutInnerLoop = function () {
-  var local = this.LocalLayouts[this.LocalLayoutTickCount];
-  //this.GlobalLayoutPercentDone = ((new Date() - this.globalForceLayoutStartTime) / this.globalForceLayoutMaxTime) * 100.0;
 }
 
 Method_One.prototype.LocalLayoutDone = function () {
@@ -453,8 +458,8 @@ Method_One.prototype.HideLocalLayout = function () {
 Method_One.prototype.Update = function () {
   Base_Method.prototype.Update.call(this);
   var discreet = this.getDiscreetfromDate(this.currentDateMin, this.data.date_type);
-  if(this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax){
-    this.ShowLocalLayout("l",discreet, this.StandardNodeFilter, this.StandardLinkFilter);
+  if (this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
+    this.ShowLocalLayout("l", discreet, this.StandardNodeFilter, this.StandardLinkFilter);
   }
   return;
 };
