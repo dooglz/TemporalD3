@@ -243,3 +243,38 @@ Base_Method.prototype.CountDiscreetStepsInRange = function (min, max, date_type)
     return 0;
   }
 }
+
+Base_Method.prototype.StandardNodeFilter = function (d) {
+  var b;
+  if (selected_method.getParam("Cumulative Nodes").pval) {
+    b = IsNodeEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
+  } else {
+    b = NodeCreatedInRange(d, this.currentDateMin, this.currentDateMax);
+  }
+  if (b !== false && b !== true) {
+    console.error(b);
+  }
+  return b;
+}
+
+Base_Method.prototype.StandardLinkFilter = function (d) {
+  var b;
+  if (selected_method.getParam("Cumulative Links").pval) {
+    b = IsLinkEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
+  } else {
+    b = LinkCreatedInRange(d, this.currentDateMin, this.currentDateMax);
+  }
+  if (b !== false && b !== true) {
+    console.error(b);
+  }
+  if (b) {
+    //check source and target node exists
+    var source = IsNumber(d.target) ? this.data.nodes[d.target] : d.target;
+    var target = IsNumber(d.source) ? this.data.nodes[d.source] : d.source;
+    if ($.inArray(source, this.filteredNodes) == -1 || $.inArray(target, this.filteredNodes) == -1) {
+      return false;
+    }
+    return true;
+  }
+  return false;
+}

@@ -124,18 +124,15 @@ Method_Simple.prototype.Update = function () {
     this.prev_currentDateMax = this.currentDateMax;
   }
 
+  //Tidy up stale tooltips
   if (this.nodeTooltip !== undefined) {
     $(".tooltip").remove();
     this.nodeTooltip = undefined;
   }
-  this.nodeTooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
-
   if (this.graphLinkTooltip !== undefined) {
     $(".tooltip.link").remove();
     this.graphLinkTooltip = undefined;
   }
-  this.graphLinkTooltip = d3.select("body").append("div").attr("class", "tooltip link").style("opacity", 0);
-  
 
   //Create Links
   this.graphLink = this.svgContainer.selectAll("line").data(this.filteredLinks);
@@ -143,20 +140,22 @@ Method_Simple.prototype.Update = function () {
     .style("stroke", this.Linkcolour.bind(this))
     .style("stroke-width", this.LinkWidth.bind(this))
     .style("stroke-dasharray", this.LinkDash.bind(this));
-  //add hover tooltip
-  this.graphLink.on("mouseover", $.proxy(function (d) {
-    var str = "";
-    this.data.link_keys.forEach(function (o) {
-      str += o + ": " + d[o] + "<br/>";
-    });
-    this.graphLinkTooltip.transition().duration(200).style("opacity", .9);
-    this.graphLinkTooltip.html(str)
-      .style("left", (d3.event.pageX) + "px")
-      .style("top", (d3.event.pageY - 28) + "px");
-  }, this));
-  this.graphLink.on("mouseout", $.proxy(function (d) {
-    this.graphLinkTooltip.transition().duration(500).style("opacity", 0);
-  }, this));    
+    
+  //add hover tooltip, if there are attributes to display
+  if (this.data.link_keys.length > 0) {
+    this.graphLinkTooltip = d3.select("body").append("div").attr("class", "tooltip link").style("opacity", 0);
+    this.graphLink.on("mouseover", $.proxy(function (d) {
+      var str = "";
+      this.data.link_keys.forEach(function (o) {
+        str += o + ": " + getLinkAttributeValue(this.data, d, o, this.currentDateMin, this.currentDateMax) + "<br/>";
+      }, this);
+      this.graphLinkTooltip.transition().duration(200).style("opacity", .9);
+      this.graphLinkTooltip.html(str).style("left", (d3.event.pageX) + "px").style("top", (d3.event.pageY - 28) + "px");
+    }, this));
+    this.graphLink.on("mouseout", $.proxy(function (d) {
+      this.graphLinkTooltip.transition().duration(500).style("opacity", 0);
+    }, this));
+  }
   //when a link is no longer in the set, remove it from the graph.
   this.graphLink.exit().remove();
 
@@ -168,22 +167,24 @@ Method_Simple.prototype.Update = function () {
     .attr("r", this.NodeSize.bind(this))
     .style("fill", this.NodeColour.bind(this))
     .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
-  //add hover tooltip
-  this.graphNode.on("mouseover", $.proxy(function (d) {
-    var str = "";
-    this.data.node_keys.forEach(function (o) {
-      str += o + ": " + d[o] + "<br/>";
-    });
-    this.nodeTooltip.transition().duration(200).style("opacity", .9);
-    this.nodeTooltip.html(str)
-      .style("left", (d3.event.pageX) + "px")
-      .style("top", (d3.event.pageY - 28) + "px");
-  }, this));
-  this.graphNode.on("mouseout", $.proxy(function (d) {
-    this.nodeTooltip.transition().duration(500).style("opacity", 0);
-  }, this)); 
     
-  //  .call(forceLayout.drag);
+  //add hover tooltip, if there are attributes to display
+  if (this.data.node_keys.length > 0) {
+    this.nodeTooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
+    this.graphNode.on("mouseover", $.proxy(function (d) {
+      var str = "";
+      this.data.node_keys.forEach(function (o) {
+        str += o + ": " + getNodeAttributeValue(this.data, d, o, this.currentDateMin, this.currentDateMax) + "<br/>";
+      }, this);
+      this.nodeTooltip.transition().duration(200).style("opacity", .9);
+      this.nodeTooltip.html(str).style("left", (d3.event.pageX) + "px").style("top", (d3.event.pageY - 28) + "px");
+    }, this));
+    this.graphNode.on("mouseout", $.proxy(function (d) {
+      this.nodeTooltip.transition().duration(500).style("opacity", 0);
+    }, this));
+  }
+  
+  // .call(forceLayout.drag);
   this.graphNode.exit().remove();
 
   //force a tick

@@ -291,6 +291,12 @@ function ParseData(data) {
   return true;
 }
 
+function getNodeAttributeValue(data, node, attribute, minDate,maxDate) {
+  return  getAttributeValue(true, data, node, attribute, minDate,maxDate);
+}
+function getLinkAttributeValue(data, link, attribute, minDate,maxDate) {
+  return getAttributeValue(false, data, link, attribute, minDate,maxDate);
+}
 function getNodeAttributeAsPercentage(data, node, attribute,minDate,maxDate) {
   return getNLAttributeAsPercentage(true, data, node, attribute);
 }
@@ -308,7 +314,6 @@ function getAttributeAsPercentage(data, nodeOrLink, attribute,minDate,maxDate) {
     console.error("coudn't determine type of attribute: %o", attribute);
     return 0;
   }
-
 }
 
 function getAttributeValue(atype, data, nodeOrLink, attribute, selecteddateMin,selecteddateMax){

@@ -34,11 +34,12 @@ function Method_One() {
   this.name = "Method One";
   this.parameters = [
     { name: "Disable rest", ptype: "checkbox", pval: false },
-    { name: "Recalculate Layout", ptype: "button", pval: false, func: function () { this.Recalculate(); }},
+    { name: "Recalculate Layout", ptype: "button", pval: false, func: function () { this.Recalculate(); } },
     { name: "Cumulative Links", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } },
     { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } },
     { name: "Global: Allow Settle", ptype: "checkbox", pval: false, func: function (val) { this.globalForceLayoutAllowSettle = val; } },
-    { name: "Local: Allow Settle", ptype: "checkbox", pval: true, func: function (val) { this.localLayoutAllowSettle = val;} },
+    { name: "Local: Allow Settle", ptype: "checkbox", pval: true, func: function (val) { this.localLayoutAllowSettle = val; } },
+    { name: "Show Global", ptype: "button", pval: false, func: function () {this.ShowLocalLayout("g"); } }
   ];
   this.nodeChannels = [
     { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -139,7 +140,7 @@ var timeout = true;
 Method_One.prototype.CaluclateGlobalLayout = function () {
   SetLoadingBarColour();
   this.GlobalLayoutPercentDone = 0;
-  this.ShowGlobalLayout();
+  this.ShowLocalLayout("g");
   //create a new force layout
   this.globalForceLayout = d3.layout.force()
     .gravity(.25)
@@ -171,8 +172,8 @@ Method_One.prototype.CaluclateGlobalLayoutLoop = function () {
     return;
   }
   for (var i = 0; i < this.globalForceLayoutMaxSubTicks; i++) {
-    if(!this.globalForceLayoutAllowSettle){
-     this.globalForceLayout.resume();
+    if (!this.globalForceLayoutAllowSettle) {
+      this.globalForceLayout.resume();
     }
     this.globalForceLayout.tick();
   }
@@ -196,47 +197,8 @@ Method_One.prototype.GlobalTick = function (e) {
       o.gy = o.y;
     });
   }
-  this.globalgraphNodes
-    .attr("cx", function (d) { return d.gx; })
-    .attr("cy", function (d) { return d.gy; });
-  this.globalgraphLinks
-    .attr("x1", function (d) { return d.source.gx; })
-    .attr("y1", function (d) { return d.source.gy; })
-    .attr("x2", function (d) { return d.target.gx; })
-    .attr("y2", function (d) { return d.target.gy; });
+  this.ShowLocalLayout("g");
 };
-
-this.globalgraphNodes;
-this.globalgraphLinks;
-Method_One.prototype.ShowGlobalLayout = function () {
-  //Create Links
-  this.globalgraphLinks = this.svgContainer.selectAll("line").data(this.data.links);
-  this.globalgraphLinks.enter().append("line")
-    .style("stroke", "black")
-    .style("stroke-width", this.LinkWidth.bind(this));
-  this.globalgraphLinks
-    .attr("x1", function (d) { return d.source.gx; })
-    .attr("y1", function (d) { return d.source.gy; })
-    .attr("x2", function (d) { return d.target.gx; })
-    .attr("y2", function (d) { return d.target.gy; });
-  this.globalgraphLinks.exit().remove();
-
-  //Create nodes
-  this.globalgraphNodes = this.svgContainer.selectAll("circle").data(this.data.nodes);
-  this.globalgraphNodes.enter()
-    .append("circle")
-    .attr("r", this.NodeSize.bind(this))
-    .style("fill", this.NodeColour.bind(this))
-    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
-  this.globalgraphNodes
-    .attr("cx", function (d) { return d.gx; })
-    .attr("cy", function (d) { return d.gy; })
-  this.globalgraphNodes.exit().remove();
-}
-Method_One.prototype.HideGlobalLayout = function () {
-  this.globalgraphLinks.remove();
-  this.globalgraphNodes.remove();
-}
 
 //######################################################################
 //########    Local Layout calculations
@@ -286,8 +248,7 @@ Method_One.prototype.CaluclateLocalLayoutLoop = function () {
       local.ForceLayout.stop();
     } else {
       for (var i = 0; i < this.localLayoutMaxSubTicks; i++) {
-        
-        if(!this.localLayoutAllowSettle){
+        if (!this.localLayoutAllowSettle) {
           local.ForceLayout.resume();
         }
         local.ForceLayout.tick();
@@ -341,91 +302,149 @@ Method_One.prototype.LocalTick = function (e) {
 };
 
 //######################################################################
-//########    Local Layout visulisations
+//########   Layout visulisations
 //######################################################################
+
 this.localgraphNodes;
 this.localgraphLinks;
-Method_One.prototype.ShowLocalLayout = function () {
+this.lastRenderdpositionAttribute;
+Method_One.prototype.ShowLocalLayout = function (positionAttribute, positionAttributeOffset, nodeFilter, linkFilter) {
+  if (positionAttribute === undefined) {
+    positionAttribute = "";
+  }
+  if (this.lastRenderdpositionAttribute != positionAttribute) {
+    this.lastRenderdpositionAttribute = positionAttribute;
+    this.filteredLinks = this.filteredNodes = undefined;
+  }
+
+  if (positionAttributeOffset === undefined) {
+    positionAttributeOffset = null;
+  }
+  //check if we actually have any data for these parameters
   if (this.currentDateMin === undefined) { this.currentDateMin = 0; }
-  var discreet = this.getDiscreetfromDate(this.currentDateMin, this.data.date_type);
-  if (!this.done && (this.LocalLayouts === undefined || this.LocalLayouts[discreet] === undefined || !this.LocalLayouts[discreet].done)) {
-    // console.log(discreet + " not done yet");
+  if (this.data.nodes[0] === undefined || this.data.nodes[0][positionAttribute + "x"] === undefined
+    || (positionAttributeOffset != null && (this.data.nodes[0][positionAttribute + "x"][positionAttributeOffset] === undefined))) {
+    // console.log("not done yet");
     return;
   }
-  //filter
-  if (this.filteredNodes === undefined || this.filteredLinks === undefined
-    || this.prev_currentDateMin != this.currentDateMin
-    || this.prev_currentDateMax != this.currentDateMax) {
-    //filter nodes by date
-    this.filteredNodes = this.data.nodes.filter(
-      $.proxy(function (d) {
-        var b;
-        if (selected_method.getParam("Cumulative Nodes").pval) {
-          b = IsNodeEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
-        } else {
-          b = NodeCreatedInRange(d, this.currentDateMin, this.currentDateMax);
-        }
-        if (b !== false && b !== true) {
-          console.error(b);
-        }
-        return b;
-      }, this));
-    //filter links by date
-    this.filteredLinks = this.data.links.filter(
-      $.proxy(function (d) {
-        var b;
-        if (selected_method.getParam("Cumulative Links").pval) {
-          b = IsLinkEverAliveInRange(d, this.currentDateMin, this.currentDateMax);
-        } else {
-          b = LinkCreatedInRange(d, this.currentDateMin, this.currentDateMax);
-        }
-        if (b !== false && b !== true) {
-          console.error(b);
-        }
-        if (b) {
-          //check node exists
-          var source = IsNumber(d.target) ? this.data.nodes[d.target] : d.target;
-          var target = IsNumber(d.source) ? this.data.nodes[d.source] : d.source;
-          if ($.inArray(source, this.filteredNodes) == -1 || $.inArray(target, this.filteredNodes) == -1) {
-            //console.warn("Link with no node! ",this.data.nodes[d.target]);
-            return false;
-          }
-          return true;
-        }
-        return false;
-      }, this));
+  
+  //Filter
+  if (nodeFilter !== undefined) {
+    if (this.filteredNodes === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
+      this.filteredNodes = this.data.nodes.filter($.proxy(nodeFilter, this));
+    }
+  }
+  if (linkFilter !== undefined) {
+    if (this.filteredLinks === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
+      this.filteredLinks = this.data.links.filter($.proxy(linkFilter, this));
+    }
+  }
+  this.prev_currentDateMin = this.currentDateMin;
+  this.prev_currentDateMax = this.currentDateMax;
 
-    this.prev_currentDateMin = this.currentDateMin;
-    this.prev_currentDateMax = this.currentDateMax;
+  if (this.filteredNodes === undefined) {
+    this.filteredNodes = this.data.nodes;
+  }
+  if (this.filteredLinks === undefined) {
+    this.filteredLinks = this.data.links;
+  }
+  
+  //Tidy up stale tooltips
+  if (this.localgraphNodeTooltip !== undefined) {
+    $(".tooltip").remove();
+    this.localgraphNodeTooltip = undefined;
+  }
+  if (this.localgraphLinkTooltip !== undefined) {
+    $(".tooltip.link").remove();
+    this.localgraphLinkTooltip = undefined;
   }
   
   //Create Links
- 
   this.localgraphLinks = this.svgContainer.selectAll("line").data(this.filteredLinks);
   this.localgraphLinks.enter().append("line").style("stroke", "black");
-  this.localgraphLinks
-    .attr("x1", function (d) { return d.source.lx[discreet]; })
-    .attr("y1", function (d) { return d.source.ly[discreet]; })
-    .attr("x2", function (d) { return d.target.lx[discreet]; })
-    .attr("y2", function (d) { return d.target.ly[discreet]; })
-    .style("stroke-width", this.LinkWidth.bind(this));
+
+  if (positionAttributeOffset != null) {
+    this.localgraphLinks
+      .attr("x1", function (d) { return d.source[positionAttribute + "x"][positionAttributeOffset]; })
+      .attr("y1", function (d) { return d.source[positionAttribute + "y"][positionAttributeOffset]; })
+      .attr("x2", function (d) { return d.target[positionAttribute + "x"][positionAttributeOffset]; })
+      .attr("y2", function (d) { return d.target[positionAttribute + "y"][positionAttributeOffset]; })
+  } else {
+    this.localgraphLinks
+      .attr("x1", function (d) { return d.source[positionAttribute + "x"]; })
+      .attr("y1", function (d) { return d.source[positionAttribute + "y"]; })
+      .attr("x2", function (d) { return d.target[positionAttribute + "x"]; })
+      .attr("y2", function (d) { return d.target[positionAttribute + "y"]; })
+  }
+  this.localgraphLinks.style("stroke-width", this.LinkWidth.bind(this));
+
+  //add hover tooltip, if there are attributes to display
+  if (this.data.link_keys.length > 0) {
+    this.localgraphLinkTooltip = d3.select("body").append("div").attr("class", "tooltip link").style("opacity", 0);
+    this.localgraphLinks.on("mouseover", $.proxy(function (d) {
+      var str = "";
+      this.data.link_keys.forEach(function (o) {
+        str += o + ": " + getLinkAttributeValue(this.data, d, o, this.currentDateMin, this.currentDateMax) + "<br/>";
+      }, this);
+      this.localgraphLinkTooltip.transition().duration(200).style("opacity", .9);
+      this.localgraphLinkTooltip.html(str).style("left", (d3.event.pageX) + "px").style("top", (d3.event.pageY - 28) + "px");
+    }, this));
+    this.localgraphLinks.on("mouseout", $.proxy(function (d) {
+      this.localgraphLinkTooltip.transition().duration(500).style("opacity", 0);
+    }, this));
+  }
+
   this.localgraphLinks.exit().remove();
 
   //Create nodes
   this.localgraphNodes = this.svgContainer.selectAll("circle").data(this.filteredNodes);
   this.localgraphNodes.enter().append("circle");
+
+  if (positionAttributeOffset != null) {
+    this.localgraphNodes
+      .attr("cx", function (d) { return d[positionAttribute + "x"][positionAttributeOffset]; })
+      .attr("cy", function (d) { return d[positionAttribute + "y"][positionAttributeOffset]; })
+  } else {
+    this.localgraphNodes
+      .attr("cx", function (d) { return d[positionAttribute + "x"]; })
+      .attr("cy", function (d) { return d[positionAttribute + "y"]; })
+  }
   this.localgraphNodes
-    .attr("cx", function (d) { return d.lx[discreet]; })
-    .attr("cy", function (d) { return d.ly[discreet]; })
     .attr("r", this.NodeSize.bind(this))
     .style("fill", this.NodeColour.bind(this))
     .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
+    
+  //add hover tooltip, if there are attributes to display
+  if (this.data.node_keys.length > 0) {
+    this.localgraphNodeTooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
+    this.localgraphNodes.on("mouseover", $.proxy(function (d) {
+      var str = "";
+      this.data.node_keys.forEach(function (o) {
+        str += o + ": " + getNodeAttributeValue(this.data, d, o, this.currentDateMin, this.currentDateMax) + "<br/>";
+      }, this);
+      this.localgraphNodeTooltip.transition().duration(200).style("opacity", .9);
+      this.localgraphNodeTooltip.html(str).style("left", (d3.event.pageX) + "px").style("top", (d3.event.pageY - 28) + "px");
+    }, this));
+    this.localgraphNodes.on("mouseout", $.proxy(function (d) {
+      this.localgraphNodeTooltip.transition().duration(500).style("opacity", 0);
+    }, this));
+  }
+
   this.localgraphNodes.exit().remove();
 }
 
 Method_One.prototype.HideLocalLayout = function () {
   this.localgraphNodes.remove();
   this.localgraphLinks.remove();
+  //Tidy up stale tooltips
+  if (this.localgraphNodeTooltip !== undefined) {
+    $(".tooltip").remove();
+    this.localgraphNodeTooltip = undefined;
+  }
+  if (this.localgraphLinkTooltip !== undefined) {
+    $(".tooltip.link").remove();
+    this.localgraphLinkTooltip = undefined;
+  }
 }
 //######################################################################
 //########    Main Update
@@ -433,7 +452,10 @@ Method_One.prototype.HideLocalLayout = function () {
 
 Method_One.prototype.Update = function () {
   Base_Method.prototype.Update.call(this);
-  this.ShowLocalLayout();
+  var discreet = this.getDiscreetfromDate(this.currentDateMin, this.data.date_type);
+  if(this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax){
+    this.ShowLocalLayout("l",discreet, this.StandardNodeFilter, this.StandardLinkFilter);
+  }
   return;
 };
 
