@@ -140,7 +140,10 @@ var timeout = true;
 Method_One.prototype.CaluclateGlobalLayout = function () {
   SetLoadingBarColour();
   this.GlobalLayoutPercentDone = 0;
+  //Update Vis
   this.ShowLocalLayout("g");
+  this.RedoNodes();
+  this.RedoLinks();
   //create a new force layout
   this.globalForceLayout = d3.layout.force()
     .gravity(.25)
@@ -197,7 +200,11 @@ Method_One.prototype.GlobalTick = function (e) {
       o.gy = o.y;
     });
   }
-  this.ShowLocalLayout("g");
+  if (this.lastRenderdpositionAttribute != "g") {
+    this.ShowLocalLayout("g", null, null, null);
+  } else {
+    this.UpdateLocalLayout("g", null, null, null);
+  }
 };
 
 //######################################################################
@@ -240,7 +247,7 @@ Method_One.prototype.CaluclateLocalLayoutLoop = function () {
     this.LocalLayoutTickCount++;
   } else if (local.done === false) {
     //keep processing this layout
-    if (local.TickCount > this.localLayoutMaxTicks  || (this.localLayoutAllowSettle && local.ForceLayout.alpha() == 0) 
+    if (local.TickCount > this.localLayoutMaxTicks || (this.localLayoutAllowSettle && local.ForceLayout.alpha() == 0)
       || (new Date() - local.startTime) > this.localLayoutMaxTime) {
       console.log("Finished Local Layout %o, ticks:%o", this.LocalLayoutTickCount, local.TickCount);
       local.done = true;
@@ -307,151 +314,6 @@ Method_One.prototype.LocalTick = function (e) {
 };
 
 //######################################################################
-//########   Layout visulisations
-//######################################################################
-
-this.localgraphNodes;
-this.localgraphLinks;
-this.lastRenderdpositionAttribute;
-Method_One.prototype.ShowLocalLayout = function (positionAttribute, positionAttributeOffset, nodeFilter, linkFilter) {
-  if (positionAttribute === undefined) {
-    positionAttribute = "";
-  }
-  if (this.lastRenderdpositionAttribute != positionAttribute) {
-    this.lastRenderdpositionAttribute = positionAttribute;
-    this.filteredLinks = this.filteredNodes = undefined;
-  }
-
-  if (positionAttributeOffset === undefined) {
-    positionAttributeOffset = null;
-  }
-  //check if we actually have any data for these parameters
-  if (this.currentDateMin === undefined) { this.currentDateMin = 0; }
-  if (this.data.nodes[0] === undefined || this.data.nodes[0][positionAttribute + "x"] === undefined
-    || (positionAttributeOffset != null && (this.data.nodes[0][positionAttribute + "x"][positionAttributeOffset] === undefined))) {
-    // console.log("not done yet");
-    return;
-  }
-  
-  //Filter
-  if (nodeFilter !== undefined) {
-    if (this.filteredNodes === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
-      this.filteredNodes = this.data.nodes.filter($.proxy(nodeFilter, this));
-    }
-  }
-  if (linkFilter !== undefined) {
-    if (this.filteredLinks === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
-      this.filteredLinks = this.data.links.filter($.proxy(linkFilter, this));
-    }
-  }
-  this.prev_currentDateMin = this.currentDateMin;
-  this.prev_currentDateMax = this.currentDateMax;
-
-  if (this.filteredNodes === undefined) {
-    this.filteredNodes = this.data.nodes;
-  }
-  if (this.filteredLinks === undefined) {
-    this.filteredLinks = this.data.links;
-  }
-  
-  //Tidy up stale tooltips
-  if (this.localgraphNodeTooltip !== undefined) {
-    $(".tooltip").remove();
-    this.localgraphNodeTooltip = undefined;
-  }
-  if (this.localgraphLinkTooltip !== undefined) {
-    $(".tooltip.link").remove();
-    this.localgraphLinkTooltip = undefined;
-  }
-  
-  //Create Links
-  this.localgraphLinks = this.svgContainer.selectAll("line").data(this.filteredLinks);
-  this.localgraphLinks.enter().append("line").style("stroke", "black");
-
-  if (positionAttributeOffset != null) {
-    this.localgraphLinks
-      .attr("x1", function (d) { return d.source[positionAttribute + "x"][positionAttributeOffset]; })
-      .attr("y1", function (d) { return d.source[positionAttribute + "y"][positionAttributeOffset]; })
-      .attr("x2", function (d) { return d.target[positionAttribute + "x"][positionAttributeOffset]; })
-      .attr("y2", function (d) { return d.target[positionAttribute + "y"][positionAttributeOffset]; })
-  } else {
-    this.localgraphLinks
-      .attr("x1", function (d) { return d.source[positionAttribute + "x"]; })
-      .attr("y1", function (d) { return d.source[positionAttribute + "y"]; })
-      .attr("x2", function (d) { return d.target[positionAttribute + "x"]; })
-      .attr("y2", function (d) { return d.target[positionAttribute + "y"]; })
-  }
-  this.localgraphLinks.style("stroke-width", this.LinkWidth.bind(this));
-
-  //add hover tooltip, if there are attributes to display
-  if (this.data.link_keys.length > 0) {
-    this.localgraphLinkTooltip = d3.select("body").append("div").attr("class", "tooltip link").style("opacity", 0);
-    this.localgraphLinks.on("mouseover", $.proxy(function (d) {
-      var str = "";
-      this.data.link_keys.forEach(function (o) {
-        str += o + ": " + getLinkAttributeValue(this.data, d, o, this.currentDateMin, this.currentDateMax) + "<br/>";
-      }, this);
-      this.localgraphLinkTooltip.transition().duration(200).style("opacity", .9);
-      this.localgraphLinkTooltip.html(str).style("left", (d3.event.pageX) + "px").style("top", (d3.event.pageY - 28) + "px");
-    }, this));
-    this.localgraphLinks.on("mouseout", $.proxy(function (d) {
-      this.localgraphLinkTooltip.transition().duration(500).style("opacity", 0);
-    }, this));
-  }
-
-  this.localgraphLinks.exit().remove();
-
-  //Create nodes
-  this.localgraphNodes = this.svgContainer.selectAll("circle").data(this.filteredNodes);
-  this.localgraphNodes.enter().append("circle");
-
-  if (positionAttributeOffset != null) {
-    this.localgraphNodes
-      .attr("cx", function (d) { return d[positionAttribute + "x"][positionAttributeOffset]; })
-      .attr("cy", function (d) { return d[positionAttribute + "y"][positionAttributeOffset]; })
-  } else {
-    this.localgraphNodes
-      .attr("cx", function (d) { return d[positionAttribute + "x"]; })
-      .attr("cy", function (d) { return d[positionAttribute + "y"]; })
-  }
-  this.localgraphNodes
-    .attr("r", this.NodeSize.bind(this))
-    .style("fill", this.NodeColour.bind(this))
-    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
-    
-  //add hover tooltip, if there are attributes to display
-  if (this.data.node_keys.length > 0) {
-    this.localgraphNodeTooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
-    this.localgraphNodes.on("mouseover", $.proxy(function (d) {
-      var str = "";
-      this.data.node_keys.forEach(function (o) {
-        str += o + ": " + getNodeAttributeValue(this.data, d, o, this.currentDateMin, this.currentDateMax) + "<br/>";
-      }, this);
-      this.localgraphNodeTooltip.transition().duration(200).style("opacity", .9);
-      this.localgraphNodeTooltip.html(str).style("left", (d3.event.pageX) + "px").style("top", (d3.event.pageY - 28) + "px");
-    }, this));
-    this.localgraphNodes.on("mouseout", $.proxy(function (d) {
-      this.localgraphNodeTooltip.transition().duration(500).style("opacity", 0);
-    }, this));
-  }
-
-  this.localgraphNodes.exit().remove();
-}
-
-Method_One.prototype.HideLocalLayout = function () {
-  this.localgraphNodes.remove();
-  this.localgraphLinks.remove();
-  //Tidy up stale tooltips
-  if (this.localgraphNodeTooltip !== undefined) {
-    $(".tooltip").remove();
-    this.localgraphNodeTooltip = undefined;
-  }
-  if (this.localgraphLinkTooltip !== undefined) {
-    $(".tooltip.link").remove();
-    this.localgraphLinkTooltip = undefined;
-  }
-}
-//######################################################################
 //########    Main Update
 //######################################################################
 
@@ -503,16 +365,20 @@ Method_One.prototype.zoomed = function () {
 //######################################################################
 
 Method_One.prototype.RedoLinks = function () {
-  if (this.graphLink === undefined) { return; }
-  // console.log("method: re-doing links");
-  this.graphLink.style("stroke", this.Linkcolour.bind(this)).style("stroke-width", this.LinkWidth.bind(this));
-  this.forceLayout.start();
+  if (this.visLinks === undefined) { return; }
+  // this.UpdateLocalLayout("", null);
+  this.visLinks.style("stroke-width", this.LinkWidth.bind(this))
+    .style("stroke-width", this.LinkWidth.bind(this))
+    .style("stroke-dasharray", this.LinkDash.bind(this));
 };
 
 Method_One.prototype.RedoNodes = function () {
-  if (this.graphLink === undefined) { return; }
-  // console.log("method: re-doing nodes");
-  this.graphNode.style("fill", this.NodeColour.bind(this)).attr("r", this.NodeSize.bind(this));
+  if (this.visNodes === undefined) { return; }
+  // this.UpdateLocalLayout("", null);
+  this.visNodes
+    .attr("r", this.NodeSize.bind(this))
+    .style("fill", this.NodeColour.bind(this))
+    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
 };
 
 var fill = d3.scale.category20().domain(d3.range(0, 20));
@@ -571,4 +437,15 @@ Method_One.prototype.GravityPoint = function (d) {
   } else {
     return 0;
   }
+};
+
+Method_One.prototype.LinkDash = function (d) {
+  var channel = this.getLinkChannel("Link Width");
+  if (channel.inUse) {
+    var q = getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
+    if (q == 0) {
+      return "10";
+    }
+  }
+  return "0";
 };

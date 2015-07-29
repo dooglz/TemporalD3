@@ -78,6 +78,8 @@ Base_Method.prototype.Redraw = function (w, h) {
     this.halfWidth = w * 0.5;
     this.halfHeight = h * 0.5;
   }
+  this.RedoNodes();
+  this.RedoLinks();
 };
 
 
@@ -291,4 +293,158 @@ Base_Method.prototype.QuickLinkFilter = function (d) {
     console.error(b);
   }
   return b;
+}
+
+
+//######################################################################
+//########   Layout visulisations
+//######################################################################
+
+//Updates The positions of all nodes and links, does not filter or handle data change. 
+Base_Method.prototype.UpdateLocalLayout = function (positionAttribute, positionAttributeOffset) {
+  if (this.lastRenderdpositionAttribute != positionAttribute) {
+    console.error("Call ShowLocalLayout(" + positionAttribute + ") before UpdateLocalLayout(" + positionAttribute + ")!");
+    return;
+  }
+  if (positionAttribute === undefined) {
+    positionAttribute = "";
+  }
+  if (positionAttributeOffset === undefined) {
+    positionAttributeOffset = null;
+  }
+  //update links
+  if (positionAttributeOffset != null) {
+    this.visLinks
+      .attr("x1", function (d) { return d.source[positionAttribute + "x"][positionAttributeOffset]; })
+      .attr("y1", function (d) { return d.source[positionAttribute + "y"][positionAttributeOffset]; })
+      .attr("x2", function (d) { return d.target[positionAttribute + "x"][positionAttributeOffset]; })
+      .attr("y2", function (d) { return d.target[positionAttribute + "y"][positionAttributeOffset]; })
+  } else {
+    this.visLinks
+      .attr("x1", function (d) { return d.source[positionAttribute + "x"]; })
+      .attr("y1", function (d) { return d.source[positionAttribute + "y"]; })
+      .attr("x2", function (d) { return d.target[positionAttribute + "x"]; })
+      .attr("y2", function (d) { return d.target[positionAttribute + "y"]; })
+  }
+  //update Nodes
+  if (positionAttributeOffset != null) {
+    this.visNodes
+      .attr("cx", function (d) { return d[positionAttribute + "x"][positionAttributeOffset]; })
+      .attr("cy", function (d) { return d[positionAttribute + "y"][positionAttributeOffset]; })
+  } else {
+    this.visNodes
+      .attr("cx", function (d) { return d[positionAttribute + "x"]; })
+      .attr("cy", function (d) { return d[positionAttribute + "y"]; })
+  }
+}
+
+Base_Method.prototype.ShowLocalLayout = function (positionAttribute, positionAttributeOffset, nodeFilter, linkFilter) {
+  if (positionAttribute === undefined) {
+    positionAttribute = "";
+  }
+  if (this.lastRenderdpositionAttribute != positionAttribute) {
+    this.lastRenderdpositionAttribute = positionAttribute;
+    this.filteredLinks = this.filteredNodes = undefined;
+  }
+
+  if (positionAttributeOffset === undefined) {
+    positionAttributeOffset = null;
+  }
+  //check if we actually have any data for these parameters
+  if (this.currentDateMin === undefined) { this.currentDateMin = 0; }
+  if (this.data.nodes[0] === undefined || this.data.nodes[0][positionAttribute + "x"] === undefined
+    || (positionAttributeOffset != null && (this.data.nodes[0][positionAttribute + "x"][positionAttributeOffset] === undefined))) {
+    return;
+  }
+
+  //Filter
+  if (nodeFilter !== undefined && nodeFilter !== null) {
+    if (this.filteredNodes === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
+      this.filteredNodes = this.data.nodes.filter($.proxy(nodeFilter, this));
+    }
+  }
+  if (linkFilter !== undefined && linkFilter !== null) {
+    if (this.filteredLinks === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
+      this.filteredLinks = this.data.links.filter($.proxy(linkFilter, this));
+    }
+  }
+  this.prev_currentDateMin = this.currentDateMin;
+  this.prev_currentDateMax = this.currentDateMax;
+
+  if (this.filteredNodes === undefined) {
+    this.filteredNodes = this.data.nodes;
+  }
+  if (this.filteredLinks === undefined) {
+    this.filteredLinks = this.data.links;
+  }
+
+  //Tidy up stale tooltips
+  if (this.visNodeTooltip !== undefined) {
+    $(".tooltip").remove();
+    this.visNodeTooltip = undefined;
+  }
+  if (this.visLinkTooltip !== undefined) {
+    $(".tooltip.link").remove();
+    this.visLinkTooltip = undefined;
+  }
+
+  //Create Links
+  this.visLinks = this.svgContainer.selectAll("line").data(this.filteredLinks);
+  this.visLinks.enter().append("line").style("stroke", "black");
+
+  //when a link is no longer in the set, remove it from the graph.
+  this.visLinks.exit().remove();
+
+  //Create nodes
+  this.visNodes = this.svgContainer.selectAll("circle").data(this.filteredNodes);
+  this.visNodes.enter().append("circle");
+  
+  //Update Poisitions
+  this.UpdateLocalLayout(positionAttribute, positionAttributeOffset);
+
+  //add hover tooltips, if there are attributes to display
+  if (this.data.link_keys.length > 0) {
+    this.visLinkTooltip = d3.select("body").append("div").attr("class", "tooltip link").style("opacity", 0);
+    this.visLinks.on("mouseover", $.proxy(function (d) {
+      var str = "";
+      this.data.link_keys.forEach(function (o) {
+        str += o + ": " + getLinkAttributeValue(this.data, d, o, this.currentDateMin, this.currentDateMax) + "<br/>";
+      }, this);
+      this.visLinkTooltip.transition().duration(200).style("opacity", .9);
+      this.visLinkTooltip.html(str).style("left", (d3.event.pageX) + "px").style("top", (d3.event.pageY - 28) + "px");
+    }, this));
+    this.visLinks.on("mouseout", $.proxy(function (d) {
+      this.visLinkTooltip.transition().duration(500).style("opacity", 0);
+    }, this));
+  }
+  if (this.data.node_keys.length > 0) {
+    this.visNodeTooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
+    this.visNodes.on("mouseover", $.proxy(function (d) {
+      var str = "";
+      this.data.node_keys.forEach(function (o) {
+        str += o + ": " + getNodeAttributeValue(this.data, d, o, this.currentDateMin, this.currentDateMax) + "<br/>";
+      }, this);
+      this.visNodeTooltip.transition().duration(200).style("opacity", .9);
+      this.visNodeTooltip.html(str).style("left", (d3.event.pageX) + "px").style("top", (d3.event.pageY - 28) + "px");
+    }, this));
+    this.visNodes.on("mouseout", $.proxy(function (d) {
+      this.visNodeTooltip.transition().duration(500).style("opacity", 0);
+    }, this));
+  }
+  //when a node is no longer in the set, remove it from the graph.
+  this.visNodes.exit().remove();
+}
+
+Base_Method.prototype.HideLocalLayout = function () {
+  this.visNodes.remove();
+  this.visLinks.remove();
+  //Tidy up stale tooltips
+  if (this.visNodeTooltip !== undefined) {
+    $(".tooltip").remove();
+    this.visNodeTooltip = undefined;
+  }
+  if (this.visLinkTooltip !== undefined) {
+    $(".tooltip.link").remove();
+    this.visLinkTooltip = undefined;
+  }
 }
