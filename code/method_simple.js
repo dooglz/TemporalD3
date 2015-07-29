@@ -89,7 +89,7 @@ Method_Simple.prototype.Update = function () {
   this.forceLayout.nodes(n).links(l).on("tick", this.Tick.bind(this)).start();
   
   //Update Vis
-  this.ShowLocalLayout("", null, this.StandardNodeFilter, this.StandardLinkFilter);
+  this.ShowLocalLayout("", null, n, l);
   this.RedoNodes();
   this.RedoLinks();
 };

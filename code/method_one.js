@@ -39,7 +39,7 @@ function Method_One() {
     { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } },
     { name: "Global: Allow Settle", ptype: "checkbox", pval: false, func: function (val) { this.globalForceLayoutAllowSettle = val; } },
     { name: "Local: Allow Settle", ptype: "checkbox", pval: true, func: function (val) { this.localLayoutAllowSettle = val; } },
-    { name: "Show Global", ptype: "button", pval: false, func: function () { this.ShowLocalLayout("g"); } }
+    { name: "Show Global", ptype: "button", pval: false, func: function () { this.ShowLocalLayout("g", null, this.data.nodes, this.data.links); } }
   ];
   this.nodeChannels = [
     { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -141,7 +141,7 @@ Method_One.prototype.CaluclateGlobalLayout = function () {
   SetLoadingBarColour();
   this.GlobalLayoutPercentDone = 0;
   //Update Vis
-  this.ShowLocalLayout("g");
+  this.ShowLocalLayout("g", null, this.data.nodes, this.data.links);
   this.RedoNodes();
   this.RedoLinks();
   //create a new force layout
@@ -201,9 +201,11 @@ Method_One.prototype.GlobalTick = function (e) {
     });
   }
   if (this.lastRenderdpositionAttribute != "g") {
-    this.ShowLocalLayout("g", null, null, null);
+    this.ShowLocalLayout("g", null, this.data.nodes, this.data.links);
+    this.RedoNodes();
+    this.RedoLinks();
   } else {
-    this.UpdateLocalLayout("g", null, null, null);
+    this.UpdateLocalLayout("g", null);
   }
 };
 
@@ -278,18 +280,16 @@ Method_One.prototype.CaluclateLocalLayoutLoop = function () {
     //reqiured to set these for the filters to work
     this.currentDateMin = local.minDate;
     this.currentDateMax = local.maxDate;
-    var n = this.data.nodes.filter($.proxy(this.StandardNodeFilter, this));
-    var l = this.data.links.filter($.proxy(this.QuickLinkFilter, this));
+    local.filteredNodes = this.data.nodes.filter($.proxy(this.StandardNodeFilter, this));
+    local.filteredLinks = this.data.links.filter($.proxy(this.QuickLinkFilter, this));
     local.ForceLayout = d3.layout.force()
       .gravity(.25)
       .charge(-840)
       .friction(0.3)
       .linkDistance(this.LinkLength.bind(this))
       .size([this.width, this.height])
-    // .nodes(this.data.nodes)
-      .nodes(n)
-    //.links(this.data.links)
-      .links(l)
+      .nodes(local.filteredNodes)
+      .links(local.filteredLinks)
       .on("tick", this.LocalTick.bind(this));
     local.ForceLayout.start();
     local.startTime = new Date();
@@ -320,8 +320,11 @@ Method_One.prototype.LocalTick = function (e) {
 Method_One.prototype.Update = function () {
   Base_Method.prototype.Update.call(this);
   var discreet = this.getDiscreetfromDate(this.currentDateMin, this.data.date_type);
-  if (this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
-    this.ShowLocalLayout("l", discreet, this.StandardNodeFilter, this.StandardLinkFilter);
+  if (this.LocalLayouts !== undefined && this.LocalLayouts[discreet] !== undefined
+    && this.LocalLayouts[discreet].filteredNodes !== undefined
+    && this.LocalLayouts[discreet].filteredLinks !== undefined &&
+    (this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax)) {
+    this.ShowLocalLayout("l", discreet, this.LocalLayouts[discreet].filteredNodes, this.LocalLayouts[discreet].filteredLinks);
   }
   return;
 };

@@ -304,6 +304,7 @@ Base_Method.prototype.QuickLinkFilter = function (d) {
 Base_Method.prototype.UpdateLocalLayout = function (positionAttribute, positionAttributeOffset) {
   if (this.lastRenderdpositionAttribute != positionAttribute) {
     console.error("Call ShowLocalLayout(" + positionAttribute + ") before UpdateLocalLayout(" + positionAttribute + ")!");
+    console.trace();
     return;
   }
   if (positionAttribute === undefined) {
@@ -311,6 +312,9 @@ Base_Method.prototype.UpdateLocalLayout = function (positionAttribute, positionA
   }
   if (positionAttributeOffset === undefined) {
     positionAttributeOffset = null;
+  }
+  if (this.visLinks === undefined) {
+    console.trace();
   }
   //update links
   if (positionAttributeOffset != null) {
@@ -338,46 +342,32 @@ Base_Method.prototype.UpdateLocalLayout = function (positionAttribute, positionA
   }
 }
 
-Base_Method.prototype.ShowLocalLayout = function (positionAttribute, positionAttributeOffset, nodeFilter, linkFilter) {
+Base_Method.prototype.ShowLocalLayout = function (positionAttribute, positionAttributeOffset, nodes, links) {
+  console.log("ShowLocalLayout " + positionAttribute);
   if (positionAttribute === undefined) {
     positionAttribute = "";
   }
-  if (this.lastRenderdpositionAttribute != positionAttribute) {
-    this.lastRenderdpositionAttribute = positionAttribute;
-    this.filteredLinks = this.filteredNodes = undefined;
-  }
-
   if (positionAttributeOffset === undefined) {
     positionAttributeOffset = null;
   }
+  if (nodes === undefined || nodes === null) {
+    this.filteredNodes = this.data.nodes;
+  }
+  if (links === undefined || links === null) {
+    this.filteredLinks = this.data.links;
+  }
+  
   //check if we actually have any data for these parameters
   if (this.currentDateMin === undefined) { this.currentDateMin = 0; }
-  if (this.data.nodes[0] === undefined || this.data.nodes[0][positionAttribute + "x"] === undefined
-    || (positionAttributeOffset != null && (this.data.nodes[0][positionAttribute + "x"][positionAttributeOffset] === undefined))) {
+  if (nodes[0] === undefined || nodes[0][positionAttribute + "x"] === undefined
+    || (positionAttributeOffset != null && (nodes[0][positionAttribute + "x"][positionAttributeOffset] === undefined))) {
     return;
   }
 
-  //Filter
-  if (nodeFilter !== undefined && nodeFilter !== null) {
-    if (this.filteredNodes === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
-      this.filteredNodes = this.data.nodes.filter($.proxy(nodeFilter, this));
-    }
+  if (this.lastRenderdpositionAttribute != positionAttribute) {
+    this.lastRenderdpositionAttribute = positionAttribute;
   }
-  if (linkFilter !== undefined && linkFilter !== null) {
-    if (this.filteredLinks === undefined || this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax) {
-      this.filteredLinks = this.data.links.filter($.proxy(linkFilter, this));
-    }
-  }
-  this.prev_currentDateMin = this.currentDateMin;
-  this.prev_currentDateMax = this.currentDateMax;
-
-  if (this.filteredNodes === undefined) {
-    this.filteredNodes = this.data.nodes;
-  }
-  if (this.filteredLinks === undefined) {
-    this.filteredLinks = this.data.links;
-  }
-
+  
   //Tidy up stale tooltips
   if (this.visNodeTooltip !== undefined) {
     $(".tooltip").remove();
@@ -389,14 +379,14 @@ Base_Method.prototype.ShowLocalLayout = function (positionAttribute, positionAtt
   }
 
   //Create Links
-  this.visLinks = this.svgContainer.selectAll("line").data(this.filteredLinks);
+  this.visLinks = this.svgContainer.selectAll("line").data(links);
   this.visLinks.enter().append("line").style("stroke", "black");
 
   //when a link is no longer in the set, remove it from the graph.
   this.visLinks.exit().remove();
 
   //Create nodes
-  this.visNodes = this.svgContainer.selectAll("circle").data(this.filteredNodes);
+  this.visNodes = this.svgContainer.selectAll("circle").data(nodes);
   this.visNodes.enter().append("circle");
   
   //Update Poisitions
