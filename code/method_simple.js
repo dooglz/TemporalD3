@@ -43,6 +43,7 @@ Method_Simple.prototype.Unload = function () {
     this.svg.remove();
   }
   this.svg = undefined;
+  this.svgContainer = undefined;
   if (this.forceLayout != undefined) {
     this.forceLayout.stop();
   }
@@ -111,6 +112,8 @@ Method_Simple.prototype.Redraw = function (w, h) {
 
   if (this.svg === undefined) {
     this.svg = d3.select("#chart").append("svg");
+  }
+  if (this.svgContainer === undefined) {
     this.svgContainer = this.svg.append("g");
   }
   this.svg.attr("width", this.width).attr("height", this.height).call(zoom);

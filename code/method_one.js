@@ -53,25 +53,29 @@ Method_One.prototype.Load = function () { };
 Method_One.prototype.Unload = function () {
   this.HideLocalLayout();
   this.StopCalculation();
-  if (this.svg != undefined) {
+  if (this.svg !== undefined) {
     this.svg.selectAll("*").remove();
     this.svg.remove();
   }
+  this.svg = undefined;
+  this.svgContainer = undefined;
   // this.svgTranslation = undefined;
-  this.GlobalLayoutPercentDone = undefined;
-  this.LocalLayoutPercentDone = undefined;
+  //this.GlobalLayoutPercentDone = undefined;
+  //this.LocalLayoutPercentDone = undefined;
   HideLoadingBar();
 
   if (this.globalForceLayout !== undefined) {
     this.globalForceLayout.stop();
     this.globalForceLayout = undefined;
   }
-  this.LocalLayouts.forEach(function (o) {
-    if (o.ForceLayout !== undefined) {
-      o.ForceLayout.stop();
-      o.ForceLayout = undefined;
-    }
-  });
+  if(this.LocalLayouts !== undefined){
+    this.LocalLayouts.forEach(function (o) {
+      if (o.ForceLayout !== undefined) {
+        o.ForceLayout.stop();
+        o.ForceLayout = undefined;
+      }
+    });
+  }
 };
 
 Method_One.prototype.foci = [
@@ -364,13 +368,14 @@ Method_One.prototype.Redraw = function (w, h) {
 
   if (this.svg === undefined) {
     this.svg = d3.select("#chart").append("svg");
+  }
+  if (this.svgContainer === undefined) {
     this.svgContainer = this.svg.append("g");
   }
   var zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", this.zoomed.bind(this));
   this.svg.attr("width", this.width)
     .attr("height", this.height)
     .call(zoom);
-
   console.log("Redrawing");
   return;
 };
