@@ -507,9 +507,14 @@ function changeMethod(methodName) {
   if (oldMethod !== undefined && oldMethod !== null) {
     oldMethod.Unload();
   }
-
   console.log("Loading Method: " + selected_method.name);
   selected_method.SetDateBounds(startDate, endDate);
+  //zero position of all nodes and links
+  if (graphdata !== undefined && graphdata !== null && graphdata.nodes !== undefined) {
+    graphdata.nodes.forEach(function (o) {
+      o.px = o.py = o.x = o.y = 0;
+    });
+  }
   selected_method.Load();
  
   //clear param div
@@ -678,7 +683,6 @@ $('#savebtn').click(function () {
 //######################################################################
 
 InitUploadUi();
-
 
 function InitUploadUi() {
   // Check for the various File API support.

@@ -8,13 +8,9 @@ Method_One.prototype = Object.create(Base_Method.prototype);
 Method_One.prototype.default_radius = 6;
 Method_One.prototype.prev_currentDateMin;
 Method_One.prototype.prev_currentDateMax;
-Method_One.prototype.filteredLinks;
 Method_One.prototype.svg;
 Method_One.prototype.svgContainer;
 Method_One.prototype.svgTranslation;
-Method_One.prototype.forceLayout;
-Method_One.prototype.graphLink;
-Method_One.prototype.graphNode;
 
 // Subticks are how many times the graph should tick inbetween page updates.
 // High subtick counts will block all JS timers, and can freeze the page.
@@ -35,8 +31,8 @@ function Method_One() {
   this.parameters = [
     { name: "Disable rest", ptype: "checkbox", pval: false },
     { name: "Recalculate Layout", ptype: "button", pval: false, func: function () { this.Recalculate(); } },
-    { name: "Cumulative Links", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } },
-    { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } },
+    { name: "Cumulative Links", ptype: "checkbox", pval: true },
+    { name: "Cumulative Nodes", ptype: "checkbox", pval: true },
     { name: "Global: Allow Settle", ptype: "checkbox", pval: false, func: function (val) { this.globalForceLayoutAllowSettle = val; } },
     { name: "Local: Allow Settle", ptype: "checkbox", pval: true, func: function (val) { this.localLayoutAllowSettle = val; } },
     { name: "Show Global", ptype: "button", pval: false, func: function () { this.ShowLocalLayout("g", null, this.data.nodes, this.data.links); } }
@@ -55,20 +51,27 @@ function Method_One() {
 
 Method_One.prototype.Load = function () { };
 Method_One.prototype.Unload = function () {
+  this.HideLocalLayout();
+  this.StopCalculation();
   if (this.svg != undefined) {
     this.svg.selectAll("*").remove();
     this.svg.remove();
   }
-  this.svg = undefined;
-  if (this.forceLayout != undefined) {
-    this.forceLayout.stop();
-  }
-  this.forceLayout = undefined;
-  this.svgContainer = undefined;
-  this.svgTranslation = undefined;
-  this.graphLink = undefined;
-  this.graphNode = undefined;
+  // this.svgTranslation = undefined;
+  this.GlobalLayoutPercentDone = undefined;
+  this.LocalLayoutPercentDone = undefined;
   HideLoadingBar();
+
+  if (this.globalForceLayout !== undefined) {
+    this.globalForceLayout.stop();
+    this.globalForceLayout = undefined;
+  }
+  this.LocalLayouts.forEach(function (o) {
+    if (o.ForceLayout !== undefined) {
+      o.ForceLayout.stop();
+      o.ForceLayout = undefined;
+    }
+  });
 };
 
 Method_One.prototype.foci = [
@@ -93,7 +96,7 @@ Method_One.prototype.SetData = function (d) {
 };
 Method_One.prototype.done = false;
 Method_One.prototype.Loading = function () {
-  var gp = this.GlobalLayoutPercentDone;//this.forceLayoutPercentDone(this.globalForceLayout);
+  var gp = this.GlobalLayoutPercentDone;
   var lp = this.LocalLayoutPercentDone;
   var str = "";
   if (gp < 100) {
@@ -102,6 +105,7 @@ Method_One.prototype.Loading = function () {
     ShowLoadingBar(Math.round(lp), "calculating Local layout");
   } else {
     clearTimeout(this.loadingtimerfunc);
+    this.loadingtimerfunc = undefined;
     HideLoadingBar();
     this.CalculationDone();
   }
@@ -121,6 +125,22 @@ Method_One.prototype.Recalculate = function () {
 
 Method_One.prototype.CalculationDone = function () {
   Method_One.prototype.done = true;
+}
+
+Method_One.prototype.StopCalculation = function () {
+  console.log("Calculation stopped");
+  if (this.loadingtimerfunc !== undefined) {
+    clearTimeout(this.loadingtimerfunc);
+    this.loadingtimerfunc = undefined;
+  }
+  if (this.globalForceLayoutLoopTimeout !== undefined) {
+    clearTimeout(this.globalForceLayoutLoopTimeout);
+    this.globalForceLayoutLoopTimeout = undefined;
+  }
+  if (this.localLayoutLoopTimeout !== undefined) {
+    clearTimeout(this.localLayoutLoopTimeout);
+    this.localLayoutLoopTimeout = undefined;
+  }
 }
 
 //######################################################################
@@ -156,9 +176,7 @@ Method_One.prototype.CaluclateGlobalLayout = function () {
     .on("tick", this.GlobalTick.bind(this));
 
   console.log("Global force layout running");
-
   this.globalForceLayout.start();
-
   this.globalForceLayoutStartTime = new Date();
   this.globalForceLayoutTickCount = 0;
   this.globalForceLayoutLoopTimeout = setInterval(this.CaluclateGlobalLayoutLoop.bind(this), 1);
@@ -169,6 +187,7 @@ Method_One.prototype.CaluclateGlobalLayoutLoop = function () {
   if (this.globalForceLayoutTickCount > this.globalForceLayoutMaxTicks || this.GlobalLayoutPercentDone >= 100
     || (this.globalForceLayoutAllowSettle && this.globalForceLayout.alpha() == 0)) {
     clearTimeout(this.globalForceLayoutLoopTimeout);
+    this.globalForceLayoutLoopTimeout = undefined;
     this.GlobalLayoutPercentDone = 100;
     this.globalForceLayout.stop();
     this.GlobalLayoutDone();
@@ -360,95 +379,4 @@ Method_One.prototype.zoomed = function () {
   this.svgTranslation = d3.event.translate;
   this.scalefactor = d3.event.scale;
   this.svgContainer.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-};
-
-
-//######################################################################
-//########    Channel Mapping Functions
-//######################################################################
-
-Method_One.prototype.RedoLinks = function () {
-  if (this.visLinks === undefined) { return; }
-  // this.UpdateLocalLayout("", null);
-  this.visLinks.style("stroke-width", this.LinkWidth.bind(this))
-    .style("stroke-width", this.LinkWidth.bind(this))
-    .style("stroke-dasharray", this.LinkDash.bind(this));
-};
-
-Method_One.prototype.RedoNodes = function () {
-  if (this.visNodes === undefined) { return; }
-  // this.UpdateLocalLayout("", null);
-  this.visNodes
-    .attr("r", this.NodeSize.bind(this))
-    .style("fill", this.NodeColour.bind(this))
-    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
-};
-
-var fill = d3.scale.category20().domain(d3.range(0, 20));
-
-//------------------ Link Channels ----------------
-Method_One.prototype.Linkcolour = function (d) {
-  var channel = this.getLinkChannel("Link Colour");
-  if (channel.inUse) {
-    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)))).darker();
-  } else {
-    return "black";
-  }
-};
-
-Method_One.prototype.LinkWidth = function (d) {
-  var channel = this.getLinkChannel("Link Width");
-  if (channel.inUse) {
-    return (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)) + "px";
-  } else {
-    return "1.5px";
-  }
-};
-
-Method_One.prototype.LinkLength = function (d) {
-  var channel = this.getLinkChannel("Link Length");
-  if (channel.inUse) {
-    return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
-  } else {
-    return 50;
-  }
-};
-
-//------------------ Node Channels ----------------
-Method_One.prototype.NodeColour = function (d) {
-  var channel = this.getNodeChannel("Node Colour");
-  if (channel.inUse) {
-    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)))).darker();
-  } else {
-    return "black";
-  }
-};
-
-Method_One.prototype.NodeSize = function (d) {
-  var channel = this.getNodeChannel("Node Size");
-  if (channel.inUse) {
-    return (this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
-  } else {
-    return this.default_radius - .75;
-  }
-};
-
-Method_One.prototype.GravityPoint = function (d) {
-  var channel = this.getNodeChannel("Gravity Point");
-  if (channel.inUse) {
-    return 1;
-  } else {
-    return 0;
-  }
-};
-
-Method_One.prototype.LinkDash = function (d) {
-  var channel = this.getLinkChannel("Link Width");
-  if (channel.inUse) {
-    var q = getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
-    if (q == 0) {
-      return "10";
-    }
-  }
-  return "0";
 };

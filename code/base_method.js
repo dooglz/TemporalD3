@@ -343,7 +343,6 @@ Base_Method.prototype.UpdateLocalLayout = function (positionAttribute, positionA
 }
 
 Base_Method.prototype.ShowLocalLayout = function (positionAttribute, positionAttributeOffset, nodes, links) {
-  console.log("ShowLocalLayout " + positionAttribute);
   if (positionAttribute === undefined) {
     positionAttribute = "";
   }
@@ -426,8 +425,12 @@ Base_Method.prototype.ShowLocalLayout = function (positionAttribute, positionAtt
 }
 
 Base_Method.prototype.HideLocalLayout = function () {
-  this.visNodes.remove();
-  this.visLinks.remove();
+  if (this.visNodes !== undefined) {
+    this.visNodes.remove();
+  }
+  if (this.visLinks !== undefined) {
+    this.visLinks.remove();
+  }
   //Tidy up stale tooltips
   if (this.visNodeTooltip !== undefined) {
     $(".tooltip").remove();
@@ -438,3 +441,95 @@ Base_Method.prototype.HideLocalLayout = function () {
     this.visLinkTooltip = undefined;
   }
 }
+
+
+//######################################################################
+//########    Default Channel Mapping Functions
+//######################################################################
+
+
+Base_Method.prototype.RedoLinks = function () {
+  if (this.visLinks === undefined) { return; }
+  // this.UpdateLocalLayout("", null);
+  this.visLinks.style("stroke-width", this.LinkWidth.bind(this))
+    .style("stroke-width", this.LinkWidth.bind(this))
+    .style("stroke-dasharray", this.LinkDash.bind(this));
+};
+
+Base_Method.prototype.RedoNodes = function () {
+  if (this.visNodes === undefined) { return; }
+  // this.UpdateLocalLayout("", null);
+  this.visNodes
+    .attr("r", this.NodeSize.bind(this))
+    .style("fill", this.NodeColour.bind(this))
+    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
+};
+
+var fill = d3.scale.category20().domain(d3.range(0, 20));
+
+//------------------ Link Channels ----------------
+Base_Method.prototype.Linkcolour = function (d) {
+  var channel = this.getLinkChannel("Link Colour");
+  if (channel.inUse) {
+    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)))).darker();
+  } else {
+    return "black";
+  }
+};
+
+Base_Method.prototype.LinkWidth = function (d) {
+  var channel = this.getLinkChannel("Link Width");
+  if (channel.inUse) {
+    return (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)) + "px";
+  } else {
+    return "1.5px";
+  }
+};
+
+Base_Method.prototype.LinkLength = function (d) {
+  var channel = this.getLinkChannel("Link Length");
+  if (channel.inUse) {
+    return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
+  } else {
+    return 50;
+  }
+};
+
+//------------------ Node Channels ----------------
+Base_Method.prototype.NodeColour = function (d) {
+  var channel = this.getNodeChannel("Node Colour");
+  if (channel.inUse) {
+    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)))).darker();
+  } else {
+    return "black";
+  }
+};
+
+Base_Method.prototype.NodeSize = function (d) {
+  var channel = this.getNodeChannel("Node Size");
+  if (channel.inUse) {
+    return (this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
+  } else {
+    return this.default_radius - .75;
+  }
+};
+
+Base_Method.prototype.GravityPoint = function (d) {
+  var channel = this.getNodeChannel("Gravity Point");
+  if (channel.inUse) {
+    return 1;
+  } else {
+    return 0;
+  }
+};
+
+Base_Method.prototype.LinkDash = function (d) {
+  var channel = this.getLinkChannel("Link Width");
+  if (channel.inUse) {
+    var q = getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
+    if (q == 0) {
+      return "10";
+    }
+  }
+  return "0";
+};
