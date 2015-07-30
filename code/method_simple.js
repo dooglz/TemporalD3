@@ -8,13 +8,10 @@ Method_Simple.prototype = Object.create(Base_Method.prototype);
 Method_Simple.prototype.default_radius = 6;
 Method_Simple.prototype.prev_currentDateMin;
 Method_Simple.prototype.prev_currentDateMax;
-Method_Simple.prototype.filteredLinks;
 Method_Simple.prototype.svg;
 Method_Simple.prototype.svgContainer;
 Method_Simple.prototype.svgTranslation;
 Method_Simple.prototype.forceLayout;
-//Method_Simple.prototype.graphLink;
-//Method_Simple.prototype.graphNode;
 
 //Method constructor
 function Method_Simple() {
@@ -23,8 +20,8 @@ function Method_Simple() {
     //{ name: "Test Slider", ptype: "slider", minval: 0, maxval: 10, step: 1, pval: 0 },
     //{ name: "Test TextBox", ptype: "textbox", pval: "" },
     { name: "Disable rest", ptype: "checkbox", pval: false },
-    { name: "Cumulative Links", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } },
-    { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () { this.filteredLinks = undefined; this.filteredNodes = undefined; } }
+    { name: "Cumulative Links", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } },
+    { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } }
   ];
   this.nodeChannels = [
     { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -50,10 +47,6 @@ Method_Simple.prototype.Unload = function () {
     this.forceLayout.stop();
   }
   this.forceLayout = undefined;
-  this.svgContainer = undefined;
-  this.svgTranslation = undefined;
- // this.graphLink = undefined;
- //this.graphNode = undefined;
 };
 
 Method_Simple.prototype.foci = [
@@ -95,8 +88,6 @@ Method_Simple.prototype.Update = function () {
 };
 
 //######################################################################
-//########    Redraw
-//######################################################################
 
 // The page has been resized or some other event that requires a redraw
 Method_Simple.prototype.Redraw = function (w, h) {
@@ -122,11 +113,10 @@ Method_Simple.prototype.Redraw = function (w, h) {
     this.svg = d3.select("#chart").append("svg");
     this.svgContainer = this.svg.append("g");
   }
-  this.svg.attr("width", this.width)
-    .attr("height", this.height)
-    .call(zoom);
-
+  this.svg.attr("width", this.width).attr("height", this.height).call(zoom);
 };
+
+//######################################################################
 
 Method_Simple.prototype.zoomed = function () {
   this.svgTranslation = d3.event.translate;
@@ -160,99 +150,4 @@ Method_Simple.prototype.Tick = function (e) {
     }, this));
   }
   this.UpdateLocalLayout("", null);
-};
-
-//######################################################################
-//########    Channel Mapping Functions
-//######################################################################
-
-Method_Simple.prototype.RedoLinks = function () {
-  if (this.visLinks === undefined) { return; }
-  this.UpdateLocalLayout("", null);
-  this.visLinks.style("stroke-width", this.LinkWidth.bind(this))
-    .style("stroke-width", this.LinkWidth.bind(this))
-    .style("stroke-dasharray", this.LinkDash.bind(this));
-  this.forceLayout.alpha(Math.max(this.forceLayout.alpha(), 0.1));
-};
-
-Method_Simple.prototype.RedoNodes = function () {
-  if (this.visNodes === undefined) { return; }
-  this.UpdateLocalLayout("", null);
-  this.visNodes
-    .attr("r", this.NodeSize.bind(this))
-    .style("fill", this.NodeColour.bind(this))
-    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
-};
-
-var fill = d3.scale.category20().domain(d3.range(0, 20));
-
-//------------------ Link Channels ----------------
-Method_Simple.prototype.Linkcolour = function (d) {
-  var channel = this.getLinkChannel("Link Colour");
-  if (channel.inUse) {
-    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)))).darker();
-  } else {
-    return "black";
-  }
-};
-
-Method_Simple.prototype.LinkWidth = function (d) {
-  var channel = this.getLinkChannel("Link Width");
-  if (channel.inUse) {
-    var q = (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax))
-    if (q == 0) {
-      q = "0.5";
-    }
-    return q + "px";
-  } else {
-    return "1.5px";
-  }
-};
-
-Method_Simple.prototype.LinkDash = function (d) {
-  var channel = this.getLinkChannel("Link Width");
-  if (channel.inUse) {
-    var q = getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
-    if (q == 0) {
-      return "10";
-    }
-  }
-  return "0";
-};
-
-
-Method_Simple.prototype.LinkLength = function (d) {
-  var channel = this.getLinkChannel("Link Length");
-  if (channel.inUse) {
-    return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
-  } else {
-    return 50;
-  }
-};
-//------------------ Node Channels ----------------
-Method_Simple.prototype.NodeColour = function (d) {
-  var channel = this.getNodeChannel("Node Colour");
-  if (channel.inUse) {
-    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)))).darker();
-  } else {
-    return "black";
-  }
-};
-
-Method_Simple.prototype.NodeSize = function (d) {
-  var channel = this.getNodeChannel("Node Size");
-  if (channel.inUse) {
-    return (this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
-  } else {
-    return this.default_radius - .75;
-  }
-};
-
-Method_Simple.prototype.GravityPoint = function (d) {
-  var channel = this.getNodeChannel("Gravity Point");
-  if (channel.inUse) {
-    return 1;
-  } else {
-    return 0;
-  }
 };
