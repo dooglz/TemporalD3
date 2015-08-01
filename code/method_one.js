@@ -22,9 +22,11 @@ Method_One.prototype.globalForceLayoutMaxTime = 4000; //4 seconds
 Method_One.prototype.globalForceLayoutAllowSettle = false;
 
 Method_One.prototype.localLayoutMaxSubTicks = 50;
-Method_One.prototype.localLayoutMaxTicks = 800;
+Method_One.prototype.localLayoutMaxTicks = 600;
 Method_One.prototype.localLayoutMaxTime = 2500; //2.5 seconds
 Method_One.prototype.localLayoutAllowSettle = true;
+
+Method_One.prototype.localLayoutGlobalForce = false;
 //Method constructor
 function Method_One() {
   this.name = "Method One";
@@ -35,17 +37,8 @@ function Method_One() {
     { name: "Cumulative Nodes", ptype: "checkbox", pval: true },
     { name: "Global: Allow Settle", ptype: "checkbox", pval: false, func: function (val) { this.globalForceLayoutAllowSettle = val; } },
     { name: "Local: Allow Settle", ptype: "checkbox", pval: true, func: function (val) { this.localLayoutAllowSettle = val; } },
+    { name: "Global Forces", ptype: "checkbox", pval: false, func: function (val) { this.localLayoutGlobalForce = val; } },
     { name: "Show Global", ptype: "button", pval: false, func: function () { this.ShowLocalLayout("g", null, this.data.nodes, this.data.links); } }
-  ];
-  this.nodeChannels = [
-    { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
-    { name: "Gravity Point", ctype: "catagory", inUse: false, dataParam: "" },
-    { name: "Node Size", ctype: "numeric", inUse: false, dataParam: "" },
-  ];
-  this.linkChannels = [
-    { name: "Link Colour", ctype: "catagory", inUse: false, dataParam: "" },
-    { name: "Link Length", ctype: "numeric", inUse: false, dataParam: "" },
-    { name: "Link Width", ctype: "numeric", inUse: false, dataParam: "" },
   ];
 }
 
@@ -63,19 +56,6 @@ Method_One.prototype.Unload = function () {
   //this.GlobalLayoutPercentDone = undefined;
   //this.LocalLayoutPercentDone = undefined;
   HideLoadingBar();
-
-  if (this.globalForceLayout !== undefined) {
-    this.globalForceLayout.stop();
-    this.globalForceLayout = undefined;
-  }
-  if(this.LocalLayouts !== undefined){
-    this.LocalLayouts.forEach(function (o) {
-      if (o.ForceLayout !== undefined) {
-        o.ForceLayout.stop();
-        o.ForceLayout = undefined;
-      }
-    });
-  }
 };
 
 Method_One.prototype.foci = [
@@ -117,6 +97,7 @@ Method_One.prototype.Loading = function () {
 }
 
 Method_One.prototype.Recalculate = function () {
+  this.StopCalculation();
   Method_One.prototype.done = false;
   this.LocalLayoutPercentDone = 0;
   this.loadingtimerfunc = setInterval(this.Loading.bind(this), 100);
@@ -144,6 +125,18 @@ Method_One.prototype.StopCalculation = function () {
   if (this.localLayoutLoopTimeout !== undefined) {
     clearTimeout(this.localLayoutLoopTimeout);
     this.localLayoutLoopTimeout = undefined;
+  }
+  if (this.globalForceLayout !== undefined) {
+    this.globalForceLayout.stop();
+    this.globalForceLayout = undefined;
+  }
+  if (this.LocalLayouts !== undefined) {
+    this.LocalLayouts.forEach(function (o) {
+      if (o.ForceLayout !== undefined) {
+        o.ForceLayout.stop();
+        o.ForceLayout = undefined;
+      }
+    });
   }
 }
 
@@ -187,16 +180,21 @@ Method_One.prototype.CaluclateGlobalLayout = function () {
 }
 
 Method_One.prototype.CaluclateGlobalLayoutLoop = function () {
-  this.GlobalLayoutPercentDone = ((new Date() - this.globalForceLayoutStartTime) / this.globalForceLayoutMaxTime) * 100.0;
-  if (this.globalForceLayoutTickCount > this.globalForceLayoutMaxTicks || this.GlobalLayoutPercentDone >= 100
-    || (this.globalForceLayoutAllowSettle && this.globalForceLayout.alpha() == 0)) {
-    clearTimeout(this.globalForceLayoutLoopTimeout);
-    this.globalForceLayoutLoopTimeout = undefined;
-    this.GlobalLayoutPercentDone = 100;
-    this.globalForceLayout.stop();
-    this.GlobalLayoutDone();
+  var elapsedtime = (new Date() - this.globalForceLayoutStartTime);
+  //are we out of time?
+  if (this.globalForceLayoutMaxTime - elapsedtime <= 0) {
+    console.log("Global out of time");
+    this.StopGlobalLayoutLoop();
     return;
   }
+
+  if (this.globalForceLayoutTickCount > this.globalForceLayoutMaxTicks || (this.globalForceLayoutAllowSettle && this.globalForceLayout.alpha() == 0)) {
+    this.StopGlobalLayoutLoop();
+    return;
+  }
+
+  this.GlobalLayoutPercentDone = (elapsedtime / this.globalForceLayoutMaxTime) * 100.0;
+
   for (var i = 0; i < this.globalForceLayoutMaxSubTicks; i++) {
     if (!this.globalForceLayoutAllowSettle) {
       this.globalForceLayout.resume();
@@ -204,6 +202,14 @@ Method_One.prototype.CaluclateGlobalLayoutLoop = function () {
     this.globalForceLayout.tick();
   }
   this.globalForceLayoutTickCount += this.globalForceLayoutMaxSubTicks;
+}
+
+Method_One.prototype.StopGlobalLayoutLoop = function () {
+  clearTimeout(this.globalForceLayoutLoopTimeout);
+  this.globalForceLayoutLoopTimeout = undefined;
+  this.GlobalLayoutPercentDone = 100;
+  this.globalForceLayout.stop();
+  this.GlobalLayoutDone();
 }
 
 Method_One.prototype.GlobalTick = function (e) {
@@ -332,6 +338,14 @@ Method_One.prototype.LocalTick = function (e) {
       var point = Math.round((this.foci.length - 1) * getAttributeAsPercentage(this.data, o, channel.dataParam));
       o.y += ((this.halfHeight + this.foci[point].y) - o.y) * k;
       o.x += ((this.halfWidth + this.foci[point].x) - o.x) * k;
+    }, this));
+  }
+  if (this.localLayoutGlobalForce) {
+    var k1 = .1 * e.alpha;
+    this.data.nodes.forEach($.proxy(function (o, i, array) {
+      var point = { x: o.gx, y: o.gy };
+      o.y += ((this.halfHeight + point.y) - o.y) * k1;
+      o.x += ((this.halfWidth + point.x) - o.x) * k1;
     }, this));
   }
 };

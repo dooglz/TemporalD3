@@ -120,6 +120,18 @@ Base_Method.prototype.ParamChanged = function (param) {
 //######################################################################
 //########    Channel Mapping Functions
 //######################################################################
+
+Base_Method.prototype.nodeChannels = [
+    { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
+    { name: "Gravity Point", ctype: "catagory", inUse: false, dataParam: "" },
+    { name: "Node Size", ctype: "numeric", inUse: false, dataParam: "" },
+  ];
+Base_Method.prototype.linkChannels = [
+    { name: "Link Colour", ctype: "catagory", inUse: false, dataParam: "" },
+    { name: "Link Length", ctype: "numeric", inUse: false, dataParam: "" },
+    { name: "Link Width", ctype: "numeric", inUse: false, dataParam: "" },
+  ];
+
 Base_Method.prototype.RedoLinks = function () { };
 Base_Method.prototype.RedoNodes = function () { };
 

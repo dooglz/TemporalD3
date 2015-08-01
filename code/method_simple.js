@@ -23,16 +23,7 @@ function Method_Simple() {
     { name: "Cumulative Links", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } },
     { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } }
   ];
-  this.nodeChannels = [
-    { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
-    { name: "Gravity Point", ctype: "catagory", inUse: false, dataParam: "" },
-    { name: "Node Size", ctype: "numeric", inUse: false, dataParam: "" },
-  ];
-  this.linkChannels = [
-    { name: "Link Colour", ctype: "catagory", inUse: false, dataParam: "" },
-    { name: "Link Length", ctype: "numeric", inUse: false, dataParam: "" },
-    { name: "Link Width", ctype: "numeric", inUse: false, dataParam: "" },
-  ];
+
 }
 
 Method_Simple.prototype.Load = function () { };
