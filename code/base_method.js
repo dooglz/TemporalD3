@@ -16,6 +16,8 @@ Base_Method.prototype.name = "";
 Base_Method.prototype.SetData = function (d) {};
 //######################################################################*/
 
+Base_Method.prototype.visNodeData = [];
+Base_Method.prototype.visLinkData = [];
 Base_Method.prototype.data;
 Base_Method.prototype.width = 1013;
 Base_Method.prototype.height = 568;
@@ -122,15 +124,15 @@ Base_Method.prototype.ParamChanged = function (param) {
 //######################################################################
 
 Base_Method.prototype.nodeChannels = [
-    { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
-    { name: "Gravity Point", ctype: "catagory", inUse: false, dataParam: "" },
-    { name: "Node Size", ctype: "numeric", inUse: false, dataParam: "" },
-  ];
+  { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
+  { name: "Gravity Point", ctype: "catagory", inUse: false, dataParam: "" },
+  { name: "Node Size", ctype: "numeric", inUse: false, dataParam: "" },
+];
 Base_Method.prototype.linkChannels = [
-    { name: "Link Colour", ctype: "catagory", inUse: false, dataParam: "" },
-    { name: "Link Length", ctype: "numeric", inUse: false, dataParam: "" },
-    { name: "Link Width", ctype: "numeric", inUse: false, dataParam: "" },
-  ];
+  { name: "Link Colour", ctype: "catagory", inUse: false, dataParam: "" },
+  { name: "Link Length", ctype: "numeric", inUse: false, dataParam: "" },
+  { name: "Link Width", ctype: "numeric", inUse: false, dataParam: "" },
+];
 
 Base_Method.prototype.RedoLinks = function () { };
 Base_Method.prototype.RedoNodes = function () { };
@@ -312,10 +314,11 @@ Base_Method.prototype.QuickLinkFilter = function (d) {
 //########   Layout visulisations
 //######################################################################
 
-//Updates The positions of all nodes and links, does not filter or handle data change. 
-Base_Method.prototype.UpdateLocalLayout = function (positionAttribute, positionAttributeOffset) {
-  if (this.lastRenderdpositionAttribute != positionAttribute) {
-    console.error("Call ShowLocalLayout(" + positionAttribute + ") before UpdateLocalLayout(" + positionAttribute + ")!");
+//Updates The positions of all nodes and links, does not handle data change. 
+//Call this when the displaying the same nodes+links, but at different positions.
+Base_Method.prototype.UpdateVisPositions = function (positionAttribute, positionAttributeOffset) {
+  if (this.visLinks === undefined || this.visNodes === undefined) {
+    console.error("Calling UpdateVisPositions(%o,%o), before NewVis()!", positionAttribute, positionAttributeOffset);
     console.trace();
     return;
   }
@@ -324,9 +327,6 @@ Base_Method.prototype.UpdateLocalLayout = function (positionAttribute, positionA
   }
   if (positionAttributeOffset === undefined) {
     positionAttributeOffset = null;
-  }
-  if (this.visLinks === undefined) {
-    console.trace();
   }
   //update links
   if (positionAttributeOffset != null) {
@@ -354,58 +354,26 @@ Base_Method.prototype.UpdateLocalLayout = function (positionAttribute, positionA
   }
 }
 
-Base_Method.prototype.ShowLocalLayout = function (positionAttribute, positionAttributeOffset, nodes, links) {
-  if (positionAttribute === undefined) {
-    positionAttribute = "";
-  }
-  if (positionAttributeOffset === undefined) {
-    positionAttributeOffset = null;
-  }
-  if (nodes === undefined || nodes === null) {
-    this.filteredNodes = this.data.nodes;
-  }
-  if (links === undefined || links === null) {
-    this.filteredLinks = this.data.links;
-  }
-  
-  //check if we actually have any data for these parameters
-  if (this.currentDateMin === undefined) { this.currentDateMin = 0; }
-  if (nodes[0] === undefined || nodes[0][positionAttribute + "x"] === undefined
-    || (positionAttributeOffset != null && (nodes[0][positionAttribute + "x"][positionAttributeOffset] === undefined))) {
+//Add and remove nodes/links to the scene (Normally called after UpdateVisData(), and before UpdateVisPositions())
+Base_Method.prototype.UpdateVis = function () {
+  if (this.data === undefined || this.data === null) {
+    console.warn("Creating/Updating vis, while this.data = undefined/null, bailing out.")
     return;
   }
-
-  if (this.lastRenderdpositionAttribute != positionAttribute) {
-    this.lastRenderdpositionAttribute = positionAttribute;
-  }
-  
-  //Tidy up stale tooltips
-  if (this.visNodeTooltip !== undefined) {
-    $(".tooltip").remove();
-    this.visNodeTooltip = undefined;
-  }
-  if (this.visLinkTooltip !== undefined) {
-    $(".tooltip.link").remove();
-    this.visLinkTooltip = undefined;
-  }
-
   //Create Links
-  this.visLinks = this.svgContainer.selectAll("line").data(links);
+  this.visLinks = this.svgContainer.selectAll("line").data(this.visLinkData);
   this.visLinks.enter().append("line").style("stroke", "black");
 
   //when a link is no longer in the set, remove it from the graph.
   this.visLinks.exit().remove();
 
   //Create nodes
-  this.visNodes = this.svgContainer.selectAll("circle").data(nodes);
+  this.visNodes = this.svgContainer.selectAll("circle").data(this.visNodeData);
   this.visNodes.enter()
     .append("circle")
     .on("click", Nodeclick)
     .on("dblclick", NodedblClick);
   
-  //Update Poisitions
-  this.UpdateLocalLayout(positionAttribute, positionAttributeOffset);
-
   //add hover tooltips, if there are attributes to display
   if (this.data.link_keys.length > 0) {
     this.visLinkTooltip = d3.select("body").append("div").attr("class", "tooltip link").style("opacity", 0);
@@ -439,13 +407,25 @@ Base_Method.prototype.ShowLocalLayout = function (positionAttribute, positionAtt
   this.visNodes.exit().remove();
 }
 
-Base_Method.prototype.HideLocalLayout = function () {
+//shortcut to ClearVis and UpdateVis
+Base_Method.prototype.NewVis = function () {
+  this.ClearVis();
+  this.UpdateVis();
+  console.info("Vis created");
+}
+
+//removes any vis from the page.
+Base_Method.prototype.ClearVis = function () {
+  //this.ClearVisData();
   if (this.visNodes !== undefined) {
     this.visNodes.remove();
+    this.visNodes = undefined;
   }
   if (this.visLinks !== undefined) {
     this.visLinks.remove();
+    this.visLinks = undefined;
   }
+
   //Tidy up stale tooltips
   if (this.visNodeTooltip !== undefined) {
     $(".tooltip").remove();
@@ -455,33 +435,70 @@ Base_Method.prototype.HideLocalLayout = function () {
     $(".tooltip.link").remove();
     this.visLinkTooltip = undefined;
   }
+  console.info("Vis cleared");
 }
+
+Base_Method.prototype.ClearVisData = function () {
+  this.visNodeData = [];
+  this.visLinkData = [];
+  console.info("Cleared vis data");
+}
+
+Base_Method.prototype.UpdateVisData = function (newNodeData, newLinkData) {
+  var nodeRems = 0;
+  var nodeAdds = 0;
+  var linkRems = 0;
+  var linkAdds = 0;
+  //remove dead
+  this.visNodeData.forEach(function (o) {
+    if ($.inArray(o, newNodeData) == -1) {
+      RemoveFromArray(this.visNodeData, o);
+      nodeRems++;
+    }
+  }, this);
+  //add new
+  newNodeData.forEach(function (o) {
+    if ($.inArray(o, this.visNodeData) == -1) {
+      this.visNodeData.push(o);
+      nodeAdds++;
+    }
+  }, this);
+  
+  //remove dead
+  this.visLinkData.forEach(function (o) {
+    if ($.inArray(o, newLinkData) == -1) {
+      RemoveFromArray(this.visLinkData, o);
+      linkRems++;
+    }
+  }, this);
+  //add new
+  newLinkData.forEach(function (o) {
+    if ($.inArray(o, this.visLinkData) == -1) {
+      this.visLinkData.push(o);
+      linkAdds++;
+    }
+  }, this);
+  //  console.info("Updated vis data, node -:%o, +:%o, link -:%o, +:%o, length N:%o, L:%o", nodeRems, nodeAdds, linkRems, linkAdds, this.visNodeData.length, this.visLinkData.length);
+}
+
 
 // action to take on mouse click
-function Nodeclick() {
-  console.log("click");
-   
-   /* d3.select(this).select("text").transition()
-        .duration(750)
-        .attr("x", 22)
-        .style("fill", "steelblue")
-        .style("stroke", "lightsteelblue")
-        .style("stroke-width", ".5px")
-        .style("font", "20px sans-serif");*/
-    d3.select(this).transition()
-        .duration(750)
-     //   .attr("r", 16)
-        .style("fill", "lightsteelblue");
+function Nodeclick(d) {
+  d.highlight = true;  
+  d3.select(this)
+    .transition()
+    .duration(750)
+    .style("fill", "lightsteelblue");
+}
+// action to take on mouse double click
+function NodedblClick(d) {
+  d.highlight = false;
+  d3.select(this)
+    .transition()
+    .duration(750)
+    .style("fill", "#000");
 }
 
-// action to take on mouse double click
-function NodedblClick() {
-  console.log("sblclick");
-    d3.select(this).transition()
-        .duration(750)
-      //  .attr("r", this.NodeSize.bind(this))
-        .style("fill", "#000");
-}
 
 //######################################################################
 //########    Default Channel Mapping Functions
@@ -490,7 +507,6 @@ function NodedblClick() {
 
 Base_Method.prototype.RedoLinks = function () {
   if (this.visLinks === undefined) { return; }
-  // this.UpdateLocalLayout("", null);
   this.visLinks.style("stroke-width", this.LinkWidth.bind(this))
     .style("stroke-width", this.LinkWidth.bind(this))
     .style("stroke-dasharray", this.LinkDash.bind(this));
@@ -498,7 +514,6 @@ Base_Method.prototype.RedoLinks = function () {
 
 Base_Method.prototype.RedoNodes = function () {
   if (this.visNodes === undefined) { return; }
-  // this.UpdateLocalLayout("", null);
   this.visNodes
     .attr("r", this.NodeSize.bind(this))
     .style("fill", this.NodeColour.bind(this))
@@ -537,6 +552,9 @@ Base_Method.prototype.LinkLength = function (d) {
 
 //------------------ Node Channels ----------------
 Base_Method.prototype.NodeColour = function (d) {
+  if (d.highlight) {
+    return "lightsteelblue";
+  }
   var channel = this.getNodeChannel("Node Colour");
   if (channel.inUse) {
     return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)))).darker();
@@ -548,9 +566,9 @@ Base_Method.prototype.NodeColour = function (d) {
 Base_Method.prototype.NodeSize = function (d) {
   var channel = this.getNodeChannel("Node Size");
   if (channel.inUse) {
-    return (this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
+    return ((this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax));
   } else {
-    return this.default_radius - .75;
+    return (this.default_radius - .75);
   }
 };
 

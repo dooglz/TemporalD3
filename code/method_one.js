@@ -27,6 +27,8 @@ Method_One.prototype.localLayoutMaxTime = 2500; //2.5 seconds
 Method_One.prototype.localLayoutAllowSettle = true;
 
 Method_One.prototype.localLayoutGlobalForce = false;
+
+Method_One.prototype.showingGlobal = false;
 //Method constructor
 function Method_One() {
   this.name = "Method One";
@@ -38,13 +40,14 @@ function Method_One() {
     { name: "Global: Allow Settle", ptype: "checkbox", pval: false, func: function (val) { this.globalForceLayoutAllowSettle = val; } },
     { name: "Local: Allow Settle", ptype: "checkbox", pval: true, func: function (val) { this.localLayoutAllowSettle = val; } },
     { name: "Global Forces", ptype: "checkbox", pval: false, func: function (val) { this.localLayoutGlobalForce = val; } },
-    { name: "Show Global", ptype: "button", pval: false, func: function () { this.ShowLocalLayout("g", null, this.data.nodes, this.data.links); } }
+    { name: "Show Global", ptype: "button", pval: false, func: function () {this.SwitchVis();}}
   ];
 }
 
 Method_One.prototype.Load = function () { };
 Method_One.prototype.Unload = function () {
-  this.HideLocalLayout();
+  this.ClearVisData();
+  this.ClearVis();
   this.StopCalculation();
   if (this.svg !== undefined) {
     this.svg.selectAll("*").remove();
@@ -75,8 +78,9 @@ Method_One.prototype.SetData = function (d) {
   if (this.done) {
     this.RedoNodes();
     this.RedoLinks();
-    // this.ShowLocalLayout();
   }
+  this.ClearVisData();
+  this.NewVis();
 };
 Method_One.prototype.done = false;
 Method_One.prototype.Loading = function () {
@@ -158,9 +162,7 @@ Method_One.prototype.CaluclateGlobalLayout = function () {
   SetLoadingBarColour();
   this.GlobalLayoutPercentDone = 0;
   //Update Vis
-  this.ShowLocalLayout("g", null, this.data.nodes, this.data.links);
-  this.RedoNodes();
-  this.RedoLinks();
+  this.SwitchVis(true);
   //create a new force layout
   this.globalForceLayout = d3.layout.force()
     .gravity(.25)
@@ -229,13 +231,7 @@ Method_One.prototype.GlobalTick = function (e) {
       o.gy = o.y;
     });
   }
-  if (this.lastRenderdpositionAttribute != "g") {
-    this.ShowLocalLayout("g", null, this.data.nodes, this.data.links);
-    this.RedoNodes();
-    this.RedoLinks();
-  } else {
-    this.UpdateLocalLayout("g", null);
-  }
+  this.UpdateVisPositions("g", null);
 };
 
 //######################################################################
@@ -350,18 +346,50 @@ Method_One.prototype.LocalTick = function (e) {
   }
 };
 
+Method_One.prototype.SwitchVis = function (global) {
+  if (global === undefined) {
+    global = !this.showingGlobal;
+  }
+  if(global == this.showingGlobal){return;}
+  
+  this.ClearVisData();
+  if (global) {
+    this.UpdateVisData(this.data.nodes, this.data.links);
+    this.NewVis();
+    this.UpdateVisPositions("g", null);
+    this.showingGlobal = true;
+     this.RedoNodes();
+    this.RedoLinks();
+    console.log("back to global");
+  } else {
+    this.ClearVis();
+    this.showingGlobal = false;
+    console.log("back to local");
+    this.Update();
+  }
+}
 //######################################################################
 //########    Main Update
 //######################################################################
 
+Method_One.prototype.SetDate = function (higher, lower) {
+ $.proxy(Base_Method.prototype.SetDate,this,higher, lower)();
+ if(this.showingGlobal){this.SwitchVis(false);}
+}
+
 Method_One.prototype.Update = function () {
   Base_Method.prototype.Update.call(this);
+  if(this.showingGlobal){return;}
   var discreet = this.getDiscreetfromDate(this.currentDateMin, this.data.date_type);
   if (this.LocalLayouts !== undefined && this.LocalLayouts[discreet] !== undefined
     && this.LocalLayouts[discreet].filteredNodes !== undefined
     && this.LocalLayouts[discreet].filteredLinks !== undefined &&
     (this.prev_currentDateMin != this.currentDateMin || this.prev_currentDateMax != this.currentDateMax)) {
-    this.ShowLocalLayout("l", discreet, this.LocalLayouts[discreet].filteredNodes, this.LocalLayouts[discreet].filteredLinks);
+      this.UpdateVisData( this.LocalLayouts[discreet].filteredNodes, this.LocalLayouts[discreet].filteredLinks);
+      this.UpdateVis();
+      this.UpdateVisPositions("l", discreet);
+      this.RedoNodes();
+      this.RedoLinks();
   }
   return;
 };

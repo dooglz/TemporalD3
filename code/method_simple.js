@@ -23,7 +23,6 @@ function Method_Simple() {
     { name: "Cumulative Links", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } },
     { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } }
   ];
-
 }
 
 Method_Simple.prototype.Load = function () { };
@@ -51,10 +50,10 @@ Method_Simple.prototype.foci = [
 
 Method_Simple.prototype.SetData = function (d) {
   this.data = d;
-  this.filteredLinks = undefined;
-  this.filteredNodes = undefined;
   this.RedoNodes();
   this.RedoLinks();
+  this.ClearVisData();
+  this.NewVis();
 };
 
 //######################################################################
@@ -74,7 +73,9 @@ Method_Simple.prototype.Update = function () {
   this.forceLayout.nodes(n).links(l).on("tick", this.Tick.bind(this)).start();
   
   //Update Vis
-  this.ShowLocalLayout("", null, n, l);
+  this.UpdateVisData(n,l);
+  this.UpdateVis();
+  this.UpdateVisPositions("", null);
   this.RedoNodes();
   this.RedoLinks();
 };
@@ -143,5 +144,5 @@ Method_Simple.prototype.Tick = function (e) {
       o.x += ((this.halfWidth + this.foci[point].x) - o.x) * k;
     }, this));
   }
-  this.UpdateLocalLayout("", null);
+   this.UpdateVisPositions("", null);
 };
