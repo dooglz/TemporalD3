@@ -398,7 +398,10 @@ Base_Method.prototype.ShowLocalLayout = function (positionAttribute, positionAtt
 
   //Create nodes
   this.visNodes = this.svgContainer.selectAll("circle").data(nodes);
-  this.visNodes.enter().append("circle");
+  this.visNodes.enter()
+    .append("circle")
+    .on("click", Nodeclick)
+    .on("dblclick", NodedblClick);
   
   //Update Poisitions
   this.UpdateLocalLayout(positionAttribute, positionAttributeOffset);
@@ -454,6 +457,31 @@ Base_Method.prototype.HideLocalLayout = function () {
   }
 }
 
+// action to take on mouse click
+function Nodeclick() {
+  console.log("click");
+   
+   /* d3.select(this).select("text").transition()
+        .duration(750)
+        .attr("x", 22)
+        .style("fill", "steelblue")
+        .style("stroke", "lightsteelblue")
+        .style("stroke-width", ".5px")
+        .style("font", "20px sans-serif");*/
+    d3.select(this).transition()
+        .duration(750)
+     //   .attr("r", 16)
+        .style("fill", "lightsteelblue");
+}
+
+// action to take on mouse double click
+function NodedblClick() {
+  console.log("sblclick");
+    d3.select(this).transition()
+        .duration(750)
+      //  .attr("r", this.NodeSize.bind(this))
+        .style("fill", "#000");
+}
 
 //######################################################################
 //########    Default Channel Mapping Functions
