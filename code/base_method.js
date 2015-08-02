@@ -484,8 +484,9 @@ Base_Method.prototype.UpdateVisData = function (newNodeData, newLinkData) {
 
 // action to take on mouse click
 function Nodeclick(d) {
-  d.highlight = true;  
+  d.highlight = true;
   d3.select(this)
+    .style("filter", "url(#glow)")
     .transition()
     .duration(750)
     .style("fill", "lightsteelblue");
@@ -494,6 +495,7 @@ function Nodeclick(d) {
 function NodedblClick(d) {
   d.highlight = false;
   d3.select(this)
+    .style("filter", "")
     .transition()
     .duration(750)
     .style("fill", "#000");
@@ -517,7 +519,8 @@ Base_Method.prototype.RedoNodes = function () {
   this.visNodes
     .attr("r", this.NodeSize.bind(this))
     .style("fill", this.NodeColour.bind(this))
-    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); });
+    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); })
+    .style("filter", this.NodeFilter);
 };
 
 var fill = d3.scale.category20().domain(d3.range(0, 20));
@@ -551,6 +554,13 @@ Base_Method.prototype.LinkLength = function (d) {
 };
 
 //------------------ Node Channels ----------------
+Base_Method.prototype.NodeFilter = function (d) {
+  if (d.highlight) {
+    return "url(#glow)";
+  }
+  return "";
+};
+
 Base_Method.prototype.NodeColour = function (d) {
   if (d.highlight) {
     return "lightsteelblue";
@@ -591,3 +601,30 @@ Base_Method.prototype.LinkDash = function (d) {
   }
   return "0";
 };
+
+
+Base_Method.prototype.SetupSVGFilters = function () {
+  var defs = this.svg.append("defs");
+  var filter = defs.append("filter")
+    .attr("id", "glow")
+    .attr("height", "400%")
+    .attr("width", "400%")
+    .attr("x", "-80%")
+    .attr("y", "-80%");
+  filter.append("feGaussianBlur")
+    .attr("in", "SourceGraphic")
+    .attr("stdDeviation", 4)
+    .attr("result", "coloredBlur");
+  var feMerge = filter.append("feMerge");
+
+  feMerge.append("feMergeNode")
+    .attr("in", "coloredBlur")
+  feMerge.append("feMergeNode")
+    .attr("in", "coloredBlur")
+  feMerge.append("feMergeNode")
+    .attr("in", "coloredBlur")
+  feMerge.append("feMergeNode")
+    .attr("in", "coloredBlur")
+  feMerge.append("feMergeNode")
+    .attr("in", "SourceGraphic");
+}

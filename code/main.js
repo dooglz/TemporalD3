@@ -786,3 +786,4 @@ function IsJson(str) {
     }
     return true;
 }
+

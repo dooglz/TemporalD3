@@ -25,7 +25,9 @@ function Method_Simple() {
   ];
 }
 
-Method_Simple.prototype.Load = function () { };
+Method_Simple.prototype.Load = function () { 
+
+};
 
 Method_Simple.prototype.Unload = function () {
   if (this.svg != undefined) {
@@ -109,6 +111,7 @@ Method_Simple.prototype.Redraw = function (w, h) {
     this.svgContainer = this.svg.append("g");
   }
   this.svg.attr("width", this.width).attr("height", this.height).call(zoom);
+  this.SetupSVGFilters();
 };
 
 //######################################################################

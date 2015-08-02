@@ -419,7 +419,7 @@ Method_One.prototype.Redraw = function (w, h) {
     .attr("height", this.height)
     .call(zoom);
   console.log("Redrawing");
-  return;
+  this.SetupSVGFilters();
 };
 
 Method_One.prototype.zoomed = function () {
