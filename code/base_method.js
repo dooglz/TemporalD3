@@ -126,7 +126,9 @@ Base_Method.prototype.ParamChanged = function (param) {
 Base_Method.prototype.nodeChannels = [
   { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
   { name: "Gravity Point", ctype: "catagory", inUse: false, dataParam: "" },
-  { name: "Node Size", ctype: "numeric", inUse: false, dataParam: "" },
+  { name: "Node Size A", ctype: "numeric", inUse: false, dataParam: "" },
+  { name: "Node Size B", ctype: "numeric", inUse: false, dataParam: "" },
+  { name: "Node Size C", ctype: "numeric", inUse: false, dataParam: "" },
 ];
 Base_Method.prototype.linkChannels = [
   { name: "Link Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -344,13 +346,19 @@ Base_Method.prototype.UpdateVisPositions = function (positionAttribute, position
   }
   //update Nodes
   if (positionAttributeOffset != null) {
-    this.visNodes
-      .attr("cx", function (d) { return d[positionAttribute + "x"][positionAttributeOffset]; })
-      .attr("cy", function (d) { return d[positionAttribute + "y"][positionAttributeOffset]; })
+    this.visNodes.attr("transform",function (d) {
+        return "translate("
+          +d[positionAttribute + "x"][positionAttributeOffset]
+          +","+d[positionAttribute + "y"][positionAttributeOffset]
+          +")"; });
   } else {
-    this.visNodes
-      .attr("cx", function (d) { return d[positionAttribute + "x"]; })
-      .attr("cy", function (d) { return d[positionAttribute + "y"]; })
+        this.visNodes
+        .attr("fire",11)
+        .attr("transform",function (d) {
+        return "translate("
+          +d[positionAttribute + "x"]
+          +","+d[positionAttribute + "y"]
+          +")"; });
   }
 }
 
@@ -368,11 +376,11 @@ Base_Method.prototype.UpdateVis = function () {
   this.visLinks.exit().remove();
 
   //Create nodes
-  this.visNodes = this.svgContainer.selectAll("circle").data(this.visNodeData);
-  this.visNodes.enter()
-    .append("circle")
+  this.visNodes = this.svgContainer.selectAll("g").data(this.visNodeData);
+  var g = this.visNodes.enter().append("g")
     .on("click", Nodeclick)
     .on("dblclick", NodedblClick);
+  g.append("circle");
   
   //add hover tooltips, if there are attributes to display
   if (this.data.link_keys.length > 0) {
@@ -501,6 +509,38 @@ function NodedblClick(d) {
     .style("fill", "#000");
 }
 
+Base_Method.prototype.AttributesPerVisNode = 0;
+Base_Method.prototype.NodeSplit = function () {
+  var channelA = this.getNodeChannel("Node Size A");
+  var channelB = this.getNodeChannel("Node Size B");
+  var channelC = this.getNodeChannel("Node Size C");
+  if(this.AttributesPerVisNode ==0 && !channelA.inUse && !channelB.inUse && !channelC.inUse){
+    return;
+  }
+  if(this.AttributesPerVisNode ==1 && channelA.inUse && !channelB.inUse && !channelC.inUse){
+    return;
+  }
+  if(this.AttributesPerVisNode ==2 && channelA.inUse && channelB.inUse && !channelC.inUse){
+    return;
+  }
+  //only chan A
+  if (channelA.inUse && !channelB.inUse && !channelC.inUse) {
+    //clean any extra nodes
+    this.visNodes.selectAll("#secondary").remove();
+    this.AttributesPerVisNode = 1;
+  }
+  //chan A + B
+  if (channelA.inUse && channelB.inUse && !channelC.inUse) {
+    if(this.AttributesPerVisNode < 2){
+      //add extra nodes
+      this.visNodes.append("circle").attr("id","secondary");
+    }else{
+      //remove extra nodes
+      this.visNodes.selectAll("#secondary").remove();
+    }
+    this.AttributesPerVisNode = 2;
+  }
+}
 
 //######################################################################
 //########    Default Channel Mapping Functions
@@ -509,21 +549,38 @@ function NodedblClick(d) {
 
 Base_Method.prototype.RedoLinks = function () {
   if (this.visLinks === undefined) { return; }
-  this.visLinks.style("stroke-width", this.LinkWidth.bind(this))
+  this.visLinks
+    .style("stroke-width", this.LinkWidth.bind(this))
     .style("stroke-width", this.LinkWidth.bind(this))
     .style("stroke-dasharray", this.LinkDash.bind(this));
 };
 
 Base_Method.prototype.RedoNodes = function () {
   if (this.visNodes === undefined) { return; }
-  this.visNodes
+  this.visNodes.selectAll("circle")
     .attr("r", this.NodeSize.bind(this))
     .style("fill", this.NodeColour.bind(this))
     .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); })
-    .style("filter", this.NodeFilter);
+    .style("filter", this.NodeFilter)
+    .attr("clip-path", this.NodeClip.bind(this));
+  //   .attr("clip-path","url(#cut-off-top)");
 };
 
 var fill = d3.scale.category20().domain(d3.range(0, 20));
+
+Base_Method.prototype.NodeClip = function (d, i) {
+  var channelA = this.getNodeChannel("Node Size A");
+  var channelB = this.getNodeChannel("Node Size B");
+  var channelC = this.getNodeChannel("Node Size C");
+  if (channelA.inUse && channelB.inUse && !channelC.inUse) {
+    if (i == 0) {
+      return "url(#cut-off-top)";
+    } else if (i == 1) {
+      return "url(#cut-off-bottom)";
+    }
+  }
+  return "";
+};
 
 //------------------ Link Channels ----------------
 Base_Method.prototype.Linkcolour = function (d) {
@@ -573,8 +630,13 @@ Base_Method.prototype.NodeColour = function (d) {
   }
 };
 
-Base_Method.prototype.NodeSize = function (d) {
-  var channel = this.getNodeChannel("Node Size");
+Base_Method.prototype.NodeSize = function (d,i) {
+  var channel ;
+  if(i==0){
+    channel = this.getNodeChannel("Node Size A");
+  }else if(i==1){
+    channel = this.getNodeChannel("Node Size B");
+  }
   if (channel.inUse) {
     return ((this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax));
   } else {
@@ -605,6 +667,21 @@ Base_Method.prototype.LinkDash = function (d) {
 
 Base_Method.prototype.SetupSVGFilters = function () {
   var defs = this.svg.append("defs");
+  var clipB = defs.append("clipPath");
+   clipB.attr("id", "cut-off-top");
+   clipB.append("rect")
+     .attr("x", "-50%")
+     .attr("y", "-50%")
+     .attr("width", "50%")
+     .attr("height", "100%");
+   var clipT = defs.append("clipPath");
+   clipT.attr("id", "cut-off-bottom");
+   clipT.append("rect")
+     .attr("x", "0")
+     .attr("y", "-50%")
+     .attr("width", "50%")
+     .attr("height", "100%");
+  
   var filter = defs.append("filter")
     .attr("id", "glow")
     .attr("height", "400%")

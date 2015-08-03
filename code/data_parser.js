@@ -362,6 +362,12 @@ function getAttributeValue(atype, data, nodeOrLink, attribute, selecteddateMin,s
           //many values, by time
           for (var i = 0; i < attribute_value.values.length; i++) {
             var thisvalue = attribute_value.values[i];
+            if(thisvalue.end === undefined && thisvalue.start !== undefined && thisvalue.start <= selecteddateMax){
+              return thisvalue.value;
+            }
+            if(thisvalue.start === undefined && thisvalue.end !== undefined && thisvalue.end >= selecteddateMin){
+              return thisvalue.value;
+            }
             if((thisvalue.start !== undefined && thisvalue.start <= selecteddateMax) && (thisvalue.end !== undefined && thisvalue.end >= selecteddateMin)){
               return thisvalue.value;
               
