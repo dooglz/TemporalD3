@@ -126,9 +126,9 @@ Base_Method.prototype.ParamChanged = function (param) {
 Base_Method.prototype.nodeChannels = [
   { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
   { name: "Gravity Point", ctype: "catagory", inUse: false, dataParam: "" },
-  { name: "Node Size A", ctype: "numeric", inUse: false, dataParam: "" },
-  { name: "Node Size B", ctype: "numeric", inUse: false, dataParam: "" },
-  { name: "Node Size C", ctype: "numeric", inUse: false, dataParam: "" },
+  { name: "Node Size A", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); } },
+  { name: "Node Size B", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); } },
+  { name: "Node Size C", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); } },
 ];
 Base_Method.prototype.linkChannels = [
   { name: "Link Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -146,6 +146,9 @@ Base_Method.prototype.ChannelChanged = function (channel, ctype) {
     this.RedoNodes();
     this.RedoLinks();
     return;
+  }
+  if (channel.func !== undefined) {
+    channel.func.bind(this)(channel.dataParam);
   }
   console.log("method: Channel: %o is now assigned to: %o", channel.name, channel.dataParam);
   if (ctype === undefined || !(ctype == "node" || ctype == "link")) {
@@ -492,25 +495,28 @@ Base_Method.prototype.UpdateVisData = function (newNodeData, newLinkData) {
 
 // action to take on mouse click
 function Nodeclick(d) {
-  d.highlight = true;
-  d3.select(this)
-    .style("filter", "url(#glow)")
-    .transition()
-    .duration(750)
-    .style("fill", "lightsteelblue");
+  if (d.highlight) {
+    d.highlight = false;
+    d3.select(this)
+      .style("filter", "")
+      .transition()
+      .duration(750)
+      .style("fill", "#000");
+  } else {
+    d.highlight = true;
+    d3.select(this)
+      .style("filter", "url(#glow)")
+      .transition()
+      .duration(750)
+      .style("fill", "lightsteelblue");
+  }
 }
 // action to take on mouse double click
-function NodedblClick(d) {
-  d.highlight = false;
-  d3.select(this)
-    .style("filter", "")
-    .transition()
-    .duration(750)
-    .style("fill", "#000");
-}
+function NodedblClick(d) { }
 
 Base_Method.prototype.AttributesPerVisNode = 0;
 Base_Method.prototype.NodeSplit = function () {
+  console.log("Node split")
   var channelA = this.getNodeChannel("Node Size A");
   var channelB = this.getNodeChannel("Node Size B");
   var channelC = this.getNodeChannel("Node Size C");
@@ -540,13 +546,11 @@ Base_Method.prototype.NodeSplit = function () {
     }
     this.AttributesPerVisNode = 2;
   }
-}
+};
 
 //######################################################################
 //########    Default Channel Mapping Functions
 //######################################################################
-
-
 Base_Method.prototype.RedoLinks = function () {
   if (this.visLinks === undefined) { return; }
   this.visLinks
@@ -563,24 +567,9 @@ Base_Method.prototype.RedoNodes = function () {
     .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); })
     .style("filter", this.NodeFilter)
     .attr("clip-path", this.NodeClip.bind(this));
-  //   .attr("clip-path","url(#cut-off-top)");
 };
 
 var fill = d3.scale.category20().domain(d3.range(0, 20));
-
-Base_Method.prototype.NodeClip = function (d, i) {
-  var channelA = this.getNodeChannel("Node Size A");
-  var channelB = this.getNodeChannel("Node Size B");
-  var channelC = this.getNodeChannel("Node Size C");
-  if (channelA.inUse && channelB.inUse && !channelC.inUse) {
-    if (i == 0) {
-      return "url(#cut-off-top)";
-    } else if (i == 1) {
-      return "url(#cut-off-bottom)";
-    }
-  }
-  return "";
-};
 
 //------------------ Link Channels ----------------
 Base_Method.prototype.Linkcolour = function (d) {
@@ -644,6 +633,28 @@ Base_Method.prototype.NodeSize = function (d,i) {
   }
 };
 
+Base_Method.prototype.NodeClip = function (d, i) {
+  var channelA = this.getNodeChannel("Node Size A");
+  var channelB = this.getNodeChannel("Node Size B");
+  var channelC = this.getNodeChannel("Node Size C");
+  if (channelA.inUse && channelB.inUse && !channelC.inUse) {
+    if (i == 0) {
+      return "url(#cut-off-left)";
+    } else if (i == 1) {
+      return "url(#cut-off-right)";
+    }
+  } else if (channelA.inUse && channelB.inUse && channelC.inUse) {
+    if (i == 0) {
+      return "url(#cut-off-mid3)";
+    } else if (i == 1) {
+      return "url(#cut-off-left3)";
+    }else if (i == 2) {
+      return "url(#cut-off-right3)";
+    }
+  }
+  return "";
+};
+
 Base_Method.prototype.GravityPoint = function (d) {
   var channel = this.getNodeChannel("Gravity Point");
   if (channel.inUse) {
@@ -664,18 +675,17 @@ Base_Method.prototype.LinkDash = function (d) {
   return "0";
 };
 
-
 Base_Method.prototype.SetupSVGFilters = function () {
   var defs = this.svg.append("defs");
   var clipB = defs.append("clipPath");
-   clipB.attr("id", "cut-off-top");
+   clipB.attr("id", "cut-off-left");
    clipB.append("rect")
      .attr("x", "-50%")
      .attr("y", "-50%")
      .attr("width", "50%")
      .attr("height", "100%");
    var clipT = defs.append("clipPath");
-   clipT.attr("id", "cut-off-bottom");
+   clipT.attr("id", "cut-off-right");
    clipT.append("rect")
      .attr("x", "0")
      .attr("y", "-50%")
@@ -694,14 +704,9 @@ Base_Method.prototype.SetupSVGFilters = function () {
     .attr("result", "coloredBlur");
   var feMerge = filter.append("feMerge");
 
-  feMerge.append("feMergeNode")
-    .attr("in", "coloredBlur")
-  feMerge.append("feMergeNode")
-    .attr("in", "coloredBlur")
-  feMerge.append("feMergeNode")
-    .attr("in", "coloredBlur")
-  feMerge.append("feMergeNode")
-    .attr("in", "coloredBlur")
-  feMerge.append("feMergeNode")
-    .attr("in", "SourceGraphic");
-}
+  feMerge.append("feMergeNode").attr("in", "coloredBlur");
+  feMerge.append("feMergeNode").attr("in", "coloredBlur");
+  feMerge.append("feMergeNode").attr("in", "coloredBlur");
+  feMerge.append("feMergeNode").attr("in", "coloredBlur");
+  feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+};

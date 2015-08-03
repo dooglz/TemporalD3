@@ -187,10 +187,10 @@ function ParseData(data) {
         FillAttributeInfo(data.link_attributes_info, attribute, data.links);
       }
     }
-    
-    if(data.date_type !== undefined){
+
+    if (data.date_type !== undefined) {
       console.log("Json file specified date-type as %o", data.date_type);
-    }else{
+    } else {
       //get date format
       var date_sample;
       if (data.links[0].start !== undefined || data.links[0].end !== undefined) {
@@ -263,13 +263,13 @@ function ParseData(data) {
     }
   });
   //we need to grab date ranges
-  var range = { min:Infinity, max: -Infinity};
+  var range = { min: Infinity, max: -Infinity };
   if (data.date_type == "static") {
     range.max = Infinity;
     range.min = -Infinity;
   } else if (data.date_type == "date" || data.date_type == "number") {
     range = getMinMaxDateOfAttriutes(data.date_type, data.links);
-    range = getMinMaxDateOfAttriutes(data.date_type, data.nodes,range.min,range.max);
+    range = getMinMaxDateOfAttriutes(data.date_type, data.nodes, range.min, range.max);
     console.log(range);
     if (data.date_type == "date") {
       range.max = new Date(range.max);
@@ -287,43 +287,43 @@ function ParseData(data) {
   data.maxDate = range.max;
   data.minDate = range.min;
   data.formattedMaxDate = (data.date_type == "date" ? data.maxDate.toDateString() : data.maxDate);
-  data.formattedMinDate = (data.date_type == "date" ? data.minDate.toDateString()  : data.minDate );
+  data.formattedMinDate = (data.date_type == "date" ? data.minDate.toDateString() : data.minDate);
   return true;
 }
 
-function getNodeAttributeValue(data, node, attribute, minDate,maxDate) {
-  return  getAttributeValue(true, data, node, attribute, minDate,maxDate);
+function getNodeAttributeValue(data, node, attribute, minDate, maxDate) {
+  return getAttributeValue(true, data, node, attribute, minDate, maxDate);
 }
-function getLinkAttributeValue(data, link, attribute, minDate,maxDate) {
-  return getAttributeValue(false, data, link, attribute, minDate,maxDate);
+function getLinkAttributeValue(data, link, attribute, minDate, maxDate) {
+  return getAttributeValue(false, data, link, attribute, minDate, maxDate);
 }
-function getNodeAttributeAsPercentage(data, node, attribute,minDate,maxDate) {
+function getNodeAttributeAsPercentage(data, node, attribute, minDate, maxDate) {
   return getNLAttributeAsPercentage(true, data, node, attribute);
 }
-function getLinkAttributeAsPercentage(data, link, attribute,minDate,maxDate) {
-  return getNLAttributeAsPercentage(false, data, link, attribute,minDate,maxDate);
+function getLinkAttributeAsPercentage(data, link, attribute, minDate, maxDate) {
+  return getNLAttributeAsPercentage(false, data, link, attribute, minDate, maxDate);
 }
-function getAttributeAsPercentage(data, nodeOrLink, attribute,minDate,maxDate) {
+function getAttributeAsPercentage(data, nodeOrLink, attribute, minDate, maxDate) {
   if (data.node_keys.indexOf(attribute) != -1) {
     //node
-    return getNLAttributeAsPercentage(true, data, nodeOrLink, attribute,minDate,maxDate);
+    return getNLAttributeAsPercentage(true, data, nodeOrLink, attribute, minDate, maxDate);
   } else if (data.link_keys.indexOf(attribute) != -1) {
     //link
-    return getNLAttributeAsPercentage(false, data, nodeOrLink, attribute,minDate,maxDate);
+    return getNLAttributeAsPercentage(false, data, nodeOrLink, attribute, minDate, maxDate);
   } else {
     console.error("coudn't determine type of attribute: %o", attribute);
     return 0;
   }
 }
 
-function getAttributeValue(atype, data, nodeOrLink, attribute, selecteddateMin,selecteddateMax){
-  if(selecteddateMin === undefined){
+function getAttributeValue(atype, data, nodeOrLink, attribute, selecteddateMin, selecteddateMax) {
+  if (selecteddateMin === undefined) {
     selecteddateMin = data.minDate;
   }
-  if(selecteddateMax === undefined){
+  if (selecteddateMax === undefined) {
     selecteddateMax = data.maxDate;
   }
-  
+
   var keys;
   var attributes_info;
   if (atype) {
@@ -349,40 +349,39 @@ function getAttributeValue(atype, data, nodeOrLink, attribute, selecteddateMin,s
   //try old attribute storage first
   var attribute_value = nodeOrLink[attribute];
   //try new storage if oldtorage fails
-  if(attribute_value == undefined && nodeOrLink.attributes !=undefined){
-      //find attributes{} is attributes[]
-      attribute_value = ($.grep(nodeOrLink.attributes, function (e) { return e.name == attribute; }));
-      //did we find it?
-      if(attribute_value !== undefined && attribute_value.length == 1){
-        attribute_value = attribute_value[0];
-        //does it have one single value?
-        if(attribute_value.value !== undefined){
-           return attribute_value.value;
-        }else if(attribute_value.values !== undefined){
-          //many values, by time
-          for (var i = 0; i < attribute_value.values.length; i++) {
-            var thisvalue = attribute_value.values[i];
-            if(thisvalue.end === undefined && thisvalue.start !== undefined && thisvalue.start <= selecteddateMax){
-              return thisvalue.value;
-            }
-            if(thisvalue.start === undefined && thisvalue.end !== undefined && thisvalue.end >= selecteddateMin){
-              return thisvalue.value;
-            }
-            if((thisvalue.start !== undefined && thisvalue.start <= selecteddateMax) && (thisvalue.end !== undefined && thisvalue.end >= selecteddateMin)){
-              return thisvalue.value;
-              
-            }
+  if (attribute_value == undefined && nodeOrLink.attributes != undefined) {
+    //find attributes{} is attributes[]
+    attribute_value = ($.grep(nodeOrLink.attributes, function (e) { return e.name == attribute; }));
+    //did we find it?
+    if (attribute_value !== undefined && attribute_value.length == 1) {
+      attribute_value = attribute_value[0];
+      //does it have one single value?
+      if (attribute_value.value !== undefined) {
+        return attribute_value.value;
+      } else if (attribute_value.values !== undefined) {
+        //many values, by time
+        for (var i = 0; i < attribute_value.values.length; i++) {
+          var thisvalue = attribute_value.values[i];
+          if (thisvalue.end === undefined && thisvalue.start !== undefined && thisvalue.start <= selecteddateMax) {
+            return thisvalue.value;
           }
-          console.error("Attribute had no value within range",attribute,nodeOrLink,selecteddateMin,selecteddateMax);
-          return null;
+          if (thisvalue.start === undefined && thisvalue.end !== undefined && thisvalue.end >= selecteddateMin) {
+            return thisvalue.value;
+          }
+          if ((thisvalue.start !== undefined && thisvalue.start <= selecteddateMax) && (thisvalue.end !== undefined && thisvalue.end >= selecteddateMin)) {
+            return thisvalue.value;
+          }
         }
-      }else{
-        console.error("couldn't find attribute ",attribute,nodeOrLink);
-      } 
+        console.error("Attribute had no value within range", attribute, nodeOrLink, selecteddateMin, selecteddateMax);
+        return null;
+      }
+    } else {
+      console.error("couldn't find attribute ", attribute, nodeOrLink);
+    }
   }
   //fnal check
-  if(attribute_value == undefined){
-    console.error("couldn't find attribute value ",attribute,nodeOrLink);
+  if (attribute_value == undefined) {
+    console.error("couldn't find attribute value ", attribute, nodeOrLink);
     return 0;
   }
   return attribute_value;
@@ -405,8 +404,8 @@ function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute, selected
     console.error("can find attribute info: %o", attribute);
     return 0;
   }
-  
-  var attribute_value = getAttributeValue(atype, data, nodeOrLink, attribute, selecteddateMin,selecteddateMax);
+
+  var attribute_value = getAttributeValue(atype, data, nodeOrLink, attribute, selecteddateMin, selecteddateMax);
 
   if (attributes_info.type == "number") {
     // console.log("number - val:"+attribute_value + " %: "+attribute_value / (attributes_info.max_val - attributes_info.min_val));
@@ -499,18 +498,18 @@ function RemoveFromArray(array, removal) {
   }
 }
 
-function CopyAttributes(obj, sources, destinations){
+function CopyAttributes(obj, sources, destinations) {
   for (var i = 0; i < sources.length; i++) {
     var source = sources[i];
     var dest = destinations[i];
     obj[dest] = obj[source];
   }
 }
-function CopyAttributesIntoArray(obj, sources, destinations,index){
+function CopyAttributesIntoArray(obj, sources, destinations, index) {
   for (var i = 0; i < sources.length; i++) {
     var source = sources[i];
     var dest = destinations[i];
-    if(obj[dest] === undefined){
+    if (obj[dest] === undefined) {
       obj[dest] = [];
     }
     obj[dest][index] = obj[source];
