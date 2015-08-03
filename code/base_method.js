@@ -555,8 +555,8 @@ Base_Method.prototype.RedoLinks = function () {
   if (this.visLinks === undefined) { return; }
   this.visLinks
     .style("stroke-width", this.LinkWidth.bind(this))
-    .style("stroke-width", this.LinkWidth.bind(this))
-    .style("stroke-dasharray", this.LinkDash.bind(this));
+    .style("stroke", this.Linkcolour.bind(this))
+  //  .style("stroke-dasharray", this.LinkDash.bind(this));
 };
 
 Base_Method.prototype.RedoNodes = function () {
@@ -584,7 +584,9 @@ Base_Method.prototype.Linkcolour = function (d) {
 Base_Method.prototype.LinkWidth = function (d) {
   var channel = this.getLinkChannel("Link Width");
   if (channel.inUse) {
-    return (3.5 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)) + "px";
+    var a = getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
+    a = Math.max(a,0.1);
+    return (3.5 * a) + "px";
   } else {
     return "1.5px";
   }

@@ -645,7 +645,7 @@ function HideLoadingBar() {
 //######################################################################
 //########    save button
 //######################################################################
-var pngscale = 4.0;
+var pngscale = 1.0;
 $('#savebtn').click(function () {
   //cnvert svg to base64 text
   var html = d3.select("svg")
