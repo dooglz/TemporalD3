@@ -497,14 +497,14 @@ Base_Method.prototype.UpdateVisData = function (newNodeData, newLinkData) {
 function Nodeclick(d) {
   if (d.highlight) {
     d.highlight = false;
-    d3.select(this)
+    d3.select(this).selectAll("circle")
       .style("filter", "")
       .transition()
       .duration(750)
       .style("fill", "#000");
   } else {
     d.highlight = true;
-    d3.select(this)
+    d3.select(this).selectAll("circle")
       .style("filter", "url(#glow)")
       .transition()
       .duration(750)
