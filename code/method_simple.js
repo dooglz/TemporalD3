@@ -112,6 +112,8 @@ Method_Simple.prototype.Redraw = function (w, h) {
   }
   this.svg.attr("width", this.width).attr("height", this.height).call(zoom);
   this.SetupSVGFilters();
+    this.RedoNodes();
+  this.RedoLinks();
 };
 
 //######################################################################

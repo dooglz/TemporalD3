@@ -28,6 +28,35 @@ Base_Method.prototype.currentDateMin;
 Base_Method.prototype.minDate;
 Base_Method.prototype.maxDate;
 Base_Method.prototype.discreet = false;
+
+Base_Method.prototype.ColorThemes = [
+  {
+    nodeEdgeBaseColour: "darkblue",
+    nodeFillBaseColour: "darkgrey",
+    nodeEdgeHighlightColour: "crimson",
+    nodeFillHighlightColour: "lightsteelblue",
+    LinkStrokeBaseColour: "black",
+    LinkStrokeHighlightColour: "black",
+    BackgroundColour: "mintcream"
+  },
+  {
+    nodeEdgeBaseColour: "lemonchiffon",
+    nodeFillBaseColour: "darkslateblue",
+    nodeEdgeHighlightColour: "crimson",
+    nodeFillHighlightColour: "deepskyblue",
+    LinkStrokeBaseColour: "moccasin",
+    LinkStrokeHighlightColour: "gold",
+    BackgroundColour: "black"
+  }
+];
+Base_Method.prototype.ColorTheme = Base_Method.prototype.ColorThemes[0];
+
+Base_Method.prototype.SetColorTheme = function (a) {
+ a = Math.max(a,0);
+ a = Math.min(a,this.ColorThemes.length);
+ this.ColorTheme = this.ColorThemes[a];
+ this.Redraw();
+}
 ///Method constructor
 function Base_Method() {
   this.name = "Base_method";
@@ -373,7 +402,7 @@ Base_Method.prototype.UpdateVis = function () {
   }
   //Create Links
   this.visLinks = this.svgContainer.selectAll("line").data(this.visLinkData);
-  this.visLinks.enter().append("line").style("stroke", "black");
+  this.visLinks.enter().insert("line", ":first-child").style("stroke", "black");
 
   //when a link is no longer in the set, remove it from the graph.
   this.visLinks.exit().remove();
@@ -497,19 +526,11 @@ Base_Method.prototype.UpdateVisData = function (newNodeData, newLinkData) {
 function Nodeclick(d) {
   if (d.highlight) {
     d.highlight = false;
-    d3.select(this).selectAll("circle")
-      .style("filter", "")
-      .transition()
-      .duration(750)
-      .style("fill", "#000");
   } else {
     d.highlight = true;
-    d3.select(this).selectAll("circle")
-      .style("filter", "url(#glow)")
-      .transition()
-      .duration(750)
-      .style("fill", "lightsteelblue");
   }
+  //such a hack
+  selected_method.RedoNodes();
 }
 // action to take on mouse double click
 function NodedblClick(d) { }
@@ -564,8 +585,8 @@ Base_Method.prototype.RedoNodes = function () {
   this.visNodes.selectAll("circle")
     .attr("r", this.NodeSize.bind(this))
     .style("fill", this.NodeColour.bind(this))
-    .style("stroke", function (d) { return d3.rgb(fill(d.group)).darker(); })
-    .style("filter", this.NodeFilter)
+    .style("stroke", this.NodeStrokeColour.bind(this))
+    .style("filter", this.NodeFilter.bind(this))
     .attr("clip-path", this.NodeClip.bind(this));
 };
 
@@ -573,11 +594,21 @@ var fill = d3.scale.category20().domain(d3.range(0, 20));
 
 //------------------ Link Channels ----------------
 Base_Method.prototype.Linkcolour = function (d) {
+
   var channel = this.getLinkChannel("Link Colour");
   if (channel.inUse) {
-    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)))).darker();
+    var rgb = d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax))));
+    if (d.highlight) {
+      return rgb.darker();
+    } else {
+      return rgb;
+    }
   } else {
-    return "black";
+    if (d.highlight) {
+      return this.ColorTheme.LinkStrokeHighlightColour;
+    } else {
+      return this.ColorTheme.LinkStrokeBaseColour;
+    }
   }
 };
 
@@ -610,15 +641,28 @@ Base_Method.prototype.NodeFilter = function (d) {
 };
 
 Base_Method.prototype.NodeColour = function (d) {
-  if (d.highlight) {
-    return "lightsteelblue";
-  }
   var channel = this.getNodeChannel("Node Colour");
   if (channel.inUse) {
-    return d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax)))).darker();
+    var rgb = d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax))));
+    if (d.highlight) {
+      return rgb.darker();
+    } else {
+      return rgb;
+    }
   } else {
-    return "black";
+    if (d.highlight) {
+      return this.ColorTheme.nodeFillHighlightColour;
+    } else {
+      return this.ColorTheme.nodeFillBaseColour;
+    }
   }
+};
+
+Base_Method.prototype.NodeStrokeColour = function (d) {
+  if (d.highlight) {
+    return this.ColorTheme.nodeEdgeHighlightColour;
+  }
+  return this.ColorTheme.nodeEdgeBaseColour;
 };
 
 Base_Method.prototype.NodeSize = function (d,i) {
@@ -678,6 +722,8 @@ Base_Method.prototype.LinkDash = function (d) {
 };
 
 Base_Method.prototype.SetupSVGFilters = function () {
+  this.svg.attr("style","stroke-width: 0px; background-color: "+this.ColorTheme.BackgroundColour+";");
+ // this.svg.attr("fill-opacity",1.0);
   var defs = this.svg.append("defs");
   var clipB = defs.append("clipPath");
    clipB.attr("id", "cut-off-left");
