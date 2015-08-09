@@ -165,6 +165,59 @@ function FillAttributeInfo(infoObj, attribute, values) {
 
 }
 
+function FindDateSmaple(data) {
+  if (data.links[0].start !== undefined) {
+    return data.links[0].start;
+  }
+  if (data.links[0].end !== undefined) {
+    return data.links[0].end;
+  }
+  if (data.nodes[0].start !== undefined) {
+    return data.nodes[0].start;
+  }
+  if (data.nodes[0].end !== undefined) {
+    return data.nodes[0].end;
+  }
+  //no date sample so far, have to search attributes
+  for (var i = 0; i < data.link_keys.length; i++) {
+    if (data.link_attributes_info[data.link_keys[i]].dynamic == true) {
+      //foreach dynamic link attribute
+      for (var j = 0; j < data.links.length; j++) {
+        var attrL = data.links[j].attributes[i];
+        if (attrL.values !== undefined) {
+          //foreach dynamic link attribute value
+          for (var k = 0; k < attrL.values.length; k++) {
+            if (attrL.values[k].start !== undefined) {
+              return attrL.values[k].start;
+            } else if (attrL.values[k].end !== undefined) {
+              return attrL.values[k].end;
+            }
+          }
+        }
+      }
+    }
+  }
+  for (var i = 0; i < data.node_keys.length; i++) {
+    if (data.node_attributes_info[data.node_keys[i]].dynamic == true) {
+      //foreach dynamic link attribute
+      for (var j = 0; j < data.nodes.length; j++) {
+        var attrN = data.nodes[j].attributes[i];
+        if (attrN.values !== undefined) {
+          //foreach dynamic link attribute value
+          for (var k = 0; k < attrN.values.length; k++) {
+            if (attrN.values[k].start !== undefined) {
+              return attrN.values[k].start;
+            } else if (attrN.values[k].end !== undefined) {
+              return attrN.values[k].end;
+            }
+          }
+        }
+      }
+    }
+  }
+  return undefined;
+}
+
 function ParseData(data) {
 
   data.link_attributes_info = {};
@@ -187,40 +240,6 @@ function ParseData(data) {
         FillAttributeInfo(data.link_attributes_info, attribute, data.links);
       }
     }
-
-    if (data.date_type !== undefined) {
-      console.log("Json file specified date-type as %o", data.date_type);
-    } else {
-      //get date format
-      var date_sample;
-      if (data.links[0].start !== undefined || data.links[0].end !== undefined) {
-        if (data.links[0].start !== undefined) {
-          date_sample = data.links[0].start;
-        } else {
-          date_sample = data.links[0].end;
-        }
-        data.date_type = typeof (date_sample);
-        if (data.date_type == "string") {
-          if (IsDate(date_sample)) {
-            data.date_type = "date";
-          } else {
-            console.error("Unkown date type");
-            data.date_type = "static";
-          }
-        }
-      } else {
-        data.date_type = "static";
-      }
-      console.log("Determined date-type as %o, from sample %o", data.date_type, date_sample);
-    }
-    //make sure targets are in correct format
-    data.links.forEach(function (o) {
-      if (typeof (o.source) !== "number" || typeof (o.target) !== "number") {
-        console.warn("link target/source is not a number, converting");
-      }
-      o.source = parseInt(o.source);
-      o.target = parseInt(o.target);
-    }, this);  
     
     //grab node attributes
     data.node_keys = []
@@ -231,6 +250,37 @@ function ParseData(data) {
         FillAttributeInfo(data.node_attributes_info, attribute, data.nodes);
       }
     }
+
+    if (data.date_type !== undefined) {
+      console.log("Json file specified date-type as %o", data.date_type);
+    } else {
+      //get a sample
+      var date_sample = FindDateSmaple(data);
+      //determine type
+      if (date_sample === undefined) {
+        data.date_type = "static";
+      } else {
+        data.date_type = typeof (date_sample);
+        if (data.date_type != "number") {
+          if (data.date_type == "string" && IsDate(date_sample)) {
+            data.date_type = "date";
+          } else {
+            console.error("Unkown date type, sample: %o, typeof: %o", date_sample, data.date_type);
+            data.date_type = "static";
+          }
+        }
+      }
+      console.log("Determined date-type as %o, from sample %o", data.date_type, date_sample);
+    }
+    //make sure targets are in correct format
+    data.links.forEach(function (o) {
+      if (typeof (o.source) !== "number" || typeof (o.target) !== "number") {
+        console.warn("link target/source is not a number, converting");
+      }
+      o.source = parseInt(o.source);
+      o.target = parseInt(o.target);
+    }, this);
+
   } else {
     //legacy format
     data.link_keys = Object.keys(data.links[0]);
