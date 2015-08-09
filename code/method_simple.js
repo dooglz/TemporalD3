@@ -51,6 +51,7 @@ Method_Simple.prototype.foci = [
 ];
 
 Method_Simple.prototype.SetData = function (d) {
+  Base_Method.prototype.SetData.call(this,d);
   this.data = d;
   this.RedoNodes();
   this.RedoLinks();

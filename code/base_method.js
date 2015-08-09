@@ -98,7 +98,9 @@ function getScreenCoords(x, y) {
   return { x: xn, y: yn };
 }
 */
-Base_Method.prototype.Update = function () { };
+Base_Method.prototype.Update = function () {
+  this.CleanupTooltips();
+};
 Base_Method.prototype.Load = function () { };
 Base_Method.prototype.Unload = function () { };
 Base_Method.prototype.Redraw = function (w, h) {
@@ -465,16 +467,7 @@ Base_Method.prototype.ClearVis = function () {
     this.visLinks.remove();
     this.visLinks = undefined;
   }
-
-  //Tidy up stale tooltips
-  if (this.visNodeTooltip !== undefined) {
-    $(".tooltip").remove();
-    this.visNodeTooltip = undefined;
-  }
-  if (this.visLinkTooltip !== undefined) {
-    $(".tooltip.link").remove();
-    this.visLinkTooltip = undefined;
-  }
+  this.CleanupTooltips();
   console.info("Vis cleared");
 }
 
@@ -758,3 +751,14 @@ Base_Method.prototype.SetupSVGFilters = function () {
   feMerge.append("feMergeNode").attr("in", "coloredBlur");
   feMerge.append("feMergeNode").attr("in", "SourceGraphic");
 };
+
+Base_Method.prototype.CleanupTooltips= function () {
+    if (this.visNodeTooltip !== undefined) {
+    $(".tooltip").remove();
+    this.visNodeTooltip = undefined;
+  }
+  if (this.visLinkTooltip !== undefined) {
+    $(".tooltip.link").remove();
+    this.visLinkTooltip = undefined;
+  }
+}
