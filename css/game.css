@@ -27,6 +27,26 @@
   border-style: solid;
   border-width: 2px;
 }
+.box2{
+	display: inline-block;
+	position: relative;
+	margin-left: auto;
+	width: 46vh;
+	height: 46vh;
+}
+.centered{
+	text-align: center;
+}
+.sbncontent2{
+	display: inline-block;
+	position:  absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+  border-style: solid;
+  border-width: 2px;
+}
 
 circle {
   stroke-width: 1.5px;

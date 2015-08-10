@@ -787,3 +787,32 @@ function IsJson(str) {
     return true;
 }
 
+var chartBoxLeft = $("#chartBoxLeft");
+var chartBoxRight = $("#chartBoxRight");
+SetDisplayMode(0);
+var displayMode;
+function SetDisplayMode(mode) {
+  if(displayMode === mode){return;}
+  switch (mode) {
+    case 0:
+      chartBoxLeft.addClass("box");
+      chartBoxLeft.removeClass("box2");
+      chartBoxRight.hide();
+      break;
+    case 1:
+    chartBoxLeft.addClass("box2");
+      chartBoxLeft.removeClass("box");
+      chartBoxRight.hide();
+      break;
+    case 2:
+      chartBoxLeft.addClass("box2");
+      chartBoxLeft.removeClass("box");
+      chartBoxRight.show();
+      break;
+    default:
+      break;
+  }
+  resize();
+  displayMode = mode;
+}
+
