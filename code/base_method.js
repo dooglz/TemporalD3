@@ -715,9 +715,9 @@ Base_Method.prototype.LinkDash = function (d) {
 };
 
 Base_Method.prototype.SetupSVGFilters = function () {
-  this.svg.attr("style","stroke-width: 0px; background-color: "+this.ColorTheme.BackgroundColour+";");
+  d3.selectAll("svg").attr("style","stroke-width: 0px; background-color: "+this.ColorTheme.BackgroundColour+";");
  // this.svg.attr("fill-opacity",1.0);
-  var defs = this.svg.append("defs");
+  var defs = d3.selectAll("svg").append("defs");
   var clipB = defs.append("clipPath");
    clipB.attr("id", "cut-off-left");
    clipB.append("rect")

@@ -789,7 +789,7 @@ function IsJson(str) {
 
 var chartBoxLeft = $("#chartBoxLeft");
 var chartBoxRight = $("#chartBoxRight");
-SetDisplayMode(0);
+SetDisplayMode(2);
 var displayMode;
 function SetDisplayMode(mode) {
   if(displayMode === mode){return;}
@@ -812,7 +812,8 @@ function SetDisplayMode(mode) {
     default:
       break;
   }
+    displayMode = mode;
   resize();
-  displayMode = mode;
+
 }
 

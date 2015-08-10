@@ -31,8 +31,8 @@
 	display: inline-block;
 	position: relative;
 	margin-left: auto;
-	width: 46vh;
-	height: 46vh;
+	width: 46vw;
+	height: 46vw;
 }
 .centered{
 	text-align: center;
