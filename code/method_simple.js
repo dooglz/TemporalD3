@@ -87,12 +87,7 @@ Method_Simple.prototype.Update = function () {
 
 // The page has been resized or some other event that requires a redraw
 Method_Simple.prototype.Redraw = function (w, h) {
-  if (w !== undefined && h !== undefined) {
-    this.width = w;
-    this.height = h;
-    this.halfWidth = w * 0.5;
-    this.halfHeight = h * 0.5;
-  }
+  Base_Method.prototype.Redraw.call(this,w,h);
 
   console.log("Redrawing");
   // force = customLayout()
@@ -104,13 +99,15 @@ Method_Simple.prototype.Redraw = function (w, h) {
     .size([this.width, this.height]);
 
   var zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", this.zoomed.bind(this));
-  
+  var refresh = false;
   if (displayMode == 2) {
     if (this.svgR === undefined) {
       this.svgR = d3.select("#chart2").append("svg");
+      refresh = true;
     }
     if (this.svgContainerR === undefined) {
       this.svgContainerR = this.svgR.append("g");
+      refresh = true;
     }
     this.svgR.attr("width", this.width).attr("height", this.height).call(zoom);
   } else {
@@ -118,20 +115,28 @@ Method_Simple.prototype.Redraw = function (w, h) {
       this.svgR.remove();
       this.svgR = undefined;
       this.svgContainerR = undefined;
+      refresh = true;
     }
   }
   
   if (this.svg === undefined) {
+    //todo do this for Right side
     this.svg = d3.select("#chart").append("svg");
+    refresh = true;
   }
   if (this.svgContainer === undefined) {
     this.svgContainer = this.svg.append("g");
+    refresh = true;
   }
   this.allsvg = $("svg");
   this.svg.attr("width", this.width).attr("height", this.height).call(zoom);
   this.SetupSVGFilters();
   this.RedoNodes();
   this.RedoLinks();
+  if(refresh){
+      this.NewVis();
+      this.Update();
+  }
 };
 
 //######################################################################

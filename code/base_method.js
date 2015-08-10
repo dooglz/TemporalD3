@@ -111,8 +111,7 @@ Base_Method.prototype.Redraw = function (w, h) {
     this.halfWidth = w * 0.5;
     this.halfHeight = h * 0.5;
   }
-  this.RedoNodes();
-  this.RedoLinks();
+  //this.Update();
 };
 
 
@@ -440,7 +439,9 @@ Base_Method.prototype.UpdateVis = function () {
   this.visLinks.enter().insert("line", ":first-child").style("stroke", "black");
     //when a link is no longer in the set, remove it from the graph.
   this.visLinks.exit().remove();
-  
+  if(this.visLinks === undefined){
+    console.warn("yoyoyoy");
+      }
   if (displayMode == 2) {
     this.visLinksR = this.svgContainerR.selectAll("line").data(this.visLinkData);
     this.visLinksR.enter().insert("line", ":first-child").style("stroke", "black");
@@ -793,10 +794,12 @@ Base_Method.prototype.LinkDash = function (d) {
 };
 
 Base_Method.prototype.SetupSVGFilters = function () {
-  // Todo: don't append if already have filters
   d3.selectAll("svg").attr("style","stroke-width: 0px; background-color: "+this.ColorTheme.BackgroundColour+";");
   // this.svg.attr("fill-opacity",1.0);
-  
+  if(d3.selectAll("defs")[0].length == d3.selectAll("svg")[0].length){
+    return;
+  }
+  d3.selectAll("defs").remove();
   var defs = d3.selectAll("svg").append("defs");
   var clipB = defs.append("clipPath");
    clipB.attr("id", "cut-off-left");
