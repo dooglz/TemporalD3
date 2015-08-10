@@ -371,13 +371,28 @@ Base_Method.prototype.UpdateVisPositions = function (positionAttribute, position
       .attr("y1", function (d) { return d.source[positionAttribute + "y"][positionAttributeOffset]; })
       .attr("x2", function (d) { return d.target[positionAttribute + "x"][positionAttributeOffset]; })
       .attr("y2", function (d) { return d.target[positionAttribute + "y"][positionAttributeOffset]; })
-  } else {
-    this.visLinks
-      .attr("x1", function (d) { return d.source[positionAttribute + "x"]; })
-      .attr("y1", function (d) { return d.source[positionAttribute + "y"]; })
-      .attr("x2", function (d) { return d.target[positionAttribute + "x"]; })
-      .attr("y2", function (d) { return d.target[positionAttribute + "y"]; })
-  }
+    if (this.visLinksR !== undefined) {
+      this.visLinksR
+        .attr("x1", function (d) { return d.source[positionAttribute + "x"]; })
+        .attr("y1", function (d) { return d.source[positionAttribute + "y"]; })
+        .attr("x2", function (d) { return d.target[positionAttribute + "x"]; })
+        .attr("y2", function (d) { return d.target[positionAttribute + "y"]; });
+        }
+    } else {
+      this.visLinks
+        .attr("x1", function (d) { return d.source[positionAttribute + "x"]; })
+        .attr("y1", function (d) { return d.source[positionAttribute + "y"]; })
+        .attr("x2", function (d) { return d.target[positionAttribute + "x"]; })
+        .attr("y2", function (d) { return d.target[positionAttribute + "y"]; });
+      if (this.visLinksR !== undefined) {
+        this.visLinksR
+          .attr("x1", function (d) { return d.source[positionAttribute + "x"]; })
+          .attr("y1", function (d) { return d.source[positionAttribute + "y"]; })
+          .attr("x2", function (d) { return d.target[positionAttribute + "x"]; })
+          .attr("y2", function (d) { return d.target[positionAttribute + "y"]; });
+      }
+    }
+  
   //update Nodes
   if (positionAttributeOffset != null) {
     this.visNodes.attr("transform",function (d) {
@@ -385,14 +400,32 @@ Base_Method.prototype.UpdateVisPositions = function (positionAttribute, position
           +d[positionAttribute + "x"][positionAttributeOffset]
           +","+d[positionAttribute + "y"][positionAttributeOffset]
           +")"; });
+     if (this.visNodesR !== undefined) {
+        this.visNodesR.attr("transform",function (d) {
+        return "translate("
+          +d[positionAttribute + "x"][positionAttributeOffset]
+          +","+d[positionAttribute + "y"][positionAttributeOffset]
+          +")"; });
+     }
   } else {
-        this.visNodes
-        .attr("fire",11)
-        .attr("transform",function (d) {
+    this.visNodes
+      .attr("fire",11)
+      .attr("transform",function (d) {
         return "translate("
           +d[positionAttribute + "x"]
           +","+d[positionAttribute + "y"]
-          +")"; });
+          +")"; 
+         });
+    if (this.visNodesR !== undefined) {
+        this.visNodesR
+          .attr("fire",11)
+          .attr("transform",function (d) {
+          return "translate("
+            +d[positionAttribute + "x"]
+            +","+d[positionAttribute + "y"]
+            +")"; 
+           });
+     }
   }
 }
 
@@ -405,9 +438,20 @@ Base_Method.prototype.UpdateVis = function () {
   //Create Links
   this.visLinks = this.svgContainer.selectAll("line").data(this.visLinkData);
   this.visLinks.enter().insert("line", ":first-child").style("stroke", "black");
-
-  //when a link is no longer in the set, remove it from the graph.
+    //when a link is no longer in the set, remove it from the graph.
   this.visLinks.exit().remove();
+  
+  if (displayMode == 2) {
+    this.visLinksR = this.svgContainerR.selectAll("line").data(this.visLinkData);
+    this.visLinksR.enter().insert("line", ":first-child").style("stroke", "black");
+    this.visLinksR.exit().remove();
+  } else {
+    if (this.visLinksR !== undefined) {
+      this.visLinksR.remove();
+      this.visLinksR = undefined;
+    }
+  }
+
 
   //Create nodes
   this.visNodes = this.svgContainer.selectAll("g").data(this.visNodeData);
@@ -415,6 +459,20 @@ Base_Method.prototype.UpdateVis = function () {
     .on("click", Nodeclick)
     .on("dblclick", NodedblClick);
   g.append("circle");
+   //when a node is no longer in the set, remove it from the graph.
+  this.visNodes.exit().remove();
+  
+  if (displayMode == 2) {
+    this.visNodesR = this.svgContainerR.selectAll("g").data(this.visNodeData);
+    var gR = this.visNodesR.enter().append("g");
+    gR.append("circle");
+    this.visNodesR.exit().remove();
+  } else {
+    if (this.visNodesR !== undefined) {
+      this.visNodesR.remove();
+      this.visNodesR = undefined;
+    }
+  }
   
   //add hover tooltips, if there are attributes to display
   if (this.data.link_keys.length > 0) {
@@ -445,8 +503,7 @@ Base_Method.prototype.UpdateVis = function () {
       this.visNodeTooltip.transition().duration(500).style("opacity", 0);
     }, this));
   }
-  //when a node is no longer in the set, remove it from the graph.
-  this.visNodes.exit().remove();
+ 
 }
 
 //shortcut to ClearVis and UpdateVis
@@ -466,6 +523,14 @@ Base_Method.prototype.ClearVis = function () {
   if (this.visLinks !== undefined) {
     this.visLinks.remove();
     this.visLinks = undefined;
+  }
+  if (this.visNodesR !== undefined) {
+    this.visNodesR.remove();
+    this.visNodesR = undefined;
+  }
+  if (this.visLinksR !== undefined) {
+    this.visLinksR.remove();
+    this.visLinksR = undefined;
   }
   this.CleanupTooltips();
   console.info("Vis cleared");
@@ -569,8 +634,13 @@ Base_Method.prototype.RedoLinks = function () {
   if (this.visLinks === undefined) { return; }
   this.visLinks
     .style("stroke-width", this.LinkWidth.bind(this))
-    .style("stroke", this.Linkcolour.bind(this))
+    .style("stroke", this.Linkcolour.bind(this));
   //  .style("stroke-dasharray", this.LinkDash.bind(this));
+  if (this.visLinksR !== undefined) {
+  this.visLinksR
+    .style("stroke-width", this.LinkWidth.bind(this))
+    .style("stroke", this.Linkcolour.bind(this));
+  }
 };
 
 Base_Method.prototype.RedoNodes = function () {
@@ -581,6 +651,14 @@ Base_Method.prototype.RedoNodes = function () {
     .style("stroke", this.NodeStrokeColour.bind(this))
     .style("filter", this.NodeFilter.bind(this))
     .attr("clip-path", this.NodeClip.bind(this));
+    if (this.visNodesR !== undefined) {
+       this.visNodesR.selectAll("circle")
+    .attr("r", this.NodeSize.bind(this))
+    .style("fill", this.NodeColour.bind(this))
+    .style("stroke", this.NodeStrokeColour.bind(this))
+    .style("filter", this.NodeFilter.bind(this))
+    .attr("clip-path", this.NodeClip.bind(this));
+    }
 };
 
 var fill = d3.scale.category20().domain(d3.range(0, 20));
@@ -715,8 +793,10 @@ Base_Method.prototype.LinkDash = function (d) {
 };
 
 Base_Method.prototype.SetupSVGFilters = function () {
+  // Todo: don't append if already have filters
   d3.selectAll("svg").attr("style","stroke-width: 0px; background-color: "+this.ColorTheme.BackgroundColour+";");
- // this.svg.attr("fill-opacity",1.0);
+  // this.svg.attr("fill-opacity",1.0);
+  
   var defs = d3.selectAll("svg").append("defs");
   var clipB = defs.append("clipPath");
    clipB.attr("id", "cut-off-left");

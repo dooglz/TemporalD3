@@ -140,6 +140,9 @@ Method_Simple.prototype.zoomed = function () {
   this.svgTranslation = d3.event.translate;
   this.scalefactor = d3.event.scale;
   this.svgContainer.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  if (this.svgR !== undefined) {
+    this.svgContainerR.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  }
 };
 
 //######################################################################
