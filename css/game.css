@@ -12,12 +12,9 @@
 .box{
 	position: relative;
 	width: 100%;		/* desired width */
+	height: 100%;
 }
-.box:before{
-	content: "";
-	display: block;
-	padding-top: 56.25%;
-}
+
 .sbncontent{
 	position:  absolute;
 	top: 0;
