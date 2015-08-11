@@ -36,12 +36,14 @@ Method_Simple.prototype.Unload = function () {
   }
   this.svg = undefined;
   this.svgContainer = undefined;
-    if (this.svgR != undefined) {
+  
+  if (this.svgR != undefined) {
     this.svgR.selectAll("*").remove();
     this.svgR.remove();
   }
   this.svgR = undefined;
   this.svgContainerR = undefined;
+  
   if (this.forceLayout != undefined) {
     this.forceLayout.stop();
   }

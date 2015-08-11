@@ -768,6 +768,18 @@ $('#dataloadbtn').click(function () {
 //########    Junk
 //######################################################################
 
+$("#dspmodepicker").on('change', function () {
+  var v = $("#dspmodepicker").val();
+  console.log(v);
+  if(v == "Split"){
+   SetDisplayMode(2);
+  }else if(v =="Single"){
+    SetDisplayMode(1);
+  }else{
+    SetDisplayMode(0);
+  }
+});
+
 $('#fullscreentoggle').change(function () {
   var val = $(this).prop('checked');
   if (val) {
@@ -792,19 +804,25 @@ var chartBoxRight = $("#chartBoxRight");
 SetDisplayMode(2);
 var displayMode;
 function SetDisplayMode(mode) {
-  if(displayMode === mode){return;}
+  if (displayMode === mode) { return; }
   switch (mode) {
     case 0:
+      $("#dspmodepicker").val("Single - Wide");
+      $("#dspmodepicker").selectpicker('refresh');
       chartBoxLeft.addClass("box");
       chartBoxLeft.removeClass("box2");
       chartBoxRight.hide();
       break;
     case 1:
-    chartBoxLeft.addClass("box2");
+      $("#dspmodepicker").val("Single");
+      $("#dspmodepicker").selectpicker('refresh');
+      chartBoxLeft.addClass("box2");
       chartBoxLeft.removeClass("box");
       chartBoxRight.hide();
       break;
     case 2:
+      $("#dspmodepicker").val("Split");
+      $("#dspmodepicker").selectpicker('refresh');
       chartBoxLeft.addClass("box2");
       chartBoxLeft.removeClass("box");
       chartBoxRight.show();
@@ -812,8 +830,7 @@ function SetDisplayMode(mode) {
     default:
       break;
   }
-    displayMode = mode;
+  displayMode = mode;
   resize();
-
 }
 
