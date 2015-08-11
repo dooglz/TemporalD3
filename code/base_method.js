@@ -613,6 +613,9 @@ Base_Method.prototype.NodeSplit = function () {
   if (channelA.inUse && !channelB.inUse && !channelC.inUse) {
     //clean any extra nodes
     this.visNodes.selectAll("#secondary").remove();
+    if(this.visNodesR){
+      this.visNodesR.selectAll("#secondary").remove();
+    }
     this.AttributesPerVisNode = 1;
   }
   //chan A + B
@@ -620,9 +623,15 @@ Base_Method.prototype.NodeSplit = function () {
     if(this.AttributesPerVisNode < 2){
       //add extra nodes
       this.visNodes.append("circle").attr("id","secondary");
+      if(this.visNodesR){
+        this.visNodesR.append("circle").attr("id","secondary");
+      }
     }else{
       //remove extra nodes
       this.visNodes.selectAll("#secondary").remove();
+      if(this.visNodesR){
+        this.visNodesR.selectAll("#secondary").remove();
+      }
     }
     this.AttributesPerVisNode = 2;
   }
@@ -638,9 +647,9 @@ Base_Method.prototype.RedoLinks = function () {
     .style("stroke", this.Linkcolour.bind(this));
   //  .style("stroke-dasharray", this.LinkDash.bind(this));
   if (this.visLinksR !== undefined) {
-  this.visLinksR
-    .style("stroke-width", this.LinkWidth.bind(this))
-    .style("stroke", this.Linkcolour.bind(this));
+    this.visLinksR
+      .style("stroke-width", this.LinkWidth.bind(this))
+      .style("stroke", this.Linkcolour.bind(this));
   }
 };
 
@@ -652,14 +661,14 @@ Base_Method.prototype.RedoNodes = function () {
     .style("stroke", this.NodeStrokeColour.bind(this))
     .style("filter", this.NodeFilter.bind(this))
     .attr("clip-path", this.NodeClip.bind(this));
-    if (this.visNodesR !== undefined) {
-       this.visNodesR.selectAll("circle")
-    .attr("r", this.NodeSize.bind(this))
-    .style("fill", this.NodeColour.bind(this))
-    .style("stroke", this.NodeStrokeColour.bind(this))
-    .style("filter", this.NodeFilter.bind(this))
-    .attr("clip-path", this.NodeClip.bind(this));
-    }
+  if (this.visNodesR !== undefined) {
+    this.visNodesR.selectAll("circle")
+      .attr("r", this.NodeSize.bind(this))
+      .style("fill", this.NodeColour.bind(this))
+      .style("stroke", this.NodeStrokeColour.bind(this))
+      .style("filter", this.NodeFilter.bind(this))
+      .attr("clip-path", this.NodeClip.bind(this));
+  }
 };
 
 var fill = d3.scale.category20().domain(d3.range(0, 20));
