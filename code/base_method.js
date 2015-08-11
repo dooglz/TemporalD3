@@ -31,19 +31,27 @@ Base_Method.prototype.discreet = false;
 
 Base_Method.prototype.ColorThemes = [
   {
-    nodeEdgeBaseColour: "darkblue",
-    nodeFillBaseColour: "darkgrey",
-    nodeEdgeHighlightColour: "crimson",
-    nodeFillHighlightColour: "lightsteelblue",
-    LinkStrokeBaseColour: "black",
-    LinkStrokeHighlightColour: "black",
-    BackgroundColour: "mintcream"
+    nodeEdgeBaseColour: "deepskyblue",
+    nodeFillBaseColour: "deepskyblue",
+    nodeEdgeHighlightColour: "black",
+    nodeFillHighlightColour: "blue",
+    RnodeEdgeBaseColour: "orangered",
+    RnodeFillBaseColour: "orangered",
+    RnodeEdgeHighlightColour: "black",
+    RnodeFillHighlightColour: "red",
+    LinkStrokeBaseColour: "grey",
+    LinkStrokeHighlightColour: "orange",
+    BackgroundColour: "white"
   },
   {
     nodeEdgeBaseColour: "lemonchiffon",
     nodeFillBaseColour: "darkslateblue",
     nodeEdgeHighlightColour: "crimson",
     nodeFillHighlightColour: "deepskyblue",
+    RnodeEdgeBaseColour: "orangered",
+    RnodeFillBaseColour: "orangered",
+    RnodeEdgeHighlightColour: "black",
+    RnodeFillHighlightColour: "red",
     LinkStrokeBaseColour: "moccasin",
     LinkStrokeHighlightColour: "gold",
     BackgroundColour: "black"
@@ -660,15 +668,15 @@ Base_Method.prototype.RedoNodes = function () {
   if (this.visNodes === undefined) { return; }
   this.visNodes.selectAll("circle")
     .attr("r", this.NodeSize.bind(this))
-    .style("fill", this.NodeColour.bind(this))
-    .style("stroke", this.NodeStrokeColour.bind(this))
+    .style("fill", this.NodeColour.bind(this,"left"))
+    .style("stroke", this.NodeStrokeColour.bind(this,"left"))
     .style("filter", this.NodeFilter.bind(this))
     .attr("clip-path", this.NodeClip.bind(this));
   if (this.visNodesR !== undefined) {
     this.visNodesR.selectAll("circle")
       .attr("r", this.NodeSize.bind(this))
-      .style("fill", this.NodeColour.bind(this))
-      .style("stroke", this.NodeStrokeColour.bind(this))
+      .style("fill", this.NodeColour.bind(this,"right"))
+      .style("stroke", this.NodeStrokeColour.bind(this,"right"))
       .style("filter", this.NodeFilter.bind(this))
       .attr("clip-path", this.NodeClip.bind(this));
   }
@@ -724,7 +732,9 @@ Base_Method.prototype.NodeFilter = function (d) {
   return "";
 };
 
-Base_Method.prototype.NodeColour = function (d) {
+Base_Method.prototype.NodeColour = function (side,d,half,i) {
+ // console.log("side: %o, data: %o, q: %o, index: %o,",side,d,q,i);
+ if(half ==0){
   var channel = this.getNodeChannel("Node Colour");
   if (channel.inUse) {
     var rgb = d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax))));
@@ -740,13 +750,37 @@ Base_Method.prototype.NodeColour = function (d) {
       return this.ColorTheme.nodeFillBaseColour;
     }
   }
+ }else if(half ==1){
+  var channelB = this.getNodeChannel("Node Colour B");
+  if (channelB !== undefined && channelB.inUse) {
+    var rgb = d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax))));
+    if (d.highlight) {
+      return rgb.darker();
+    } else {
+      return rgb;
+    }
+  } else {
+    if (d.highlight) {
+      return this.ColorTheme.RnodeFillHighlightColour;
+    } else {
+      return this.ColorTheme.RnodeFillBaseColour;
+    }
+  }
+ }
 };
 
-Base_Method.prototype.NodeStrokeColour = function (d) {
+Base_Method.prototype.NodeStrokeColour = function (side,d,half,i) {
+  if(half ==0){
   if (d.highlight) {
     return this.ColorTheme.nodeEdgeHighlightColour;
   }
   return this.ColorTheme.nodeEdgeBaseColour;
+  }else{
+      if (d.highlight) {
+    return this.ColorTheme.RnodeEdgeHighlightColour;
+  }
+  return this.ColorTheme.RnodeEdgeBaseColour;
+  }
 };
 
 Base_Method.prototype.NodeSize = function (d,i) {

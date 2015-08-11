@@ -31,8 +31,9 @@
 	display: inline-block;
 	position: relative;
 	margin-left: auto;
-	width: 46vw;
-	height: 46vw;
+	width: 50%;
+	height: 100%;
+	white-space: nowrap;
 }
 .centered{
 	text-align: center;
@@ -44,8 +45,17 @@
 	left: 0;
 	bottom: 0;
 	right: 0;
-  border-style: solid;
-  border-width: 2px;
+  	border-style: solid;
+  	border-width: 2px;
+}
+
+.stopbox{
+	margin-left: auto;
+	white-space: nowrap;
+	width: 94vw;
+	height: 42vw;
+	max-width: 1094px;
+	max-height: 547px;
 }
 
 circle {
