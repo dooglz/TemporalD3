@@ -408,7 +408,6 @@ Base_Method.prototype.UpdateVisPositions = function (positionAttribute, position
      }
   } else {
     this.visNodes
-      .attr("fire",11)
       .attr("transform",function (d) {
         return "translate("
           +d[positionAttribute + "x"]
@@ -417,7 +416,6 @@ Base_Method.prototype.UpdateVisPositions = function (positionAttribute, position
          });
     if (this.visNodesR !== undefined) {
         this.visNodesR
-          .attr("fire",11)
           .attr("transform",function (d) {
           return "translate("
             +d[positionAttribute + "x"]
@@ -511,6 +509,8 @@ Base_Method.prototype.UpdateVis = function () {
 Base_Method.prototype.NewVis = function () {
   this.ClearVis();
   this.UpdateVis();
+  this.AttributesPerVisNode = 0;
+  this.NodeSplit(); 
   console.info("Vis created");
 }
 
@@ -609,31 +609,34 @@ Base_Method.prototype.NodeSplit = function () {
   if(this.AttributesPerVisNode ==2 && channelA.inUse && channelB.inUse && !channelC.inUse){
     return;
   }
+  //cleanup any stale circles first
+  this.visNodes.selectAll("#secondary").remove();
+  if (this.visNodesR) {
+    this.visNodesR.selectAll("#secondaryR").remove();
+  }
+  
   //only chan A
   if (channelA.inUse && !channelB.inUse && !channelC.inUse) {
-    //clean any extra nodes
-    this.visNodes.selectAll("#secondary").remove();
-    if(this.visNodesR){
-      this.visNodesR.selectAll("#secondary").remove();
-    }
     this.AttributesPerVisNode = 1;
+    return;
   }
   //chan A + B
   if (channelA.inUse && channelB.inUse && !channelC.inUse) {
     if(this.AttributesPerVisNode < 2){
       //add extra nodes
       this.visNodes.append("circle").attr("id","secondary");
-      if(this.visNodesR){
-        this.visNodesR.append("circle").attr("id","secondary");
+      if(this.visNodesR !== undefined){
+        this.visNodesR.append("circle").attr("id","secondaryR");
       }
     }else{
       //remove extra nodes
       this.visNodes.selectAll("#secondary").remove();
-      if(this.visNodesR){
-        this.visNodesR.selectAll("#secondary").remove();
+      if(this.visNodesR !== undefined){
+        this.visNodesR.selectAll("#secondaryR").remove();
       }
     }
     this.AttributesPerVisNode = 2;
+    return;
   }
 };
 
