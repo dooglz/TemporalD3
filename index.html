@@ -57,14 +57,15 @@
     <!-- main content -->
     <div class="container superwide" id="canvcont">
       <div>
-      <div class='stopbox  centered' >
-      <div class='box2' id="chartBoxLeft">
-        <div class='sbncontent' id="chart"></div>
+        <div class='stopbox  centered'>
+          <div class='box2' id="chartBoxLeft">
+            <div class='sbncontent' id="chart"></div>
+          </div>
+          <div class='box2' id="chartBoxRight">
+            <div class='sbncontent' id="chart2"></div>
+          </div>
+        </div>
       </div>
-     <div class='box2' id="chartBoxRight">
-        <div class='sbncontent' id="chart2"></div>
-      </div>
-      </div></div>
       <!-- Date Slider -->
       <div class="container" id="Slidercontainer">
         <div class="row">
@@ -88,7 +89,7 @@
           <h3>
             <a class='btn btn-success' href='#' role='button' id="savebtn">Save Img</a>
             <span class="label label-primary" id="infoBox1">Placeholder</span>
-            <span class="label label-info" id="infoBox2">Placeholder</span>     
+            <span class="label label-info" id="infoBox2">Placeholder</span>
             <div class="methodParam">Display Mode
               <select id="dspmodepicker" class="selectpicker" data-width="75%">
                 <option>Single - Wide</option>
@@ -134,11 +135,21 @@
         <div class="panel-group" id="accordion">
           <div class="panel panel-default">
             <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#collapse1">
-              <span class="glyphicon glyphicon-collapse-down"></span>Show Channel Mixer</button>
-            <span id="channelPanelHeadder">hello world</span>
+              <span class="glyphicon glyphicon-collapse-down" />Show Channel Mixer</button>
+            <span id="channelPanelHeadder">
+              <strong>DataSet:</strong>{{displayName}}
+              <strong>Nodes / Links:</strong>{{nodes}} / {{links}}</span>
             <div id="collapse1" class="panel-collapse collapse">
-              <div class="panel-body" id="channelPanel">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+              <div class="panel-body" id="channelPanel">
+                <div class="row" id="channelPanelInfo">
+                  <strong>Node Data Attributes:</strong>{{node_keys}}
+                  <strong>Link Data Attributes:</strong>{{link_keys}}
+                  <br>
+                  <strong>Node Channels:</strong>{{nodeChannels}}
+                  <strong>Link Channels:</strong>{{linkChannels}}
+                  <hr>
+                </div>
+                <div id="channelPanelDropdowns" /></div>
             </div>
           </div>
         </div>
@@ -217,32 +228,27 @@
               <div id="dataParseResults">
                 <div class="col-sm-8">Total Nodes:
                   <strong>{{nodes.length}}</strong>
-                  <br>Total Links:<strong>{{links.length}}</strong>
-                  <br>Date Type:<strong>{{date_type}}</strong>
-                  <br>Min Date:<strong>{{formattedMinDate }}</strong>
-                  <br>Max Date:<strong>{{formattedMaxDate}}</strong>
-                </div>
-                {{#if node_keys}}
-                  <div class="col-sm-8">
-                    <h4>Node Attributes</h4>
-                    {{#each node_attributes_info}}
-                      <strong>{{@key}}</strong> - Type: {{this.type}} - Dynamic: {{this.dynamic}}<br>
-                      Min: {{min_val}}<br>
-                      Max: {{max_val}}<br>
-                    {{/each}}
-                  </div>
-                {{/if}}
-                {{#if link_keys}}
-                  <div class="col-sm-8"> 
-                    <h4>Link Attributes</h4>
-                    {{#each link_attributes_info}}
-                      <strong>{{@key}}</strong> - Type: {{this.type}} - Dynamic: {{this.dynamic}}<br>
-                      Min: {{min_val}}<br>
-                      Max: {{max_val}}<br>
-                    {{/each}}
-                  </div>
-                {{/if}}
-              </div>
+                  <br>Total Links:
+                  <strong>{{links.length}}</strong>
+                  <br>Date Type:
+                  <strong>{{date_type}}</strong>
+                  <br>Min Date:
+                  <strong>{{formattedMinDate }}</strong>
+                  <br>Max Date:
+                  <strong>{{formattedMaxDate}}</strong>
+                </div>{{#if node_keys}}
+                <div class="col-sm-8">
+                  <h4>Node Attributes</h4>{{#each node_attributes_info}}
+                  <strong>{{@key}}</strong>- Type: {{this.type}} - Dynamic: {{this.dynamic}}
+                  <br>Min: {{min_val}}
+                  <br>Max: {{max_val}}
+                  <br>{{/each}}</div>{{/if}} {{#if link_keys}}
+                <div class="col-sm-8">
+                  <h4>Link Attributes</h4>{{#each link_attributes_info}}
+                  <strong>{{@key}}</strong>- Type: {{this.type}} - Dynamic: {{this.dynamic}}
+                  <br>Min: {{min_val}}
+                  <br>Max: {{max_val}}
+                  <br>{{/each}}</div>{{/if}}</div>
             </div>
           </div>
         </div>

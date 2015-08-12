@@ -199,11 +199,11 @@ function FindDateSmaple(data) {
   }
   for (var i = 0; i < data.node_keys.length; i++) {
     if (data.node_attributes_info[data.node_keys[i]].dynamic == true) {
-      //foreach dynamic link attribute
+      //foreach dynamic node attribute
       for (var j = 0; j < data.nodes.length; j++) {
         var attrN = data.nodes[j].attributes[i];
         if (attrN.values !== undefined) {
-          //foreach dynamic link attribute value
+          //foreach dynamic node attribute value
           for (var k = 0; k < attrN.values.length; k++) {
             if (attrN.values[k].start !== undefined) {
               return attrN.values[k].start;

@@ -312,13 +312,21 @@ function ChangeData(dataName) {
 //######################################################################
 //########    Channel Mixer
 //######################################################################
+channelPanelHeadder
+var channelPanelHeadderHtmlTemplate = $("#channelPanelHeadder").html();
+var channelPanelHeadderTemplate = Handlebars.compile(channelPanelHeadderHtmlTemplate);
+$("#channelPanelHeadder").html("");
+var channelPanelInfoHtmlTemplate = $("#channelPanelInfo").html();
+var channelPanelInfoTemplate = Handlebars.compile(channelPanelInfoHtmlTemplate);
+$("#channelPanelInfo").html("");
 
 //Creates the UI for channel Mixer, called on data change
 function InitChannelMixer(data) {
   var nodeChannels = {};
   nodeChannels.channels = [];
+  nodeChannels.amount = 0;
   for (var i = 0; i < selected_method.nodeChannels.length; i++) {
-    nodeChannels.amount = i;
+    nodeChannels.amount ++;
     nodeChannels.channels.push(selected_method.nodeChannels[i].name);
     selected_method.nodeChannels[i].dataParam = "";
     selected_method.nodeChannels[i].inUse = false;
@@ -332,18 +340,13 @@ function InitChannelMixer(data) {
     selected_method.linkChannels[i].inUse = false;
   }
   selected_method.ChannelChanged();
-  var cp = $("#channelPanel");
+  var rendered = channelPanelHeadderTemplate({ displayName: data.displayName, nodes: data.nodes.length, links: data.links.length });
+  $("#channelPanelHeadder").html(rendered);
+  rendered = channelPanelInfoTemplate({ node_keys: data.node_keys, link_keys: data.link_keys, nodeChannels: nodeChannels.channels, linkChannels: linkChannels.channels });
+  $("#channelPanelInfo").html(rendered);
+
+  var cp = $("#channelPanelDropdowns");
   cp.html("");
-  $("#channelPanelHeadder").html(
-    "<strong>DataSet:</strong> " + data.displayName +
-    ", <strong>Nodes / Links:</strong> " + data.nodes.length + " / " + data.links.length
-    );
-  $('<div>', { 'class': 'row' }).html(
-    "<strong>Node Data Attributes:</strong> " + data.node_keys +
-    " <strong>Link Data Attributes:</strong> " + data.link_keys +
-    "<br><strong>Node Channels:</strong> " + nodeChannels.channels +
-    " <strong>Link Channels:</strong> " + linkChannels.channels + "<hr>"
-    ).appendTo(cp);
   var lkeydiv = $('<div>', { 'class': 'col-sm-4' })
     .html("<strong>Links</strong>")
     .appendTo(cp);
@@ -368,6 +371,9 @@ function InitChannelMixer(data) {
 function GetChannelDropdown(channels, attribute, atype) {
   var str = "<option>Disabled</option>";
   for (var i in channels) {
+    if (channels[i].filter !== undefined && !channels[i].filter()) {
+      continue;
+    }
     str += "<option>" + channels[i].name + "</option>";
   }
   var div = $('<select>', { 'class': 'selectpicker', 'data-width': '50%', 'id': atype + "_" + attribute + "_dropdown" }).html(str);

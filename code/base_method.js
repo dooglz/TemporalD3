@@ -164,9 +164,9 @@ Base_Method.prototype.ParamChanged = function (param) {
 Base_Method.prototype.nodeChannels = [
   { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
   { name: "Gravity Point", ctype: "catagory", inUse: false, dataParam: "" },
-  { name: "Node Size A", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); } },
-  { name: "Node Size B", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); } },
-  { name: "Node Size C", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); } },
+  { name: "Node Size A", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }},
+  { name: "Node Size B", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return Base_Method.prototype.nodeChannels[2].inUse}  },
+  { name: "Node Size C", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return Base_Method.prototype.nodeChannels[3].inUse}  },
 ];
 Base_Method.prototype.linkChannels = [
   { name: "Link Colour", ctype: "catagory", inUse: false, dataParam: "" },
