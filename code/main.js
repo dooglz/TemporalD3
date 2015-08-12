@@ -344,16 +344,9 @@ function InitChannelMixer(data) {
   $("#channelPanelHeadder").html(rendered);
   rendered = channelPanelInfoTemplate({ node_keys: data.node_keys, link_keys: data.link_keys, nodeChannels: nodeChannels.channels, linkChannels: linkChannels.channels });
   $("#channelPanelInfo").html(rendered);
-
-  var cp = $("#channelPanelDropdowns");
-  cp.html("");
-  var lkeydiv = $('<div>', { 'class': 'col-sm-4' })
-    .html("<strong>Links</strong>")
-    .appendTo(cp);
-  var nkeydiv = $('<div>', { 'class': 'col-sm-4' })
-    .html("<strong>Nodes</strong>")
-    .appendTo(cp);
-  var linkDropdown = $();
+  
+  var lkeydiv = $("#linkDropdowns").html("<strong>Links</strong>");
+  var nkeydiv = $("#nodeDropdowns").html("<strong>Nodes</strong>");
 
   for (var key in data.node_keys) {
     $('<div>', { 'class': 'methodParam text-right' }).html(data.node_keys[key] + " - ")
@@ -367,6 +360,7 @@ function InitChannelMixer(data) {
   $('.selectpicker').selectpicker();
 }
 
+
 // creates and returns a <select> div with all channel options as <option>'s
 function GetChannelDropdown(channels, attribute, atype) {
   var str = "<option>Disabled</option>";
@@ -374,11 +368,41 @@ function GetChannelDropdown(channels, attribute, atype) {
     if (channels[i].filter !== undefined && !channels[i].filter()) {
       continue;
     }
-    str += "<option>" + channels[i].name + "</option>";
+    str += "<option value='"+channels[i].name+"'>" + channels[i].name + "</option>";
   }
   var div = $('<select>', { 'class': 'selectpicker', 'data-width': '50%', 'id': atype + "_" + attribute + "_dropdown" }).html(str);
   div.on('change', function () { ChannelChange(atype, attribute, div.val()); });
   return div;
+}
+
+function checkOptionalChannels(channels,atype) {
+  for (var i in channels) {
+    var channel = channels[i];
+    if (channel.filter !== undefined) {
+      var dropdowns = $("[id$=_dropdown][id^="+atype+"_]");
+      var instances = dropdowns.find('[value="' + channel.name + '"]');
+      if (!channel.filter()) {
+        if(instances.length != 0){
+          console.log("Removing channel from dropdown: ",channel.name );
+          //check to see if in use
+          if (channel.inUse == true) {
+              //Yes, change dropdown of assigned attribute to disabled
+              $("#" + atype + "_" + channel.dataParam + "_dropdown").selectpicker('val', "Disabled");
+              //unnasign current attribute
+              ChannelChange(atype, channel.dataParam, "Disabled");
+          }
+          //remove
+          instances.remove();
+          dropdowns.selectpicker('refresh');
+        }
+      } else if (instances.length == 0) {
+        console.log("Adding channel to dropdown: ",channel.name );
+        //add if not added
+        dropdowns.append("<option value='" + channel.name + "'>" + channel.name + "</option>");
+        dropdowns.selectpicker('refresh');
+      }
+    }
+  }
 }
 
 //reads selected channels from the method and set UI accordingly
@@ -444,6 +468,8 @@ function ChannelChange(atype, attribute, newChannel) {
     channel.inUse = true;
     selected_method.ChannelChanged(channel);
   }
+  checkOptionalChannels(selected_method.nodeChannels,"node");
+  checkOptionalChannels(selected_method.linkChannels,"link");
 }
 
 //######################################################################
