@@ -204,6 +204,8 @@ function Update() {
   }
   if (selected_method !== null) {
     selected_method.Update();
+    checkOptionalChannels(selected_method.nodeChannels,"node");
+    checkOptionalChannels(selected_method.linkChannels,"link");
   }
 }
 
@@ -365,7 +367,7 @@ function InitChannelMixer(data) {
 function GetChannelDropdown(channels, attribute, atype) {
   var str = "<option>Disabled</option>";
   for (var i in channels) {
-    if (channels[i].filter !== undefined && !channels[i].filter()) {
+    if (channels[i].filter !== undefined && !channels[i].filter.bind(selected_method)()) {
       continue;
     }
     str += "<option value='"+channels[i].name+"'>" + channels[i].name + "</option>";
@@ -381,7 +383,7 @@ function checkOptionalChannels(channels,atype) {
     if (channel.filter !== undefined) {
       var dropdowns = $("[id$=_dropdown][id^="+atype+"_]");
       var instances = dropdowns.find('[value="' + channel.name + '"]');
-      if (!channel.filter()) {
+      if (!channel.filter.bind(selected_method)()) {
         if(instances.length != 0){
           console.log("Removing channel from dropdown: ",channel.name );
           //check to see if in use
@@ -864,5 +866,7 @@ function SetDisplayMode(mode) {
   }
   displayMode = mode;
   resize();
+  checkOptionalChannels(selected_method.nodeChannels,"node");
+  checkOptionalChannels(selected_method.linkChannels,"link");
 }
 

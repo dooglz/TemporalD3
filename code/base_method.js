@@ -31,27 +31,37 @@ Base_Method.prototype.discreet = false;
 
 Base_Method.prototype.ColorThemes = [
   {
-    nodeEdgeBaseColour: "deepskyblue",
-    nodeFillBaseColour: "deepskyblue",
-    nodeEdgeHighlightColour: "black",
-    nodeFillHighlightColour: "blue",
-    RnodeEdgeBaseColour: "orangered",
-    RnodeFillBaseColour: "orangered",
-    RnodeEdgeHighlightColour: "black",
-    RnodeFillHighlightColour: "red",
+    LAnodeEdgeBaseColour: "deepskyblue",
+    LAnodeFillBaseColour: "deepskyblue",
+    LAnodeEdgeHighlightColour: "black",
+    LAnodeFillHighlightColour: "blue",
+    LBnodeEdgeBaseColour: "orangered",
+    LBnodeFillBaseColour: "orangered",
+    LBnodeEdgeHighlightColour: "black",
+    LBnodeFillHighlightColour: "red",
+    //
+    RAnodeEdgeBaseColour: "deepskyblue",
+    RAnodeFillBaseColour: "deepskyblue",
+    RAnodeEdgeHighlightColour: "black",
+    RAnodeFillHighlightColour: "blue",
+    RBnodeEdgeBaseColour: "orangered",
+    RBnodeFillBaseColour: "orangered",
+    RBnodeEdgeHighlightColour: "black",
+    RBnodeFillHighlightColour: "red",
+    //
     LinkStrokeBaseColour: "grey",
     LinkStrokeHighlightColour: "orange",
     BackgroundColour: "white"
   },
   {
-    nodeEdgeBaseColour: "lemonchiffon",
-    nodeFillBaseColour: "darkslateblue",
-    nodeEdgeHighlightColour: "crimson",
-    nodeFillHighlightColour: "deepskyblue",
-    RnodeEdgeBaseColour: "orangered",
-    RnodeFillBaseColour: "orangered",
-    RnodeEdgeHighlightColour: "black",
-    RnodeFillHighlightColour: "red",
+    LAnodeEdgeBaseColour: "lemonchiffon",
+    LAnodeFillBaseColour: "darkslateblue",
+    LAnodeEdgeHighlightColour: "crimson",
+    LAnodeFillHighlightColour: "deepskyblue",
+    LBnodeEdgeBaseColour: "orangered",
+    LBnodeFillBaseColour: "orangered",
+    LBnodeEdgeHighlightColour: "black",
+    LBnodeFillHighlightColour: "red",
     LinkStrokeBaseColour: "moccasin",
     LinkStrokeHighlightColour: "gold",
     BackgroundColour: "black"
@@ -160,13 +170,16 @@ Base_Method.prototype.ParamChanged = function (param) {
 //######################################################################
 //########    Channel Mapping Functions
 //######################################################################
-
+//AttributesPerVisNode
 Base_Method.prototype.nodeChannels = [
   { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
+  { name: "Node Colour B", ctype: "catagory", inUse: false, dataParam: "" },
   { name: "Gravity Point", ctype: "catagory", inUse: false, dataParam: "" },
   { name: "Node Size A", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }},
-  { name: "Node Size B", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return Base_Method.prototype.nodeChannels[2].inUse}  },
-  { name: "Node Size C", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return Base_Method.prototype.nodeChannels[3].inUse}  },
+  { name: "Node Size B", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return this.nodeChannels[3].inUse}  },
+  { name: "Node Size C", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return this.nodeChannels[4].inUse}  },
+  { name: "Node Colour Right", ctype: "catagory", inUse: false, dataParam: "", filter: function () { return (displayMode ==2)} },
+  { name: "Node Colour B Right", ctype: "catagory", inUse: false, dataParam: "", filter: function () { return (displayMode ==2)} }
 ];
 Base_Method.prototype.linkChannels = [
   { name: "Link Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -732,10 +745,23 @@ Base_Method.prototype.NodeFilter = function (d) {
   return "";
 };
 
-Base_Method.prototype.NodeColour = function (side,d,half,i) {
- // console.log("side: %o, data: %o, q: %o, index: %o,",side,d,q,i);
- if(half ==0){
-  var channel = this.getNodeChannel("Node Colour");
+Base_Method.prototype.NodeColour = function (side, d, half, i) {
+  // console.log("side: %o, data: %o, q: %o, index: %o,",side,d,q,i);
+  //side  = "leftright"
+  var channel;
+  if (half == 0) {
+    if (side == "left") {
+      channel = this.getNodeChannel("Node Colour");
+    } else {
+      channel = this.getNodeChannel("Node Colour B");
+    }
+  } else {
+    if (side == "left") {
+      channel = this.getNodeChannel("Node Colour Right");
+    } else {
+      channel = this.getNodeChannel("Node Colour B Right");
+    }
+  }
   if (channel.inUse) {
     var rgb = d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax))));
     if (d.highlight) {
@@ -744,42 +770,70 @@ Base_Method.prototype.NodeColour = function (side,d,half,i) {
       return rgb;
     }
   } else {
+    //not in use, use defaults
     if (d.highlight) {
-      return this.ColorTheme.nodeFillHighlightColour;
+      if (side == "left") {
+        if (half == 0) {
+          return this.ColorTheme.LAnodeFillHighlightColour;
+        } else {
+          return this.ColorTheme.LBnodeFillHighlightColour;
+        }
+      } else {
+        if (half == 0) {
+          return this.ColorTheme.RAnodeFillHighlightColour;
+        } else {
+          return this.ColorTheme.RBnodeFillHighlightColour;
+        }
+      }
     } else {
-      return this.ColorTheme.nodeFillBaseColour;
+      if (side == "left") {
+        if (half == 0) {
+          return this.ColorTheme.LAnodeFillBaseColour;
+        } else {
+          return this.ColorTheme.LBnodeFillBaseColour;
+        }
+      } else {
+        if (half == 0) {
+          return this.ColorTheme.RAnodeFillBaseColour;
+        } else {
+          return this.ColorTheme.RBnodeFillBaseColour;
+        }
+      }
     }
   }
- }else if(half ==1){
-  var channelB = this.getNodeChannel("Node Colour B");
-  if (channelB !== undefined && channelB.inUse) {
-    var rgb = d3.rgb(fill(Math.round(20.0 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax))));
-    if (d.highlight) {
-      return rgb.darker();
-    } else {
-      return rgb;
-    }
-  } else {
-    if (d.highlight) {
-      return this.ColorTheme.RnodeFillHighlightColour;
-    } else {
-      return this.ColorTheme.RnodeFillBaseColour;
-    }
-  }
- }
+  console.error("01212");
+  return;
 };
 
-Base_Method.prototype.NodeStrokeColour = function (side,d,half,i) {
-  if(half ==0){
+Base_Method.prototype.NodeStrokeColour = function (side, d, half, i) {
   if (d.highlight) {
-    return this.ColorTheme.nodeEdgeHighlightColour;
-  }
-  return this.ColorTheme.nodeEdgeBaseColour;
-  }else{
-      if (d.highlight) {
-    return this.ColorTheme.RnodeEdgeHighlightColour;
-  }
-  return this.ColorTheme.RnodeEdgeBaseColour;
+    if (side == "left") {
+      if (half == 0) {
+        return this.ColorTheme.LAnodeEdgeHighlightColour;
+      } else {
+        return this.ColorTheme.LBnodeEdgeHighlightColour;
+      }
+    } else {
+      if (half == 0) {
+        return this.ColorTheme.RAnodeEdgeHighlightColour;
+      } else {
+        return this.ColorTheme.RBnodeEdgeHighlightColour;
+      }
+    }
+  } else {
+    if (side == "left") {
+      if (half == 0) {
+        return this.ColorTheme.LAnodeEdgeBaseColour;
+      } else {
+        return this.ColorTheme.LBnodeEdgeBaseColour;
+      }
+    } else {
+      if (half == 0) {
+        return this.ColorTheme.RAnodeEdgeBaseColour;
+      } else {
+        return this.ColorTheme.RAnodeEdgeBaseColour;
+      }
+    }
   }
 };
 
