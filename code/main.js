@@ -328,11 +328,15 @@ function InitChannelMixer(data) {
   var nodeChannels = {};
   nodeChannels.channels = [];
   nodeChannels.amount = 0;
+  var fvalues = [];
   for (var i = 0; i < selected_method.nodeChannels.length; i++) {
     nodeChannels.amount ++;
     nodeChannels.channels.push(selected_method.nodeChannels[i].name);
     selected_method.nodeChannels[i].dataParam = "";
     selected_method.nodeChannels[i].inUse = false;
+    if(selected_method.nodeChannels[i].filter === undefined || selected_method.nodeChannels[i].filter.bind(selected_method)() ){
+      fvalues.push(selected_method.nodeChannels[i].name);
+    }
   }
   var linkChannels = {};
   linkChannels.channels = [];
@@ -341,9 +345,12 @@ function InitChannelMixer(data) {
     linkChannels.channels.push(selected_method.linkChannels[i].name);
     selected_method.linkChannels[i].dataParam = "";
     selected_method.linkChannels[i].inUse = false;
+    if(selected_method.linkChannels[i].filter === undefined || selected_method.linkChannels[i].filter.bind(selected_method)() ){
+      fvalues.push(selected_method.linkChannels[i].name);
+    }
   }
   
-  kmap.SetValues(nodeChannels.channels.concat(linkChannels.channels));
+  kmap.SetValues(fvalues);
   
   selected_method.ChannelChanged();
   var rendered = channelPanelHeadderTemplate({ displayName: data.displayName, nodes: data.nodes.length, links: data.links.length });
@@ -468,6 +475,7 @@ function Readchannels() {
 
 function Assign(attribute, oldchannelname, newchannelname) {
   //disable old channel
+ 
   if (oldchannelname !== "Disabled") {
     var oldchannel = selected_method.nodeChannels.filter(function (obj) {
       return obj.name == oldchannelname;
@@ -479,14 +487,13 @@ function Assign(attribute, oldchannelname, newchannelname) {
     }
     if (oldchannel.length == 0) {
       console.warn("Can't find old channel", oldchannelname);
-    }else{
+    } else {
       oldchannel[0].dataParam = "";
       oldchannel[0].inUse = false;
-      // element.selectpicker('val', "Disabled");
     }
   }
   //enalbe new channel
-    if (newchannelname !== "Disabled") {
+  if (newchannelname !== "Disabled") {
     var newchannel = selected_method.nodeChannels.filter(function (obj) {
       return obj.name == newchannelname;
     });
@@ -497,18 +504,19 @@ function Assign(attribute, oldchannelname, newchannelname) {
     }
     if (newchannel.length == 0) {
       console.warn("Can't find new channel", newchannelname);
-    }else{
+    } else {
       newchannel[0].dataParam = attribute;
       newchannel[0].inUse = true;
     }
   }
+ // console.warn("set %o, to %o",attribute, newchannelname);
+  $("[id$='_" + attribute + "_dropdown']").selectpicker('val', newchannelname);
 }
 kmap.SetAssignmentBehaviour(Assign);
 
 // Handles changing of channels, called when any dropdown selector changes
 function ChannelChange(atype, attribute, newChannel) {
-  console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
-  
+  //console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
   kmap.Pair(attribute, newChannel);
   checkOptionalChannels(selected_method.nodeChannels, "node");
   checkOptionalChannels(selected_method.linkChannels, "link");

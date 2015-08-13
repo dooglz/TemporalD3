@@ -689,7 +689,7 @@ CoolKeyMap.prototype.UpdateValues = function (newvals) {
       this.Pair(null, o);
     }
   }, this);
-
+  console.log("kmap vals: ",newvals);
   this.values = newvals;
 };
 
@@ -745,7 +745,7 @@ CoolKeyMap.prototype.Pair = function (key, value) {
   for (var pk in this.pairs) {
       //unnasign if not key
       if (this.pairs[pk] == value && pk != key){
-        this.Assignment(key, this.pairs[pk], this.default);
+        this.Assignment(pk, this.pairs[pk], this.default);
         this.pairs[pk] = this.default;
       }
   }
