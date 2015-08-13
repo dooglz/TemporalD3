@@ -314,7 +314,8 @@ function ChangeData(dataName) {
 //######################################################################
 //########    Channel Mixer
 //######################################################################
-channelPanelHeadder
+var kmap = new CoolKeyMap();
+kmap.SetDefault("Disabled");
 var channelPanelHeadderHtmlTemplate = $("#channelPanelHeadder").html();
 var channelPanelHeadderTemplate = Handlebars.compile(channelPanelHeadderHtmlTemplate);
 $("#channelPanelHeadder").html("");
@@ -341,6 +342,9 @@ function InitChannelMixer(data) {
     selected_method.linkChannels[i].dataParam = "";
     selected_method.linkChannels[i].inUse = false;
   }
+  
+  kmap.SetValues(nodeChannels.channels.concat(linkChannels.channels));
+  
   selected_method.ChannelChanged();
   var rendered = channelPanelHeadderTemplate({ displayName: data.displayName, nodes: data.nodes.length, links: data.links.length });
   $("#channelPanelHeadder").html(rendered);
@@ -349,15 +353,18 @@ function InitChannelMixer(data) {
   
   var lkeydiv = $("#linkDropdowns").html("<strong>Links</strong>");
   var nkeydiv = $("#nodeDropdowns").html("<strong>Nodes</strong>");
-
+  var attrs = [];
   for (var key in data.node_keys) {
+    attrs.push(data.node_keys[key]);
     $('<div>', { 'class': 'methodParam text-right', 'id': "node_"+data.node_keys[key]+"_dropdowns"  }).html(data.node_keys[key] + " - ")
       .append(GetChannelDropdown(selected_method.nodeChannels, data.node_keys[key], "node")).appendTo(nkeydiv);
   }
   for (var key in data.link_keys) {
+    attrs.push(data.link_keys[key]);
     $('<div>', { 'class': 'methodParam text-right', 'id': "link_"+data.link_keys[key]+"_dropdowns" }).html(data.link_keys[key] + " - ")
       .append(GetChannelDropdown(selected_method.linkChannels, data.link_keys[key], "link")).appendTo(lkeydiv);
   }
+  kmap.SetKeys(attrs);
   // Init dropdowns
   $('.selectpicker').selectpicker();
 }
@@ -404,24 +411,30 @@ function checkOptionalChannels(channels,atype) {
       var dropdowns = $("[id$=_dropdown][id^="+atype+"_]");
       var instances = dropdowns.find('[value="' + channel.name + '"]');
       if (!channel.filter.bind(selected_method)()) {
-        if(instances.length != 0){
-          console.log("Removing channel from dropdown: ",channel.name );
+        if (instances.length != 0) {
+          console.log("Removing channel from dropdown: ", channel.name);
           //check to see if in use
           if (channel.inUse == true) {
-              //Yes, change dropdown of assigned attribute to disabled
-              $("#" + atype + "_" + channel.dataParam + "_dropdown").selectpicker('val', "Disabled");
-              //unnasign current attribute
-              ChannelChange(atype, channel.dataParam, "Disabled");
+            //Yes, change dropdown of assigned attribute to disabled
+            $("#" + atype + "_" + channel.dataParam + "_dropdown").selectpicker('val', "Disabled");
+            //unnasign current attribute
+            ChannelChange(atype, channel.dataParam, "Disabled");
           }
           //remove
+          var q = kmap.values.slice(0);
+          RemoveFromArray(q, channel.name);
+          kmap.UpdateValues(q);
           instances.remove();
           dropdowns.selectpicker('refresh');
         }
       } else if (instances.length == 0) {
-        console.log("Adding channel to dropdown: ",channel.name );
+        console.log("Adding channel to dropdown: ", channel.name);
         //add if not added
         dropdowns.append("<option value='" + channel.name + "'>" + channel.name + "</option>");
         dropdowns.selectpicker('refresh');
+        var qa = kmap.values.slice(0);
+        qa.push(channel.name);
+        kmap.UpdateValues(qa);
       }
     }
   }
@@ -453,10 +466,67 @@ function Readchannels() {
   selected_method.ChannelChanged();
 }
 
+function Assign(attribute, oldchannelname, newchannelname) {
+  //disable old channel
+  if (oldchannelname !== "Disabled") {
+    var oldchannel = selected_method.nodeChannels.filter(function (obj) {
+      return obj.name == oldchannelname;
+    });
+    if (oldchannel.length == 0) {
+      oldchannel = selected_method.linkChannels.filter(function (obj) {
+        return obj.name == oldchannelname;
+      });
+    }
+    if (oldchannel.length == 0) {
+      console.warn("Can't find old channel", oldchannelname);
+    }else{
+      oldchannel[0].dataParam = "";
+      oldchannel[0].inUse = false;
+      // element.selectpicker('val', "Disabled");
+    }
+  }
+  //enalbe new channel
+    if (newchannelname !== "Disabled") {
+    var newchannel = selected_method.nodeChannels.filter(function (obj) {
+      return obj.name == newchannelname;
+    });
+    if (newchannel.length == 0) {
+      newchannel = selected_method.linkChannels.filter(function (obj) {
+        return obj.name == newchannelname;
+      });
+    }
+    if (newchannel.length == 0) {
+      console.warn("Can't find new channel", newchannelname);
+    }else{
+      newchannel[0].dataParam = attribute;
+      newchannel[0].inUse = true;
+    }
+  }
+}
+kmap.SetAssignmentBehaviour(Assign);
+
 // Handles changing of channels, called when any dropdown selector changes
 function ChannelChange(atype, attribute, newChannel) {
   console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
-    
+  
+  kmap.Pair(attribute, newChannel);
+  checkOptionalChannels(selected_method.nodeChannels, "node");
+  checkOptionalChannels(selected_method.linkChannels, "link");
+  if (newChannel == "Disabled") {
+    selected_method.ChannelChanged();
+  } else {
+    //find the actual channel
+    var channel = (atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels).filter(function (obj) {
+      return obj.name == newChannel;
+    });
+    if (channel.length != 1) {
+      console.error("Can't find " + atype + " Channel '" + newChannel + "' in method %o", selected_method.name);
+      return;
+    }
+    channel = channel[0];
+    selected_method.ChannelChanged(channel);
+  }
+  return;/*
   //find the channel that we were previously assigned to and set to Null
   var oldchannel = (atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels).filter(function (obj) {
     return obj.dataParam == attribute;
@@ -473,15 +543,7 @@ function ChannelChange(atype, attribute, newChannel) {
 
   //Assign to new channel
   if (newChannel != "Disabled") {    
-    //find the channel
-    var channel = (atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels).filter(function (obj) {
-      return obj.name == newChannel;
-    });
-    if (channel.length != 1) {
-      console.error("Can't find " + atype + " Channel '" + newChannel + "' in method %o", selected_method.name);
-      return;
-    }
-    channel = channel[0];
+    
     //is this channel already in use?
     if (channel.inUse == true) {
       console.log("channel already in use by attribute: " + channel.dataParam);
@@ -492,7 +554,7 @@ function ChannelChange(atype, attribute, newChannel) {
       for (var k = 0; k < len; k++) {
         var element = ob.eq(k);
         if (element.val() == channel.name) {
-          console,log(element.val(),channel.name);
+          console.log(element.val(),channel.name);
           console.log("found it");
           //found it
           element.selectpicker('val', "Disabled");
@@ -510,7 +572,7 @@ function ChannelChange(atype, attribute, newChannel) {
     selected_method.ChannelChanged(channel);
   }
   checkOptionalChannels(selected_method.nodeChannels,"node");
-  checkOptionalChannels(selected_method.linkChannels,"link");
+  checkOptionalChannels(selected_method.linkChannels,"link");*/
 }
 
 //######################################################################
@@ -911,119 +973,3 @@ function IsJson(str) {
     }
     return true;
 }
-
-var CoolKeyMap = function () {
-  this.values = [];
-  this.keys = [];
-  this.default = null;
-  this.Assignment = function () { };
-  this.pairs = {};
-}
-CoolKeyMap.prototype.GetUnassignedKeys = function () {
-  var a = [];
-  for (var pk in this.pairs) {
-    if (this.pairs[pk] == this.default) {
-      a.push(pk);
-    }
-  }
-  return a;
-};
-CoolKeyMap.prototype.GetUnassignedValues = function () {
-  return "todo";
-};
-CoolKeyMap.prototype.GetAssignedKeys = function () {
-  var a = [];
-  for (var pk in this.pairs) {
-    if (this.pairs[pk] != this.default) {
-      a.push(pk);
-    }
-  }
-  return a;
-};
-CoolKeyMap.prototype.GetAssignedValues = function () {
-  return "todo";
-};
-CoolKeyMap.prototype.SetAssignmentBehaviour = function (func) {
-  this.Assignment = func;
-};
-CoolKeyMap.prototype.SetDefault = function (def) {
-  this.default = def;
-};
-
-CoolKeyMap.prototype.SetValues = function (newvals) {
-   //check to see for any removals
-  this.values.forEach(function (o) {
-    if ($.inArray(o, newvals) == -1) {
-      this.pair(null, o);
-    }
-  }, this);
-  //add new
-  newvals.forEach(function (o) {
-    if ($.inArray(o, this.values) == -1) {
-      this.pair(null, o);
-    }
-  }, this);
-
-  this.values = newvals;
-};
-
-CoolKeyMap.prototype.SetKeys = function (newkeys) {
-  //check to see for any removals
-  this.keys.forEach(function (o) {
-    if ($.inArray(o, newkeys) == -1) {
-      this.pair(o, this.default);
-      delete this.pairs[o];
-    }
-  }, this);
-  //add new
-  newkeys.forEach(function (o) {
-    if ($.inArray(o, this.keys) == -1) {
-      this.pair(o, this.default);
-    }
-  }, this);
-
-  this.keys = newkeys;
-};
-
-CoolKeyMap.prototype.Pair = function (key, value) {
-  if (key == null && value !== this.default) {
-    //unnasign any key assigned to value
-    for(var pk in this.pairs){
-      if (this.pairs[pk] == value){
-        this.Assignment(key, this.pairs[pk], this.default);
-        this.pairs[pk] = this.default;
-      }
-    }
-    return;
-  }
-  var oldval;
-  if (value == this.default) {
-    //no need to check anything, just set.
-    oldval = this.pairs[key];
-    if (oldval != this.default) {
-      this.Assignment(key, oldval, value);
-      this.pairs[key] = this.default;
-    }
-    return;
-  }
-  //find anything paired with value
-  for (var pk in this.pairs) {
-      //unnasign if not key
-      if (this.pairs[pk] == value && pk != key){
-        this.Assignment(key, this.pairs[pk], this.default);
-        this.pairs[pk] = this.default;
-      }
-  }
-  //find key current value
-  if (this.pairs[key] === undefined || this.pairs[key] === this.default) {
-    this.pairs[key] = value;
-    this.Assignment(key, this.default, value);
-    return;
-  }
-  oldval = this.pairs[key];
-  if (oldval == value) {
-    return;
-  }
-  this.Assignment(key, oldval, value);
-  this.pairs[key] = value;
-};

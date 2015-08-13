@@ -631,3 +631,134 @@ function convertDateToNumber(date) {
   }
   return (new Date(date).valueOf());
 }
+
+var CoolKeyMap = function () {
+  this.values = [];
+  this.keys = [];
+  this.default = null;
+  this.Assignment = function () { };
+  this.pairs = {};
+};
+CoolKeyMap.prototype.GetUnassignedKeys = function () {
+  var a = [];
+  for (var pk in this.pairs) {
+    if (this.pairs[pk] == this.default) {
+      a.push(pk);
+    }
+  }
+  return a;
+};
+CoolKeyMap.prototype.GetUnassignedValues = function () {
+  return "todo";
+};
+CoolKeyMap.prototype.GetAssignedKeys = function () {
+  var a = [];
+  for (var pk in this.pairs) {
+    if (this.pairs[pk] != this.default) {
+      a.push(pk);
+    }
+  }
+  return a;
+};
+CoolKeyMap.prototype.GetAssignedValues = function () {
+  return "todo";
+};
+CoolKeyMap.prototype.SetAssignmentBehaviour = function (func) {
+  this.Assignment = func;
+};
+CoolKeyMap.prototype.SetDefault = function (def) {
+  this.default = def;
+};
+CoolKeyMap.prototype.SetValues = function (newvals) {
+   //check to see for any removals
+  this.values.forEach(function (o) {
+    this.Pair(null,o);
+  }, this);
+  this.values = newvals;
+};
+CoolKeyMap.prototype.UpdateValues = function (newvals) {
+   //check to see for any removals
+  this.values.forEach(function (o) {
+    if ($.inArray(o, newvals) == -1) {
+      this.Pair(null, o);
+    }
+  }, this);
+  //add new
+  newvals.forEach(function (o) {
+    if ($.inArray(o, this.values) == -1) {
+      this.Pair(null, o);
+    }
+  }, this);
+
+  this.values = newvals;
+};
+
+CoolKeyMap.prototype.SetKeys = function (newkeys) {
+  //check to see for any removals
+  this.keys.forEach(function (o) {
+   this.Pair(o,this.default);
+  }, this);
+  this.pairs = {};
+  this.keys = newkeys;
+};
+
+CoolKeyMap.prototype.UpdateKeys = function (newkeys) {
+  //check to see for any removals
+  this.keys.forEach(function (o) {
+    if ($.inArray(o, newkeys) == -1) {
+      this.Pair(o, this.default);
+      delete this.pairs[o];
+    }
+  }, this);
+  //add new
+  newkeys.forEach(function (o) {
+    if ($.inArray(o, this.keys) == -1) {
+      this.Pair(o, this.default);
+    }
+  }, this);
+
+  this.keys = newkeys;
+};
+
+CoolKeyMap.prototype.Pair = function (key, value) {
+  if (key == null && value !== this.default) {
+    //unnasign any key assigned to value
+    for(var pk in this.pairs){
+      if (this.pairs[pk] == value){
+        this.Assignment(key, this.pairs[pk], this.default);
+        this.pairs[pk] = this.default;
+      }
+    }
+    return;
+  }
+  var oldval;
+  if (value == this.default) {
+    //no need to check anything, just set.
+    oldval = this.pairs[key];
+    if (oldval != this.default) {
+      this.Assignment(key, oldval, value);
+      this.pairs[key] = this.default;
+    }
+    return;
+  }
+  //find anything paired with value
+  for (var pk in this.pairs) {
+      //unnasign if not key
+      if (this.pairs[pk] == value && pk != key){
+        this.Assignment(key, this.pairs[pk], this.default);
+        this.pairs[pk] = this.default;
+      }
+  }
+  //find key current value
+  if (this.pairs[key] === undefined || this.pairs[key] === this.default) {
+    this.pairs[key] = value;
+    this.Assignment(key, this.default, value);
+    return;
+  }
+  oldval = this.pairs[key];
+  if (oldval == value) {
+    return;
+  }
+  this.Assignment(key, oldval, value);
+  this.pairs[key] = value;
+};
