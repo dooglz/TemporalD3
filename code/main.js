@@ -378,7 +378,7 @@ function GetChannelDropdown(channels, attribute, atype, removeBtn) {
   //
   var divA = $('<div>', { 'style': 'display:inline;', 'id': atype + "_" + attribute + "_dropdownContainer" });
   var divB = $('<select>', { 'class': 'selectpicker', 'data-width': '50%', 'id': atype + "_" + attribute + "_dropdown" }).html(str);
-  divB.on('change', function () { ChannelChange(atype, attribute, divB.val()); });
+  divB.on('change', function () { ChannelChange(atype, attribute, divB.val(),divA); });
   var divC;
   if (removeBtn) {
     divC = $('<button>', { 'class': 'btn btn-default', 'id': atype + "_" + attribute + "_minus" }).html('<span class="glyphicon glyphicon-minus"></span>');
@@ -461,14 +461,16 @@ function ChannelChange(atype, attribute, newChannel) {
   var oldchannel = (atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels).filter(function (obj) {
     return obj.dataParam == attribute;
   });
-  if (oldchannel.length == 1) {
-    //check to see that it wasn't st to ourselves
-    //if(oldchannel[0].dataParam != attribute){
-    oldchannel[0].dataParam = "";
-    oldchannel[0].inUse = false;
-    selected_method.ChannelChanged(oldchannel[0]);
-   // }
+  for (var j = 0; j < oldchannel.length; j++) {
+    var oc = oldchannel[j];
+    if(oc.name == newChannel){
+      console.warn(newChannel);
+    }
+    oc.dataParam = "";
+    oc.inUse = false;
+    selected_method.ChannelChanged(oc);
   }
+
   //Assign to new channel
   if (newChannel != "Disabled") {    
     //find the channel
@@ -486,9 +488,11 @@ function ChannelChange(atype, attribute, newChannel) {
       var ob = $("#" + atype + "_" + channel.dataParam + "_dropdown");
       var len = ob.length;
       //search every dropdown for this attribute
+      console.log(ob);
       for (var k = 0; k < len; k++) {
         var element = ob.eq(k);
         if (element.val() == channel.name) {
+          console,log(element.val(),channel.name);
           console.log("found it");
           //found it
           element.selectpicker('val', "Disabled");
@@ -834,7 +838,7 @@ $('#dataloadbtn').click(function () {
 });
 
 //######################################################################
-//########    Junk
+//########    DisplayMode
 //######################################################################
 
 $("#dspmodepicker").on('change', function () {
@@ -848,26 +852,6 @@ $("#dspmodepicker").on('change', function () {
     SetDisplayMode(0);
   }
 });
-
-$('#fullscreentoggle').change(function () {
-  var val = $(this).prop('checked');
-  if (val) {
-    $('.container.superwide').css("max-width","90%");
-  } else {
-    $('.container.superwide').css("max-width","1094px");
-  }
-  resize();
-});
-  
-function IsJson(str) {
-    try {
-        JSON.parse(str);
-    } catch (e) {
-        return false;
-    }
-    return true;
-}
-
 var chartBoxLeft = $("#chartBoxLeft");
 var chartBoxRight = $("#chartBoxRight");
 SetDisplayMode(2);
@@ -905,3 +889,141 @@ function SetDisplayMode(mode) {
   checkOptionalChannels(selected_method.linkChannels,"link");
 }
 
+//######################################################################
+//########    Junk
+//######################################################################
+
+$('#fullscreentoggle').change(function () {
+  var val = $(this).prop('checked');
+  if (val) {
+    $('.container.superwide').css("max-width","90%");
+  } else {
+    $('.container.superwide').css("max-width","1094px");
+  }
+  resize();
+});
+  
+function IsJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+var CoolKeyMap = function () {
+  this.values = [];
+  this.keys = [];
+  this.default = null;
+  this.Assignment = function () { };
+  this.pairs = {};
+}
+CoolKeyMap.prototype.GetUnassignedKeys = function () {
+  var a = [];
+  for (var pk in this.pairs) {
+    if (this.pairs[pk] == this.default) {
+      a.push(pk);
+    }
+  }
+  return a;
+};
+CoolKeyMap.prototype.GetUnassignedValues = function () {
+  return "todo";
+};
+CoolKeyMap.prototype.GetAssignedKeys = function () {
+  var a = [];
+  for (var pk in this.pairs) {
+    if (this.pairs[pk] != this.default) {
+      a.push(pk);
+    }
+  }
+  return a;
+};
+CoolKeyMap.prototype.GetAssignedValues = function () {
+  return "todo";
+};
+CoolKeyMap.prototype.SetAssignmentBehaviour = function (func) {
+  this.Assignment = func;
+};
+CoolKeyMap.prototype.SetDefault = function (def) {
+  this.default = def;
+};
+
+CoolKeyMap.prototype.SetValues = function (newvals) {
+   //check to see for any removals
+  this.values.forEach(function (o) {
+    if ($.inArray(o, newvals) == -1) {
+      this.pair(null, o);
+    }
+  }, this);
+  //add new
+  newvals.forEach(function (o) {
+    if ($.inArray(o, this.values) == -1) {
+      this.pair(null, o);
+    }
+  }, this);
+
+  this.values = newvals;
+};
+
+CoolKeyMap.prototype.SetKeys = function (newkeys) {
+  //check to see for any removals
+  this.keys.forEach(function (o) {
+    if ($.inArray(o, newkeys) == -1) {
+      this.pair(o, this.default);
+      delete this.pairs[o];
+    }
+  }, this);
+  //add new
+  newkeys.forEach(function (o) {
+    if ($.inArray(o, this.keys) == -1) {
+      this.pair(o, this.default);
+    }
+  }, this);
+
+  this.keys = newkeys;
+};
+
+CoolKeyMap.prototype.Pair = function (key, value) {
+  if (key == null && value !== this.default) {
+    //unnasign any key assigned to value
+    for(var pk in this.pairs){
+      if (this.pairs[pk] == value){
+        this.Assignment(key, this.pairs[pk], this.default);
+        this.pairs[pk] = this.default;
+      }
+    }
+    return;
+  }
+  var oldval;
+  if (value == this.default) {
+    //no need to check anything, just set.
+    oldval = this.pairs[key];
+    if (oldval != this.default) {
+      this.Assignment(key, oldval, value);
+      this.pairs[key] = this.default;
+    }
+    return;
+  }
+  //find anything paired with value
+  for (var pk in this.pairs) {
+      //unnasign if not key
+      if (this.pairs[pk] == value && pk != key){
+        this.Assignment(key, this.pairs[pk], this.default);
+        this.pairs[pk] = this.default;
+      }
+  }
+  //find key current value
+  if (this.pairs[key] === undefined || this.pairs[key] === this.default) {
+    this.pairs[key] = value;
+    this.Assignment(key, this.default, value);
+    return;
+  }
+  oldval = this.pairs[key];
+  if (oldval == value) {
+    return;
+  }
+  this.Assignment(key, oldval, value);
+  this.pairs[key] = value;
+};
