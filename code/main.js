@@ -372,9 +372,18 @@ function GetChannelDropdown(channels, attribute, atype) {
     }
     str += "<option value='"+channels[i].name+"'>" + channels[i].name + "</option>";
   }
-  var div = $('<select>', { 'class': 'selectpicker', 'data-width': '50%', 'id': atype + "_" + attribute + "_dropdown" }).html(str);
-  div.on('change', function () { ChannelChange(atype, attribute, div.val()); });
-  return div;
+  //
+  var divA =  $('<div>', { 'style': 'display:inline;'});
+  var divB = $('<select>', { 'class': 'selectpicker', 'data-width': '50%', 'id': atype + "_" + attribute + "_dropdown" }).html(str);
+  divB.on('change', function () { ChannelChange(atype, attribute, divB.val()); });
+  var divC = $('<button>', { 'class': 'btn btn-default','id': atype + "_" + attribute + "_plus" }).html('<span class="glyphicon glyphicon-plus"></span>');
+ // var divD = $('<button>', { 'class': 'btn btn-default','id': atype + "_" + attribute + "_minus" }).html('<span class="glyphicon glyphicon-minus"></span>');
+ // divC.hide();
+//  divD.hide();
+  divA.append(divB);
+  divA.append(divC);
+ // divA.append(divD);
+  return divA;
 }
 
 function checkOptionalChannels(channels,atype) {

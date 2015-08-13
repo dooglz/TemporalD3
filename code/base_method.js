@@ -31,20 +31,20 @@ Base_Method.prototype.discreet = false;
 
 Base_Method.prototype.ColorThemes = [
   {
-    LAnodeEdgeBaseColour: "deepskyblue",
+    LAnodeEdgeBaseColour: "black",
     LAnodeFillBaseColour: "deepskyblue",
     LAnodeEdgeHighlightColour: "black",
     LAnodeFillHighlightColour: "blue",
-    LBnodeEdgeBaseColour: "orangered",
+    LBnodeEdgeBaseColour: "black",
     LBnodeFillBaseColour: "orangered",
     LBnodeEdgeHighlightColour: "black",
     LBnodeFillHighlightColour: "red",
     //
-    RAnodeEdgeBaseColour: "deepskyblue",
+    RAnodeEdgeBaseColour: "black",
     RAnodeFillBaseColour: "deepskyblue",
     RAnodeEdgeHighlightColour: "black",
     RAnodeFillHighlightColour: "blue",
-    RBnodeEdgeBaseColour: "orangered",
+    RBnodeEdgeBaseColour: "black",
     RBnodeFillBaseColour: "orangered",
     RBnodeEdgeHighlightColour: "black",
     RBnodeFillHighlightColour: "red",
@@ -62,6 +62,16 @@ Base_Method.prototype.ColorThemes = [
     LBnodeFillBaseColour: "orangered",
     LBnodeEdgeHighlightColour: "black",
     LBnodeFillHighlightColour: "red",
+    //
+    RAnodeEdgeBaseColour: "deepskyblue",
+    RAnodeFillBaseColour: "deepskyblue",
+    RAnodeEdgeHighlightColour: "black",
+    RAnodeFillHighlightColour: "blue",
+    RBnodeEdgeBaseColour: "orangered",
+    RBnodeFillBaseColour: "orangered",
+    RBnodeEdgeHighlightColour: "black",
+    RBnodeFillHighlightColour: "red",
+    //
     LinkStrokeBaseColour: "moccasin",
     LinkStrokeHighlightColour: "gold",
     BackgroundColour: "black"
@@ -170,16 +180,16 @@ Base_Method.prototype.ParamChanged = function (param) {
 //######################################################################
 //########    Channel Mapping Functions
 //######################################################################
-//AttributesPerVisNode
 Base_Method.prototype.nodeChannels = [
-  { name: "Node Colour", ctype: "catagory", inUse: false, dataParam: "" },
-  { name: "Node Colour B", ctype: "catagory", inUse: false, dataParam: "" },
   { name: "Gravity Point", ctype: "catagory", inUse: false, dataParam: "" },
-  { name: "Node Size A", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }},
-  { name: "Node Size B", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return this.nodeChannels[3].inUse}  },
-  { name: "Node Size C", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return this.nodeChannels[4].inUse}  },
-  { name: "Node Colour Right", ctype: "catagory", inUse: false, dataParam: "", filter: function () { return (displayMode ==2)} },
-  { name: "Node Colour B Right", ctype: "catagory", inUse: false, dataParam: "", filter: function () { return (displayMode ==2)} }
+  { name: "Node Colour LA", ctype: "catagory", inUse: false, dataParam: "", func: function () { this.NodeSplit(); } },
+  { name: "Node Colour LB", ctype: "catagory", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return this.getNodeChannel("Node Colour LA").inUse } },
+  { name: "Node Colour RA", ctype: "catagory", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return (displayMode == 2) } },
+  { name: "Node Colour RB", ctype: "catagory", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return this.getNodeChannel("Node Colour RA").inUse } },
+  { name: "Node Size LA", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); } },
+  { name: "Node Size LB", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return this.getNodeChannel("Node Size LA").inUse } },
+  { name: "Node Size RA", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return (displayMode == 2) } },
+  { name: "Node Size RB", ctype: "numeric", inUse: false, dataParam: "", func: function () { this.NodeSplit(); }, filter: function () { return this.getNodeChannel("Node Size RA").inUse } }
 ];
 Base_Method.prototype.linkChannels = [
   { name: "Link Colour", ctype: "catagory", inUse: false, dataParam: "" },
@@ -530,7 +540,8 @@ Base_Method.prototype.UpdateVis = function () {
 Base_Method.prototype.NewVis = function () {
   this.ClearVis();
   this.UpdateVis();
-  this.AttributesPerVisNode = 0;
+  this.LAttributesPerVisNode = 0;
+  this.RAttributesPerVisNode = 0;
   this.NodeSplit(); 
   console.info("Vis created");
 }
@@ -615,48 +626,85 @@ function Nodeclick(d) {
 // action to take on mouse double click
 function NodedblClick(d) { }
 
-Base_Method.prototype.AttributesPerVisNode = 0;
+Base_Method.prototype.LAttributesPerVisNode = 0;
+Base_Method.prototype.RAttributesPerVisNode = 0;
+
 Base_Method.prototype.NodeSplit = function () {
-  console.log("Node split")
-  var channelA = this.getNodeChannel("Node Size A");
-  var channelB = this.getNodeChannel("Node Size B");
-  var channelC = this.getNodeChannel("Node Size C");
-  if(this.AttributesPerVisNode ==0 && !channelA.inUse && !channelB.inUse && !channelC.inUse){
+  this.NodeSplitL();
+   this.NodeSplitR();
+}
+Base_Method.prototype.NodeSplitL = function () {
+  var channelLA = this.getNodeChannel("Node Size LA").inUse || this.getNodeChannel("Node Colour LA").inUse;
+  var channelLB = this.getNodeChannel("Node Size LB").inUse || this.getNodeChannel("Node Colour LB").inUse;
+  
+  if(this.LAttributesPerVisNode ==0 && !channelLA && !channelLB){
     return;
   }
-  if(this.AttributesPerVisNode ==1 && channelA.inUse && !channelB.inUse && !channelC.inUse){
+  if(this.LAttributesPerVisNode ==1 && channelLA && !channelLB){
     return;
   }
-  if(this.AttributesPerVisNode ==2 && channelA.inUse && channelB.inUse && !channelC.inUse){
+  if(this.LAttributesPerVisNode ==2 && channelLA && channelLB){
     return;
-  }
-  //cleanup any stale circles first
-  this.visNodes.selectAll("#secondary").remove();
-  if (this.visNodesR) {
-    this.visNodesR.selectAll("#secondaryR").remove();
   }
   
+  //cleanup any stale circles first
+  this.visNodes.selectAll("#secondary").remove();
   //only chan A
-  if (channelA.inUse && !channelB.inUse && !channelC.inUse) {
-    this.AttributesPerVisNode = 1;
+  if (channelLA && !channelLB) {
+    this.LAttributesPerVisNode = 1;
     return;
   }
   //chan A + B
-  if (channelA.inUse && channelB.inUse && !channelC.inUse) {
-    if(this.AttributesPerVisNode < 2){
+  if (channelLA && channelLB) {
+    if(this.LAttributesPerVisNode < 2){
       //add extra nodes
       this.visNodes.append("circle").attr("id","secondary");
+    }else{
+      //remove extra nodes
+      this.visNodes.selectAll("#secondary").remove();
+    }
+    this.LAttributesPerVisNode = 2;
+    return;
+  }
+};
+Base_Method.prototype.NodeSplitR = function () {
+  
+  var channelRA = this.getNodeChannel("Node Size RA").inUse || this.getNodeChannel("Node Colour RA").inUse;
+  var channelRB = this.getNodeChannel("Node Size RB").inUse || this.getNodeChannel("Node Colour RB").inUse;
+  
+  if(this.RAttributesPerVisNode == 0 && !channelRA && !channelRB){
+    return;
+  }
+  if(this.RAttributesPerVisNode == 1 && channelRA && !channelRB){
+    return;
+  }
+  if(this.RAttributesPerVisNode == 2 && channelRA && channelRB){
+    return;
+  }
+  
+  //cleanup any stale circles first
+  if (this.visNodesR) {
+    this.visNodesR.selectAll("#secondaryR").remove();
+  }
+  //only chan A
+  if (channelRA && !channelRB) {
+    this.RAttributesPerVisNode = 1;
+    return;
+  }
+  //chan A + B
+  if (channelRA && channelRB) {
+    if(this.RAttributesPerVisNode < 2){
+      //add extra nodes
       if(this.visNodesR !== undefined){
         this.visNodesR.append("circle").attr("id","secondaryR");
       }
     }else{
       //remove extra nodes
-      this.visNodes.selectAll("#secondary").remove();
       if(this.visNodesR !== undefined){
         this.visNodesR.selectAll("#secondaryR").remove();
       }
     }
-    this.AttributesPerVisNode = 2;
+    this.RAttributesPerVisNode = 2;
     return;
   }
 };
@@ -680,18 +728,18 @@ Base_Method.prototype.RedoLinks = function () {
 Base_Method.prototype.RedoNodes = function () {
   if (this.visNodes === undefined) { return; }
   this.visNodes.selectAll("circle")
-    .attr("r", this.NodeSize.bind(this))
+    .attr("r", this.NodeSize.bind(this,"left"))
     .style("fill", this.NodeColour.bind(this,"left"))
     .style("stroke", this.NodeStrokeColour.bind(this,"left"))
-    .style("filter", this.NodeFilter.bind(this))
-    .attr("clip-path", this.NodeClip.bind(this));
+    .style("filter", this.NodeFilter.bind(this,"left"))
+    .attr("clip-path", this.NodeClip.bind(this,"left"));
   if (this.visNodesR !== undefined) {
     this.visNodesR.selectAll("circle")
-      .attr("r", this.NodeSize.bind(this))
+      .attr("r", this.NodeSize.bind(this,"right"))
       .style("fill", this.NodeColour.bind(this,"right"))
       .style("stroke", this.NodeStrokeColour.bind(this,"right"))
-      .style("filter", this.NodeFilter.bind(this))
-      .attr("clip-path", this.NodeClip.bind(this));
+      .style("filter", this.NodeFilter.bind(this,"right"))
+      .attr("clip-path", this.NodeClip.bind(this,"right"));
   }
 };
 
@@ -738,7 +786,7 @@ Base_Method.prototype.LinkLength = function (d) {
 };
 
 //------------------ Node Channels ----------------
-Base_Method.prototype.NodeFilter = function (d) {
+Base_Method.prototype.NodeFilter = function (side, d, half, i) {
   if (d.highlight) {
     return "url(#glow)";
   }
@@ -751,15 +799,15 @@ Base_Method.prototype.NodeColour = function (side, d, half, i) {
   var channel;
   if (half == 0) {
     if (side == "left") {
-      channel = this.getNodeChannel("Node Colour");
+      channel = this.getNodeChannel("Node Colour LA");
     } else {
-      channel = this.getNodeChannel("Node Colour B");
+      channel = this.getNodeChannel("Node Colour RA");
     }
   } else {
     if (side == "left") {
-      channel = this.getNodeChannel("Node Colour Right");
+      channel = this.getNodeChannel("Node Colour LB");
     } else {
-      channel = this.getNodeChannel("Node Colour B Right");
+      channel = this.getNodeChannel("Node Colour RB");
     }
   }
   if (channel.inUse) {
@@ -831,18 +879,26 @@ Base_Method.prototype.NodeStrokeColour = function (side, d, half, i) {
       if (half == 0) {
         return this.ColorTheme.RAnodeEdgeBaseColour;
       } else {
-        return this.ColorTheme.RAnodeEdgeBaseColour;
+        return this.ColorTheme.RBnodeEdgeBaseColour;
       }
     }
   }
 };
 
-Base_Method.prototype.NodeSize = function (d,i) {
-  var channel ;
-  if(i==0){
-    channel = this.getNodeChannel("Node Size A");
-  }else if(i==1){
-    channel = this.getNodeChannel("Node Size B");
+Base_Method.prototype.NodeSize = function (side, d, half, i) {
+  var channel;
+  if (half == 0) {
+    if (side == "left") {
+      channel = this.getNodeChannel("Node Size LA");
+    } else {
+      channel = this.getNodeChannel("Node Size RA");
+    }
+  } else {
+    if (side == "left") {
+      channel = this.getNodeChannel("Node Size LB");
+    } else {
+      channel = this.getNodeChannel("Node Size RB");
+    }
   }
   if (channel.inUse) {
     return ((this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax));
@@ -851,22 +907,29 @@ Base_Method.prototype.NodeSize = function (d,i) {
   }
 };
 
-Base_Method.prototype.NodeClip = function (d, i) {
-  var channelA = this.getNodeChannel("Node Size A");
-  var channelB = this.getNodeChannel("Node Size B");
-  var channelC = this.getNodeChannel("Node Size C");
-  if (channelA.inUse && channelB.inUse && !channelC.inUse) {
-    if (i == 0) {
+Base_Method.prototype.NodeClip = function (side, d, half, i) {
+  var channelA;
+  var channelB;
+  if (side == "left") {
+    channelA = this.getNodeChannel("Node Size LA").inUse || this.getNodeChannel("Node Colour LA").inUse;
+    channelB = this.getNodeChannel("Node Size LB").inUse || this.getNodeChannel("Node Colour LB").inUse;
+  } else {
+    channelA = this.getNodeChannel("Node Size RA").inUse || this.getNodeChannel("Node Colour RA").inUse;
+    channelB = this.getNodeChannel("Node Size RB").inUse || this.getNodeChannel("Node Colour RB").inUse;
+  }
+  
+  if (channelA && channelB) {
+    if (half == 0) {
       return "url(#cut-off-left)";
-    } else if (i == 1) {
+    } else if (half == 1) {
       return "url(#cut-off-right)";
     }
-  } else if (channelA.inUse && channelB.inUse && channelC.inUse) {
-    if (i == 0) {
+  } else if (channelA && channelB) {
+    if (half == 0) {
       return "url(#cut-off-mid3)";
-    } else if (i == 1) {
+    } else if (half == 1) {
       return "url(#cut-off-left3)";
-    }else if (i == 2) {
+    }else if (half == 2) {
       return "url(#cut-off-right3)";
     }
   }
