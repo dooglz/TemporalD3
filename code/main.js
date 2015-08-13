@@ -351,11 +351,11 @@ function InitChannelMixer(data) {
   var nkeydiv = $("#nodeDropdowns").html("<strong>Nodes</strong>");
 
   for (var key in data.node_keys) {
-    $('<div>', { 'class': 'methodParam text-right' }).html(data.node_keys[key] + " - ")
+    $('<div>', { 'class': 'methodParam text-right', 'id': "node_"+data.node_keys[key]+"_dropdowns"  }).html(data.node_keys[key] + " - ")
       .append(GetChannelDropdown(selected_method.nodeChannels, data.node_keys[key], "node")).appendTo(nkeydiv);
   }
   for (var key in data.link_keys) {
-    $('<div>', { 'class': 'methodParam text-right' }).html(data.link_keys[key] + " - ")
+    $('<div>', { 'class': 'methodParam text-right', 'id': "link_"+data.link_keys[key]+"_dropdowns" }).html(data.link_keys[key] + " - ")
       .append(GetChannelDropdown(selected_method.linkChannels, data.link_keys[key], "link")).appendTo(lkeydiv);
   }
   // Init dropdowns
@@ -364,25 +364,36 @@ function InitChannelMixer(data) {
 
 
 // creates and returns a <select> div with all channel options as <option>'s
-function GetChannelDropdown(channels, attribute, atype) {
+function GetChannelDropdown(channels, attribute, atype, removeBtn) {
+  if (removeBtn === undefined) { removeBtn = false; }
+ // if (x === undefined) { x = 0; }
+ //  x = $("[id$=_dropdownContainer][id^="+atype+"_"+attribute+"_]").length;
   var str = "<option>Disabled</option>";
   for (var i in channels) {
     if (channels[i].filter !== undefined && !channels[i].filter.bind(selected_method)()) {
       continue;
     }
-    str += "<option value='"+channels[i].name+"'>" + channels[i].name + "</option>";
+    str += "<option value='" + channels[i].name + "'>" + channels[i].name + "</option>";
   }
   //
-  var divA =  $('<div>', { 'style': 'display:inline;'});
+  var divA = $('<div>', { 'style': 'display:inline;', 'id': atype + "_" + attribute + "_dropdownContainer" });
   var divB = $('<select>', { 'class': 'selectpicker', 'data-width': '50%', 'id': atype + "_" + attribute + "_dropdown" }).html(str);
   divB.on('change', function () { ChannelChange(atype, attribute, divB.val()); });
-  var divC = $('<button>', { 'class': 'btn btn-default','id': atype + "_" + attribute + "_plus" }).html('<span class="glyphicon glyphicon-plus"></span>');
- // var divD = $('<button>', { 'class': 'btn btn-default','id': atype + "_" + attribute + "_minus" }).html('<span class="glyphicon glyphicon-minus"></span>');
- // divC.hide();
-//  divD.hide();
+  var divC;
+  if (removeBtn) {
+    divC = $('<button>', { 'class': 'btn btn-default', 'id': atype + "_" + attribute + "_minus" }).html('<span class="glyphicon glyphicon-minus"></span>');
+    divC.on('click', function () { divA.remove(); });
+  } else {
+   
+    divC = $('<button>', { 'class': 'btn btn-default', 'id': atype + "_" + attribute + "_plus" }).html('<span class="glyphicon glyphicon-plus"></span>');
+    divC.on('click', function () {
+      $("#"+atype+"_"+attribute+"_dropdowns").append(GetChannelDropdown(selected_method.linkChannels, attribute, atype, true));
+      $('.selectpicker').selectpicker();
+    });
+  }
+
   divA.append(divB);
   divA.append(divC);
- // divA.append(divD);
   return divA;
 }
 
@@ -451,9 +462,12 @@ function ChannelChange(atype, attribute, newChannel) {
     return obj.dataParam == attribute;
   });
   if (oldchannel.length == 1) {
+    //check to see that it wasn't st to ourselves
+    //if(oldchannel[0].dataParam != attribute){
     oldchannel[0].dataParam = "";
     oldchannel[0].inUse = false;
     selected_method.ChannelChanged(oldchannel[0]);
+   // }
   }
   //Assign to new channel
   if (newChannel != "Disabled") {    
@@ -468,11 +482,23 @@ function ChannelChange(atype, attribute, newChannel) {
     channel = channel[0];
     //is this channel already in use?
     if (channel.inUse == true) {
-      // console.log("channel already in use by attribute: " + channel.dataParam);
+      console.log("channel already in use by attribute: " + channel.dataParam);
+      var ob = $("#" + atype + "_" + channel.dataParam + "_dropdown");
+      var len = ob.length;
+      //search every dropdown for this attribute
+      for (var k = 0; k < len; k++) {
+        var element = ob.eq(k);
+        if (element.val() == channel.name) {
+          console.log("found it");
+          //found it
+          element.selectpicker('val', "Disabled");
+          //unnasign current attribute
+          ChannelChange(atype, channel.dataParam, "Disabled");
+        }
+      }
       //Yes, change dropdown of assigned attribute to disabled
-      $("#" + atype + "_" + channel.dataParam + "_dropdown").selectpicker('val', "Disabled");
-      //unnasign current attribute
-      ChannelChange(atype, channel.dataParam, "Disabled");
+      //  $("#" + atype + "_" + channel.dataParam + "_dropdown").selectpicker('val', "Disabled");
+      
     }
     //Add attritubute to the channel
     channel.dataParam = attribute;
