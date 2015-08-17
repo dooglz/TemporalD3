@@ -51,7 +51,8 @@ Base_Method.prototype.ColorThemes = [
     //
     LinkStrokeBaseColour: "grey",
     LinkStrokeHighlightColour: "orange",
-    BackgroundColour: "white"
+    BackgroundColour: "white",
+    name: "Default"
   },
   {
     LAnodeEdgeBaseColour: "lemonchiffon",
@@ -74,16 +75,27 @@ Base_Method.prototype.ColorThemes = [
     //
     LinkStrokeBaseColour: "moccasin",
     LinkStrokeHighlightColour: "gold",
-    BackgroundColour: "black"
+    BackgroundColour: "black",
+    name: "Dark"
   }
 ];
 Base_Method.prototype.ColorTheme = Base_Method.prototype.ColorThemes[0];
 
 Base_Method.prototype.SetColorTheme = function (a) {
- a = Math.max(a,0);
- a = Math.min(a,this.ColorThemes.length);
- this.ColorTheme = this.ColorThemes[a];
- this.Redraw();
+  if (typeof (a) == "string") {
+    var s = a.toLocaleUpperCase();
+    a = 0;
+    for (var i = 0; i < this.ColorThemes.length; i++) {
+      if (this.ColorThemes[i].name.toLocaleUpperCase() == s) {
+        a = i;
+        break;
+      }
+    }
+  }
+  a = Math.max(a, 0);
+  a = Math.min(a, this.ColorThemes.length);
+  this.ColorTheme = this.ColorThemes[a];
+  this.Redraw();
 }
 ///Method constructor
 function Base_Method() {

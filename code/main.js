@@ -217,6 +217,9 @@ function resize() {
   selected_method.Redraw(canvasWidth, canvasHeight);
 }
 
+$("#colschmepicker").on('change', function () {
+  selected_method.SetColorTheme($("#colschmepicker").val());
+});
 //######################################################################
 //########    Data Picking, Validating, Loading
 //######################################################################
@@ -243,6 +246,7 @@ $("#datapicker").on('change', function () {
   ChangeData($("#datapicker").val());
   Update();
 });
+
 
 function UpdateDataPicker(){
   for (i = 0; i < stockData.length; i++) {
@@ -419,6 +423,9 @@ function checkOptionalChannels(channels, atype) {
           console.log("Removing channel from dropdown: ", channel.name);
           // Will set any dropdown cuurently to this, to disabled
           kmap.RemoveValue(channel.name);
+          //remove from UI
+          instances.remove();
+          dropdowns.selectpicker('refresh');
         }
       } else if (instances.length == 0) {
         console.log("Adding channel to dropdown: ", channel.name);
@@ -618,7 +625,13 @@ function changeMethod(methodName) {
     console.log("Method: %o has no parameters", selected_method);
     return;
   }
-
+  
+  $("#colschmepicker").empty();
+  selected_method.ColorThemes.forEach(function(c) {
+    $("#colschmepicker").append("<option>" + c.name + "</option>");
+  }, this);
+  $("#colschmepicker").selectpicker('refresh');
+  
   //verify parameters
   if (!VerifyMethodParmeters(selected_method)) {
     return;
@@ -737,36 +750,37 @@ function HideLoadingBar() {
 //######################################################################
 //########    save button
 //######################################################################
-var pngscale = 1.0;
+
 $('#savebtn').click(function () {
+  var pngscale = parseInt($("#imagescalepicker").val().slice(0, 1));
   //cnvert svg to base64 text
   var html = d3.select("svg")
-        .attr("version", 1.1)
-        .attr("xmlns", "http://www.w3.org/2000/svg")
-        .node().parentNode.innerHTML;
-  var imgsrc = 'data:image/svg+xml;base64,'+ btoa(html);
+    .attr("version", 1.1)
+    .attr("xmlns", "http://www.w3.org/2000/svg")
+    .node().parentNode.innerHTML;
+  var imgsrc = 'data:image/svg+xml;base64,' + btoa(html);
   
   //setup canvas
   var w = $("#chart").width();
   var h = $("#chart").height();
-  $("#canvas").width( w*pngscale).height(h*pngscale);
+  $("#canvas").width(w * pngscale).height(h * pngscale);
   var canvas = document.querySelector("#canvas");
-	var context = canvas.getContext("2d");
-  context.canvas.width = w*pngscale;
-  context.canvas.height = h*pngscale;
-  
+  var context = canvas.getContext("2d");
+  context.canvas.width = w * pngscale;
+  context.canvas.height = h * pngscale;
+
   var image = new Image;
   image.src = imgsrc;
-  image.onload = function() {
+  image.onload = function () {
     //draw to canvas
-	  context.drawImage(image, 0, 0, w*pngscale, h*pngscale);
+    context.drawImage(image, 0, 0, w * pngscale, h * pngscale);
     //convert  to png
     var canvasdata = canvas.toDataURL("image/png");
     //download
-	  var a = document.createElement("a");
-	  a.download = graphdata.displayName+"_"+selected_method.name+"_"+selectedDate.toString()+".png";
-	  a.href = canvasdata;
-	  a.click();
+    var a = document.createElement("a");
+    a.download = pngscale + "x_"+graphdata.displayName + "_" + selected_method.name + "_" + selectedDate.toString() + ".png";
+    a.href = canvasdata;
+    a.click();
   };
 });
 
@@ -930,3 +944,4 @@ function IsJson(str) {
     }
     return true;
 }
+
