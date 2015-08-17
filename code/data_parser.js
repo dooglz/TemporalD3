@@ -764,8 +764,12 @@ CoolKeyMap.prototype.RemoveValue = function (val) {
   } 
   //else{console.error("No such value!");}
 };
+CoolKeyMap.prototype.WipePairsNoAssign = function (key, value) {
+  this.pairs = {};
+};
+
 CoolKeyMap.prototype.Pair = function (key, value) {
-  // console.info("Pair ",key, value);console.trace();
+  //console.info("Pair ",key, value);console.trace();
   if (key == null && value !== this.default) {
     //unnasign any key assigned to value
     for (var pk in this.pairs) {

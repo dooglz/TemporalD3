@@ -449,35 +449,72 @@ function DropdownNameToAttributeName(str){
 };
 
 //reads selected channels from the method and set UI accordingly
-//TODO Test this for bugs.
-
 function Readchannels() {
+  var ddc;
+  var dds;
+  var ddp;
+  var done;
+  var dropdown;
   //wipe dropdowns
   $("[id$=_dropdown]").selectpicker('val', "Disabled");
+  //todo remove multidropdowns
+  kmap.WipePairsNoAssign();
   for (var i = 0; i < selected_method.nodeChannels.length; i++) {
     var nchannel = selected_method.nodeChannels[i];
     if (nchannel.inUse) {
-      var dd = $("#node_" + nchannel.dataParam + "_dropdown");
-      if (dd.length == 1) {
-        dd.selectpicker('val', nchannel.name);
+      //find the dropdown for this
+      ddc = $("#node_" + nchannel.dataParam + "_dropdowns");
+      dds = $("[id$=_dropdown]",ddc);
+      for (var j = 0; j < $("[id$=_dropdown]",ddc).length; j++) {
+        dropdown = $("[id$=_dropdown]",ddc).eq(j);
+       // console.log("Trying to load in node channel: %o, to attribute %o",nchannel.name,nchannel.dataParam);
+       // console.log("lookign at %o, %o, value: %o",dropdown,dropdown.val(),dropdown.attr('id'));
+        if(dropdown.val() == "Disabled"){
+          ChannelChange("node",dropdown.attr('id').slice(5,-9),nchannel.name);
+          done = true;
+          break;
+        }
+        if(j == $("[id$=_dropdown]",ddc).length - 1){
+          ddp = $("[id$=_plus]",ddc);
+          ddp.click();
+        }
+      }
+      if (!done) {
+        console.error("Loading in multi dropdown not supported yet :(");
       }
     }
   }
   for (var i = 0; i < selected_method.linkChannels.length; i++) {
     var lchannel = selected_method.linkChannels[i];
     if (lchannel.inUse) {
-      var dd = $("#link_" + lchannel.dataParam + "_dropdown");
-      if (dd.length == 1) {
-        dd.selectpicker('val', lchannel.name);
+      ddc = $("#link_" + lchannel.dataParam + "_dropdowns");
+      dds = $("[id$=_dropdown]",ddc);
+      done = false;
+      for (var j = 0; j <  $("[id$=_dropdown]",ddc).length; j++) {
+        dropdown =  $("[id$=_dropdown]",ddc).eq(j);
+       // console.log("Trying to load in link channel: %o, to attribute %o",lchannel.name,lchannel.dataParam);
+        //console.log("lookign at %o, %o, value: %o",dropdown,dropdown.val(),dropdown.attr('id'));
+        if(dropdown.val() == "Disabled" || lchannel.name){
+          ChannelChange("link",dropdown.attr('id').slice(5,-9),lchannel.name);
+          done = true;
+          break;
+        }
+        if(j ==  $("[id$=_dropdown]",ddc).length - 1){
+          ddp = $("[id$=_plus]",ddc);
+          ddp.click();
+        }
+      }
+      if (!done) {
+        console.error("Loading in multi dropdown not supported yet :(");
       }
     }
   }
-  selected_method.ChannelChanged();
+  //selected_method.ChannelChanged();
 }
 
 function Assign(attribute, oldchannelname, newchannelname) {
   var realAttribute = DropdownNameToAttributeName(attribute);
-  console.log("Assign() attribute: %o, realAttribute:%o, oldchannelname: %o, newchannelname: %o", attribute,realAttribute, oldchannelname, newchannelname);
+ // console.log("Assign() attribute: %o, realAttribute:%o, oldchannelname: %o, newchannelname: %o", attribute,realAttribute, oldchannelname, newchannelname);
   //disable old channel
   if (oldchannelname !== "Disabled") {
     var oldchannel = selected_method.nodeChannels.filter(function (obj) {
@@ -515,7 +552,7 @@ function Assign(attribute, oldchannelname, newchannelname) {
       newchannel[0].inUse = true;
     }
   }
- // console.log("Assign() setting dropdown to: %o ", newchannelname);
+  console.log("Assign() setting dropdown to: %o ", newchannelname);
   $("[id$='_" + attribute + "_dropdown']").selectpicker('val', newchannelname);
 }
 
