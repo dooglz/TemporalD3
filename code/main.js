@@ -22,7 +22,12 @@ $(document).ready(function(){
   changeMethod(m_simple);
  }) 
 
-
+$(window).keypress(function( event ) {
+  //r =82
+  if ( event.keyCode == 114 ) {
+   selected_method.Reset();
+  }
+});
 
 $('#dateSliderInput').slider({
   formatter: function (value) {
@@ -885,6 +890,7 @@ $("#dspmodepicker").on('change', function () {
     SetDisplayMode(0);
   }
 });
+
 var chartBoxLeft = $("#chartBoxLeft");
 var chartBoxRight = $("#chartBoxRight");
 SetDisplayMode(2);
@@ -920,7 +926,7 @@ function SetDisplayMode(mode) {
   resize();
   checkOptionalChannels(selected_method.nodeChannels,"node");
   checkOptionalChannels(selected_method.linkChannels,"link");
-}
+};
 
 //######################################################################
 //########    Junk
@@ -943,5 +949,4 @@ function IsJson(str) {
         return false;
     }
     return true;
-}
-
+};

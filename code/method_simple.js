@@ -157,7 +157,14 @@ Method_Simple.prototype.zoomed = function () {
     this.svgContainerR.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
   }
 };
-
+Method_Simple.prototype.Reset = function () {
+  this.svgTranslation = [0,0];
+  this.scalefactor = [1,1];
+  this.svgContainer.attr("transform", "translate(0,0)scale(1,1)");
+  if (this.svgR !== undefined) {
+    this.svgContainerR.attr("transform", "translate(0,0)scale(1,1)");
+  }
+};
 //######################################################################
 //########    Force layout tick
 //######################################################################
