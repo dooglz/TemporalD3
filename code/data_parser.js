@@ -670,39 +670,41 @@ CoolKeyMap.prototype.SetDefault = function (def) {
   this.default = def;
 };
 CoolKeyMap.prototype.SetValues = function (newvals) {
-   //check to see for any removals
+  //console.info("SetValues");console.trace();
+  //check to see for any removals
   this.values.forEach(function (o) {
-    this.Pair(null,o);
+    this.Pair(null, o);
   }, this);
   this.values = newvals;
 };
 CoolKeyMap.prototype.UpdateValues = function (newvals) {
-   //check to see for any removals
+  //console.info("UpdateValues");console.trace();
+  //check to see for any removals
   this.values.forEach(function (o) {
     if ($.inArray(o, newvals) == -1) {
       this.Pair(null, o);
     }
   }, this);
-  //add new
+  /*add new - don't actually have to do anything
   newvals.forEach(function (o) {
-    if ($.inArray(o, this.values) == -1) {
-      this.Pair(null, o);
-    }
-  }, this);
-  console.log("kmap vals: ",newvals);
+    if ($.inArray(o, this.values) == -1) {this.Pair(null, o);}
+  }, this);*/
+  console.log("kmap vals: ", newvals);
   this.values = newvals;
 };
 
 CoolKeyMap.prototype.SetKeys = function (newkeys) {
+  // console.info("setkeys");console.trace();
   //check to see for any removals
   this.keys.forEach(function (o) {
-   this.Pair(o,this.default);
+    this.Pair(o, this.default);
   }, this);
   this.pairs = {};
   this.keys = newkeys;
 };
 
 CoolKeyMap.prototype.UpdateKeys = function (newkeys) {
+  //  console.info("UpdateKeys");console.trace();
   //check to see for any removals
   this.keys.forEach(function (o) {
     if ($.inArray(o, newkeys) == -1) {
@@ -720,12 +722,55 @@ CoolKeyMap.prototype.UpdateKeys = function (newkeys) {
   this.keys = newkeys;
 };
 
+CoolKeyMap.prototype.AddKey = function (key) {
+  // console.info("addkey ", key);console.trace();
+  var tt = this.keys.indexOf(key);
+  if (tt == -1) {
+    this.keys.push(key);
+    this.Pair(key, this.default);
+  }
+};
+
+CoolKeyMap.prototype.RemoveKey = function (key) {
+  var tt = this.keys.indexOf(key);
+  if (tt != -1) {
+    //unpair form any value
+    this.Pair(key, this.default);
+    //delete the pairing
+    delete this.pairs[key];
+    //remove from keys
+    this.keys.splice(tt, 1);
+    // console.info("removed K ",key);
+  }
+};
+
+CoolKeyMap.prototype.AddValue = function (val) {
+  // console.info("AddValue ",val);console.trace();
+  var tt = this.values.indexOf(val);
+  if (tt == -1) {
+    this.values.push(val);
+  }
+};
+
+CoolKeyMap.prototype.RemoveValue = function (val) {
+  // console.info("RemoveValue %o",val);console.trace();
+  var tt = this.values.indexOf(val);
+  if (tt != -1) {
+    //unpair form any key
+    this.Pair(null, val);
+    //remove from values
+    this.values.splice(tt, 1);
+    console.info("removed V ", val);
+  } 
+  //else{console.error("No such value!");}
+};
 CoolKeyMap.prototype.Pair = function (key, value) {
+  // console.info("Pair ",key, value);console.trace();
   if (key == null && value !== this.default) {
     //unnasign any key assigned to value
-    for(var pk in this.pairs){
-      if (this.pairs[pk] == value){
-        this.Assignment(key, this.pairs[pk], this.default);
+    for (var pk in this.pairs) {
+      if (this.pairs[pk] == value) {
+        this.Assignment(pk, this.pairs[pk], this.default);
         this.pairs[pk] = this.default;
       }
     }
@@ -735,6 +780,7 @@ CoolKeyMap.prototype.Pair = function (key, value) {
   if (value == this.default) {
     //no need to check anything, just set.
     oldval = this.pairs[key];
+    if (oldval === undefined) { oldval = this.default; }
     if (oldval != this.default) {
       this.Assignment(key, oldval, value);
       this.pairs[key] = this.default;
@@ -743,11 +789,11 @@ CoolKeyMap.prototype.Pair = function (key, value) {
   }
   //find anything paired with value
   for (var pk in this.pairs) {
-      //unnasign if not key
-      if (this.pairs[pk] == value && pk != key){
-        this.Assignment(pk, this.pairs[pk], this.default);
-        this.pairs[pk] = this.default;
-      }
+    //unnasign if not key
+    if (this.pairs[pk] == value && pk != key) {
+      this.Assignment(pk, this.pairs[pk], this.default);
+      this.pairs[pk] = this.default;
+    }
   }
   //find key current value
   if (this.pairs[key] === undefined || this.pairs[key] === this.default) {

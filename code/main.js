@@ -315,6 +315,7 @@ function ChangeData(dataName) {
 //########    Channel Mixer
 //######################################################################
 var kmap = new CoolKeyMap();
+var kmapKeys = [];
 kmap.SetDefault("Disabled");
 var channelPanelHeadderHtmlTemplate = $("#channelPanelHeadder").html();
 var channelPanelHeadderTemplate = Handlebars.compile(channelPanelHeadderHtmlTemplate);
@@ -360,28 +361,26 @@ function InitChannelMixer(data) {
   
   var lkeydiv = $("#linkDropdowns").html("<strong>Links</strong>");
   var nkeydiv = $("#nodeDropdowns").html("<strong>Nodes</strong>");
-  var attrs = [];
+  
   for (var key in data.node_keys) {
-    attrs.push(data.node_keys[key]);
+    var drop = GetChannelDropdown(selected_method.nodeChannels, data.node_keys[key], "node");
     $('<div>', { 'class': 'methodParam text-right', 'id': "node_"+data.node_keys[key]+"_dropdowns"  }).html(data.node_keys[key] + " - ")
-      .append(GetChannelDropdown(selected_method.nodeChannels, data.node_keys[key], "node")).appendTo(nkeydiv);
+      .append(drop).appendTo(nkeydiv);
   }
   for (var key in data.link_keys) {
-    attrs.push(data.link_keys[key]);
     $('<div>', { 'class': 'methodParam text-right', 'id': "link_"+data.link_keys[key]+"_dropdowns" }).html(data.link_keys[key] + " - ")
       .append(GetChannelDropdown(selected_method.linkChannels, data.link_keys[key], "link")).appendTo(lkeydiv);
   }
-  kmap.SetKeys(attrs);
+
   // Init dropdowns
   $('.selectpicker').selectpicker();
 }
 
-
+var uniq = 0;
 // creates and returns a <select> div with all channel options as <option>'s
 function GetChannelDropdown(channels, attribute, atype, removeBtn) {
+  uniq++;
   if (removeBtn === undefined) { removeBtn = false; }
- // if (x === undefined) { x = 0; }
- //  x = $("[id$=_dropdownContainer][id^="+atype+"_"+attribute+"_]").length;
   var str = "<option>Disabled</option>";
   for (var i in channels) {
     if (channels[i].filter !== undefined && !channels[i].filter.bind(selected_method)()) {
@@ -389,84 +388,75 @@ function GetChannelDropdown(channels, attribute, atype, removeBtn) {
     }
     str += "<option value='" + channels[i].name + "'>" + channels[i].name + "</option>";
   }
-  //
-  var divA = $('<div>', { 'style': 'display:inline;', 'id': atype + "_" + attribute + "_dropdownContainer" });
-  var divB = $('<select>', { 'class': 'selectpicker', 'data-width': '50%', 'id': atype + "_" + attribute + "_dropdown" }).html(str);
-  divB.on('change', function () { ChannelChange(atype, attribute, divB.val(),divA); });
+  var divA = $('<div>', { 'style': 'display:inline;', 'id': atype + "_" + attribute + "_" + uniq + "_dropdownContainer" });
+  var divB = $('<select>', { 'class': 'selectpicker', 'data-width': '50%', 'id': atype + "_" + attribute + "_" + uniq + "_dropdown" }).html(str);
+  divB.on('change', (function () { var suniq = uniq; return function () { ChannelChange(atype, attribute + "_" + suniq, divB.val()) } })());
   var divC;
   if (removeBtn) {
-    divC = $('<button>', { 'class': 'btn btn-default', 'id': atype + "_" + attribute + "_minus" }).html('<span class="glyphicon glyphicon-minus"></span>');
-    divC.on('click', function () { divA.remove(); });
+    divC = $('<button>', { 'class': 'btn btn-default', 'id': atype + "_" + attribute + "_" + uniq + "_minus" }).html('<span class="glyphicon glyphicon-minus"></span>');
+    divC.on('click',(function () { var suniq = uniq; return function () { ChannelChange(atype, attribute + "_" + suniq, "Disabled"); kmap.RemoveKey(attribute + "_" + suniq); divA.remove(); } })());
   } else {
-   
-    divC = $('<button>', { 'class': 'btn btn-default', 'id': atype + "_" + attribute + "_plus" }).html('<span class="glyphicon glyphicon-plus"></span>');
+    divC = $('<button>', { 'class': 'btn btn-default', 'id': atype + "_" + attribute + "_" + uniq + "_plus" }).html('<span class="glyphicon glyphicon-plus"></span>');
     divC.on('click', function () {
-      $("#"+atype+"_"+attribute+"_dropdowns").append(GetChannelDropdown(selected_method.linkChannels, attribute, atype, true));
+      $("#" + atype + "_" + attribute + "_dropdowns").append(GetChannelDropdown((atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels), attribute, atype, true));
       $('.selectpicker').selectpicker();
     });
   }
-
   divA.append(divB);
   divA.append(divC);
+  kmap.AddKey(attribute + "_" + uniq);
   return divA;
 }
 
-function checkOptionalChannels(channels,atype) {
+function checkOptionalChannels(channels, atype) {
   for (var i in channels) {
     var channel = channels[i];
     if (channel.filter !== undefined) {
-      var dropdowns = $("[id$=_dropdown][id^="+atype+"_]");
+      var dropdowns = $("[id$=_dropdown][id^=" + atype + "_]");
       var instances = dropdowns.find('[value="' + channel.name + '"]');
       if (!channel.filter.bind(selected_method)()) {
         if (instances.length != 0) {
           console.log("Removing channel from dropdown: ", channel.name);
-          //check to see if in use
-          if (channel.inUse == true) {
-            //Yes, change dropdown of assigned attribute to disabled
-            $("#" + atype + "_" + channel.dataParam + "_dropdown").selectpicker('val', "Disabled");
-            //unnasign current attribute
-            ChannelChange(atype, channel.dataParam, "Disabled");
-          }
-          //remove
-          var q = kmap.values.slice(0);
-          RemoveFromArray(q, channel.name);
-          kmap.UpdateValues(q);
-          instances.remove();
-          dropdowns.selectpicker('refresh');
+          // Will set any dropdown cuurently to this, to disabled
+          kmap.RemoveValue(channel.name);
         }
       } else if (instances.length == 0) {
         console.log("Adding channel to dropdown: ", channel.name);
         //add if not added
         dropdowns.append("<option value='" + channel.name + "'>" + channel.name + "</option>");
         dropdowns.selectpicker('refresh');
-        var qa = kmap.values.slice(0);
-        qa.push(channel.name);
-        kmap.UpdateValues(qa);
+        kmap.AddValue(channel.name);
       }
     }
   }
 }
 
+
+function DropdownNameToAttributeName(str){
+  return str.slice(0,str.lastIndexOf("_"));
+};
+
 //reads selected channels from the method and set UI accordingly
 //TODO Test this for bugs.
+
 function Readchannels() {
   //wipe dropdowns
   $("[id$=_dropdown]").selectpicker('val', "Disabled");
   for (var i = 0; i < selected_method.nodeChannels.length; i++) {
-    var channel = selected_method.nodeChannels[i];
-    if (channel.inUse) {
-      var dd = $("#node_" + channel.dataParam + "_dropdown");
+    var nchannel = selected_method.nodeChannels[i];
+    if (nchannel.inUse) {
+      var dd = $("#node_" + nchannel.dataParam + "_dropdown");
       if (dd.length == 1) {
-        dd.selectpicker('val', channel.name);
+        dd.selectpicker('val', nchannel.name);
       }
     }
   }
   for (var i = 0; i < selected_method.linkChannels.length; i++) {
-    var channel = selected_method.linkChannels[i];
-    if (channel.inUse) {
-      var dd = $("#link_" + channel.dataParam + "_dropdown");
+    var lchannel = selected_method.linkChannels[i];
+    if (lchannel.inUse) {
+      var dd = $("#link_" + lchannel.dataParam + "_dropdown");
       if (dd.length == 1) {
-        dd.selectpicker('val', channel.name);
+        dd.selectpicker('val', lchannel.name);
       }
     }
   }
@@ -474,8 +464,9 @@ function Readchannels() {
 }
 
 function Assign(attribute, oldchannelname, newchannelname) {
+  var realAttribute = DropdownNameToAttributeName(attribute);
+  console.log("Assign() attribute: %o, realAttribute:%o, oldchannelname: %o, newchannelname: %o", attribute,realAttribute, oldchannelname, newchannelname);
   //disable old channel
- 
   if (oldchannelname !== "Disabled") {
     var oldchannel = selected_method.nodeChannels.filter(function (obj) {
       return obj.name == oldchannelname;
@@ -487,12 +478,14 @@ function Assign(attribute, oldchannelname, newchannelname) {
     }
     if (oldchannel.length == 0) {
       console.warn("Can't find old channel", oldchannelname);
+      console.trace();
     } else {
+      //console.log("Assign() setting channel dataParam to: Disabled ");
       oldchannel[0].dataParam = "";
       oldchannel[0].inUse = false;
     }
   }
-  //enalbe new channel
+  //enable new channel
   if (newchannelname !== "Disabled") {
     var newchannel = selected_method.nodeChannels.filter(function (obj) {
       return obj.name == newchannelname;
@@ -505,18 +498,20 @@ function Assign(attribute, oldchannelname, newchannelname) {
     if (newchannel.length == 0) {
       console.warn("Can't find new channel", newchannelname);
     } else {
-      newchannel[0].dataParam = attribute;
+      //console.log("Assign() setting channel dataParam to: %o ", realAttribute);
+      newchannel[0].dataParam = realAttribute;
       newchannel[0].inUse = true;
     }
   }
- // console.warn("set %o, to %o",attribute, newchannelname);
+ // console.log("Assign() setting dropdown to: %o ", newchannelname);
   $("[id$='_" + attribute + "_dropdown']").selectpicker('val', newchannelname);
 }
+
 kmap.SetAssignmentBehaviour(Assign);
 
 // Handles changing of channels, called when any dropdown selector changes
 function ChannelChange(atype, attribute, newChannel) {
-  //console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
+  console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
   kmap.Pair(attribute, newChannel);
   checkOptionalChannels(selected_method.nodeChannels, "node");
   checkOptionalChannels(selected_method.linkChannels, "link");
@@ -534,53 +529,7 @@ function ChannelChange(atype, attribute, newChannel) {
     channel = channel[0];
     selected_method.ChannelChanged(channel);
   }
-  return;/*
-  //find the channel that we were previously assigned to and set to Null
-  var oldchannel = (atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels).filter(function (obj) {
-    return obj.dataParam == attribute;
-  });
-  for (var j = 0; j < oldchannel.length; j++) {
-    var oc = oldchannel[j];
-    if(oc.name == newChannel){
-      console.warn(newChannel);
-    }
-    oc.dataParam = "";
-    oc.inUse = false;
-    selected_method.ChannelChanged(oc);
-  }
-
-  //Assign to new channel
-  if (newChannel != "Disabled") {    
-    
-    //is this channel already in use?
-    if (channel.inUse == true) {
-      console.log("channel already in use by attribute: " + channel.dataParam);
-      var ob = $("#" + atype + "_" + channel.dataParam + "_dropdown");
-      var len = ob.length;
-      //search every dropdown for this attribute
-      console.log(ob);
-      for (var k = 0; k < len; k++) {
-        var element = ob.eq(k);
-        if (element.val() == channel.name) {
-          console.log(element.val(),channel.name);
-          console.log("found it");
-          //found it
-          element.selectpicker('val', "Disabled");
-          //unnasign current attribute
-          ChannelChange(atype, channel.dataParam, "Disabled");
-        }
-      }
-      //Yes, change dropdown of assigned attribute to disabled
-      //  $("#" + atype + "_" + channel.dataParam + "_dropdown").selectpicker('val', "Disabled");
-      
-    }
-    //Add attritubute to the channel
-    channel.dataParam = attribute;
-    channel.inUse = true;
-    selected_method.ChannelChanged(channel);
-  }
-  checkOptionalChannels(selected_method.nodeChannels,"node");
-  checkOptionalChannels(selected_method.linkChannels,"link");*/
+  return;
 }
 
 //######################################################################

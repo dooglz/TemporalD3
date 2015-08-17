@@ -204,6 +204,7 @@ Base_Method.prototype.ChannelChanged = function (channel, ctype) {
   //console.log("method: ChannelChanged: " + channel);
   if (channel === undefined) {
     //We don't know which Channel Changed, could be more than one. Poll all of them.
+    console.log("B_Method: channel changed, Reprocessing all cahnnels");
     this.RedoNodes();
     this.RedoLinks();
     return;
@@ -211,7 +212,7 @@ Base_Method.prototype.ChannelChanged = function (channel, ctype) {
   if (channel.func !== undefined) {
     channel.func.bind(this)(channel.dataParam);
   }
-  console.log("method: Channel: %o is now assigned to: %o", channel.name, channel.dataParam);
+  console.log("B_Method: Channel: %o is now assigned to: %o", channel.name, channel.dataParam);
   if (ctype === undefined || !(ctype == "node" || ctype == "link")) {
     if ($.inArray(channel, this.nodeChannels) != -1) {
       ctype = "node";
