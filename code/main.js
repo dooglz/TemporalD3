@@ -294,8 +294,7 @@ function ChangeData(dataName) {
       }else{
         $(":contains('Data Settings')","#settingspicker").remove();
       }
-      $("#settingspicker").selectpicker('refresh');
-       //$("#settingspicker").selectpicker('val','');
+     UpdateSettingsPicker();
       return;
     }
   }
@@ -909,7 +908,7 @@ $('#dataloadbtn').click(function () {
 //######################################################################
 //########    Settings Save/load
 //######################################################################
-var stockSettings = [{ name: "Blank", url: "settings/blank.json" }];
+var stockSettings = [{url: "settings/blank.json" }];
 var loadedSettings = [];
 
 for (i = 0; i < stockSettings.length; i++) {
@@ -931,7 +930,9 @@ function UpdateSettingsPicker(){
       $("#settingspicker").append("<option>" + loadedSettings[i].name + "</option>");
     }
   }
+  
   $("#settingspicker").selectpicker('refresh');
+ $("#settingspicker").selectpicker('val','');
 }
 
 $('#saveSettingsbtn').click(SaveSettings);
