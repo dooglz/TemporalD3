@@ -450,66 +450,49 @@ function DropdownNameToAttributeName(str){
 
 //reads selected channels from the method and set UI accordingly
 function Readchannels() {
-  var ddc;
-  var dds;
-  var ddp;
-  var done;
-  var dropdown;
   //wipe dropdowns
   $("[id$=_dropdown]").selectpicker('val', "Disabled");
   //todo remove multidropdowns
   kmap.WipePairsNoAssign();
+  
   for (var i = 0; i < selected_method.nodeChannels.length; i++) {
     var nchannel = selected_method.nodeChannels[i];
     if (nchannel.inUse) {
-      //find the dropdown for this
-      ddc = $("#node_" + nchannel.dataParam + "_dropdowns");
-      dds = $("[id$=_dropdown]",ddc);
-      for (var j = 0; j < $("[id$=_dropdown]",ddc).length; j++) {
-        dropdown = $("[id$=_dropdown]",ddc).eq(j);
-       // console.log("Trying to load in node channel: %o, to attribute %o",nchannel.name,nchannel.dataParam);
-       // console.log("lookign at %o, %o, value: %o",dropdown,dropdown.val(),dropdown.attr('id'));
-        if(dropdown.val() == "Disabled"){
-          ChannelChange("node",dropdown.attr('id').slice(5,-9),nchannel.name);
-          done = true;
-          break;
-        }
-        if(j == $("[id$=_dropdown]",ddc).length - 1){
-          ddp = $("[id$=_plus]",ddc);
-          ddp.click();
-        }
-      }
-      if (!done) {
-        console.error("Loading in multi dropdown not supported yet :(");
-      }
+       SetChannel("node",nchannel.dataParam,nchannel.name);
     }
   }
   for (var i = 0; i < selected_method.linkChannels.length; i++) {
     var lchannel = selected_method.linkChannels[i];
     if (lchannel.inUse) {
-      ddc = $("#link_" + lchannel.dataParam + "_dropdowns");
-      dds = $("[id$=_dropdown]",ddc);
-      done = false;
-      for (var j = 0; j <  $("[id$=_dropdown]",ddc).length; j++) {
-        dropdown =  $("[id$=_dropdown]",ddc).eq(j);
-       // console.log("Trying to load in link channel: %o, to attribute %o",lchannel.name,lchannel.dataParam);
-        //console.log("lookign at %o, %o, value: %o",dropdown,dropdown.val(),dropdown.attr('id'));
-        if(dropdown.val() == "Disabled" || lchannel.name){
-          ChannelChange("link",dropdown.attr('id').slice(5,-9),lchannel.name);
-          done = true;
-          break;
-        }
-        if(j ==  $("[id$=_dropdown]",ddc).length - 1){
-          ddp = $("[id$=_plus]",ddc);
-          ddp.click();
-        }
-      }
-      if (!done) {
-        console.error("Loading in multi dropdown not supported yet :(");
-      }
+      SetChannel("link",lchannel.dataParam,lchannel.name);
     }
   }
   //selected_method.ChannelChanged();
+}
+
+//Takes an attribute and a channel, 
+// finds an appropriate dropdown, assigns it, calls ChannelChange.
+function SetChannel(atype, attribute, channelname) {
+  var ddc = $("#" + atype + "_" + attribute + "_dropdowns");
+  var done = false;
+  for (var j = 0; j < $("[id$=_dropdown]", ddc).length; j++) {
+    var dropdown = $("[id$=_dropdown]", ddc).eq(j);
+    console.log("SetChannel: %o, to attribute %o", channelname,attribute);
+    //console.log("lookign at %o, %o, value: %o",dropdown,dropdown.val(),dropdown.attr('id'));
+    if (dropdown.val() == "Disabled" || dropdown.val() == attribute) {
+      var shortSpecificName =  dropdown.attr('id').slice(5, -9);
+      console.log("SetChannel: %o, to attribute %o, dropdown: %o",channelname,attribute,shortSpecificName);
+      ChannelChange(atype,shortSpecificName, channelname);
+      done = true;
+      break;
+    }
+    if (j == $("[id$=_dropdown]", ddc).length - 1) {
+      $("[id$=_plus]", ddc).click();
+    }
+  }
+  if (!done) {
+    console.error("Loading in multi dropdown not supported yet :(");
+  }
 }
 
 function Assign(attribute, oldchannelname, newchannelname) {
@@ -913,6 +896,55 @@ $('#dataloadbtn').click(function () {
 });
 
 //######################################################################
+$('#saveSettingsbtn').click(SaveSettings);
+
+function SaveSettings() {
+  console.log("saving settings");
+  var out = {};
+  //Interface settings
+  out.interface = {};
+  out.interface.testMode = false;
+  out.interface.displayMode = $("#dspmodepicker").val();
+  out.interface.colourTheme = $("#colschmepicker").val();
+ 
+  //Slider Settings
+  out.slider = {};
+  out.slider.visible = true;
+  out.slider.enabled = true;
+  out.slider.position = 2;
+ 
+  //Controll Settings
+  out.control = {};
+  out.control.method = (selected_method === undefined ? null :selected_method.name);
+  out.control.data = (graphdata === undefined ? null :graphdata.displayName);
+  out.control.dateRange = false;
+  out.control.animatedSlider = false;
+  out.control.fullscreen = isFullscreen;
+ 
+  //Method parameters 
+  if (selected_method !== undefined && selected_method !== null) {
+    out.method ={};
+    out.method.nodeChannels = [];
+    selected_method.nodeChannels.forEach(function (c) {
+      if (c.inUse) {
+        out.method.nodeChannels.push({ name: c.name, inUse: true, dataParam: c.dataParam });
+      } else {
+        out.method.nodeChannels.push({ name: c.name, inUse: false });
+      }
+    }, this);
+        out.method.linkChannels = [];
+    selected_method.linkChannels.forEach(function (c) {
+      if (c.inUse) {
+        out.method.linkChannels.push({ name: c.name, inUse: true, dataParam: c.dataParam });
+      } else {
+        out.method.linkChannels.push({ name: c.name, inUse: false });
+      }
+    }, this);
+  }
+  console.log(JSON.stringify(out));
+}
+
+//######################################################################
 //########    DisplayMode
 //######################################################################
 
@@ -968,12 +1000,14 @@ function SetDisplayMode(mode) {
 //######################################################################
 //########    Junk
 //######################################################################
-
+var isFullscreen = false;
 $('#fullscreentoggle').change(function () {
   var val = $(this).prop('checked');
   if (val) {
+    isFullscreen = true;
     $('.container.superwide').css("max-width","90%");
   } else {
+    isFullscreen = false;
     $('.container.superwide').css("max-width","1094px");
   }
   resize();
