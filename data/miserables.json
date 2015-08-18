@@ -1,4 +1,34 @@
 {
+  "settings":{
+    "name":"Miserables Settings",
+    "interface":{
+      "testMode":false,"displayMode":"Split","colourTheme":"Default"
+      },
+    "slider":{
+      "visible":true,"enabled":true,"position":2
+      },
+    "control":{
+      "method":"simple","dateRange":false,"animatedSlider":false
+      },
+    "method":{
+      "nodeChannels":[
+        {"name":"Gravity Point","inUse":false},
+        {"name":"Node Colour LA","inUse":true,"dataParam":"name"},
+        {"name":"Node Colour LB","inUse":false},
+        {"name":"Node Colour RA","inUse":true,"dataParam":"name"},
+        {"name":"Node Colour RB","inUse":false},
+        {"name":"Node Size LA","inUse":false},
+        {"name":"Node Size LB","inUse":false},
+        {"name":"Node Size RA","inUse":false},
+        {"name":"Node Size RB","inUse":false}
+      ],
+    "linkChannels":[
+        {"name":"Link Colour","inUse":false},
+        {"name":"Link Length","inUse":false},
+        {"name":"Link Width","inUse":true,"dataParam":"value"}
+      ]
+    }
+  },
   "nodes": [
     {"name": "Myriel", "group": 1},
     {"name": "Napoleon", "group": 1},

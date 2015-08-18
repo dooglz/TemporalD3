@@ -285,6 +285,17 @@ function ChangeData(dataName) {
       }
       slided();
       Update();
+      if(Exists(graphdata.settings)){
+        //console.info("Loading settings from Data");
+        //LoadSettings(selected_method.settings);
+        if( $("#settingspicker").find(":contains('Data Settings')" ).length == 0){
+          $("#settingspicker").append("<option>Data Settings</option>");
+        }
+      }else{
+        $(":contains('Data Settings')","#settingspicker").remove();
+      }
+      $("#settingspicker").selectpicker('refresh');
+       //$("#settingspicker").selectpicker('val','');
       return;
     }
   }
@@ -896,11 +907,39 @@ $('#dataloadbtn').click(function () {
 });
 
 //######################################################################
-$('#saveSettingsbtn').click(SaveSettings);
+//########    Settings Save/load
+//######################################################################
+var stockSettings = [{ name: "Blank", url: "settings/blank.json" }];
+var loadedSettings = [];
 
+for (i = 0; i < stockSettings.length; i++) {
+  var s = stockSettings[i];
+  d3.json(s.url, function (error, newData) {
+    if (error) {
+      console.error(error);
+    } else {
+      loadedSettings.push(newData);
+      UpdateSettingsPicker();
+    }
+  });
+}
+  
+
+function UpdateSettingsPicker(){
+  for (i = 0; i < loadedSettings.length; i++) {
+    if( $("#settingspicker").find(":contains('"+loadedSettings[i].name+"')" ).length == 0){
+      $("#settingspicker").append("<option>" + loadedSettings[i].name + "</option>");
+    }
+  }
+  $("#settingspicker").selectpicker('refresh');
+}
+
+$('#saveSettingsbtn').click(SaveSettings);
+var saveout;
 function SaveSettings() {
   console.log("saving settings");
   var out = {};
+  out.name = "output"+loadedSettings.length;
   //Interface settings
   out.interface = {};
   out.interface.testMode = false;
@@ -915,8 +954,8 @@ function SaveSettings() {
  
   //Controll Settings
   out.control = {};
-  out.control.method = (selected_method === undefined ? null :selected_method.name);
-  out.control.data = (graphdata === undefined ? null :graphdata.displayName);
+  out.control.method = (Exists(selected_method) ? null :selected_method.name);
+  out.control.data = (Exists(graphdata) ? null :graphdata.displayName);
   out.control.dateRange = false;
   out.control.animatedSlider = false;
   out.control.fullscreen = isFullscreen;
@@ -942,6 +981,52 @@ function SaveSettings() {
     }, this);
   }
   console.log(JSON.stringify(out));
+  saveout = out;
+  loadedSettings.push(out);
+  UpdateSettingsPicker();
+}
+
+$("#settingspicker").on('change', function () {
+  LoadSettings($("#settingspicker").val());
+});
+function LoadSettings(s) {
+  if(typeof(s) == "string"){
+    if(s == "Data Settings"){
+      s = graphdata.settings;
+    }else{
+    for (var i = 0; i < loadedSettings.length; i++) {
+      if(loadedSettings[i].name == s){
+        s = loadedSettings[i];
+        break;
+      }
+    }}
+  }
+  console.log("Load Settings, %o",s);
+  //Load interface
+  if (Exists(s.interface)) {
+    if (Exists(s.interface.testMode)) { }
+    if (Exists(s.interface.displayMode)) {SetDisplayMode(s.interface.displayMode); }
+    if (Exists(s.interface.colourTheme)) { selected_method.SetColorTheme(s.interface.colourTheme);}
+  }
+  //control
+  if (Exists(s.control)) {
+    if (Exists(s.control.method)) { }
+    if (Exists(s.control.data)) { }
+    if (Exists(s.control.dateRange)) { }
+    if (Exists(s.control.animatedSlider)) { }
+    if (Exists(s.control.fullscreen)) { }
+  }
+  //slider
+  if (Exists(s.slider)) {
+    if (Exists(s.slider.visible)) { }
+    if (Exists(s.slider.enabled)) { }
+    if (Exists(s.slider.position)) { }
+  }
+  //Method
+  if (Exists(s.method)) {
+    if (Exists(s.method.nodeChannels) && s.method.nodeChannels.length>0) { }
+    if (Exists(s.method.linkChannels) && s.method.linkChannels.length>0) { }
+  }
 }
 
 //######################################################################
@@ -949,22 +1034,25 @@ function SaveSettings() {
 //######################################################################
 
 $("#dspmodepicker").on('change', function () {
-  var v = $("#dspmodepicker").val();
-  console.log(v);
-  if(v == "Split"){
-   SetDisplayMode(2);
-  }else if(v =="Single"){
-    SetDisplayMode(1);
-  }else{
-    SetDisplayMode(0);
-  }
+  SetDisplayMode($("#dspmodepicker").val());
 });
 
 var chartBoxLeft = $("#chartBoxLeft");
 var chartBoxRight = $("#chartBoxRight");
+
 SetDisplayMode(2);
 var displayMode;
+
 function SetDisplayMode(mode) {
+  if (typeof (mode) == "string") {
+    if (mode == "Split") {
+      mode = 2;
+    } else if (mode == "Single") {
+      mode = 1;
+    } else {
+      mode = 0;
+    }
+  }
   if (displayMode === mode) { return; }
   switch (mode) {
     case 0:
@@ -1021,3 +1109,6 @@ function IsJson(str) {
     }
     return true;
 };
+function Exists(i){
+  return (i !== undefined && i !== null);
+}
