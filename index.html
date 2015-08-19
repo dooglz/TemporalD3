@@ -235,8 +235,44 @@
           <div id="infoModalContent" style="width:100%;">
             Welcome
             <hr>
+            <form>
+              <div class="form-group">
+                <label for="testInputName">Name</label>
+                <input type="text" class="form-control" id="testInputName" placeholder="Name">
+              </div>
+              <div class="form-group">
+              <label for="testInput1">Input 1</label>
+              <input type="text" class="form-control" id="testInput1">
+              </div>
+              <div class="form-group">
+              <label for="testInput2">Input 2</label>
+              <input type="text" class="form-control" id="testInput2">
+              </div>
+              <div class="form-group">
+                <label for="expModeToggle">Experiment Mode: </label>
+                <input id="expModeToggle" type="checkbox" data-toggle="toggle" data-width="150" data-size="normal" data-onstyle="info" data-on="Experiment" data-off="Single Test">
+              </div>
+              <div class="form-group" id="testSelectorDiv">
+                <label for="testSelector">Select a Test</label><br>
+                <select class="selectpicker" id="testSelector">
+                  <option>Mustard</option>
+                  <option>Ketchup</option>
+                  <option>Barbecue</option>
+                </select>
+              </div>
+              <div class="form-group" id="expSelectorDiv">
+                <label for="expSelector">Select an Experiment</label><br>
+                <select class="selectpicker" id="expSelector">
+                  <option>Mustard</option>
+                  <option>Ketchup</option>
+                  <option>Barbecue</option>
+                </select>
+              </div>
+              <div id="infomodalError" class="danger"></div>
+            </form>
+            <hr>
             <a class='btn btn-danger' href='#' role='button' id="modalTestQuitBtn">Quit</a>
-            <a class='btn btn-success' href='#' role='button' id="modalTestStartBtn" disabled>Start</a>
+            <a class='btn btn-success' href='#' role='button' id="modalTestStartBtn">Start</a>
           </div>
         </div>
       </div>

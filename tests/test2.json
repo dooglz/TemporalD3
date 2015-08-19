@@ -1,0 +1,34 @@
+{
+    "name":"Test2",
+	"questionText":" Hello world 2",
+	"settings":{
+		"name":"Test1Settings",
+		"interface":{
+		  "testMode":false,"displayMode":"Single","colourTheme":"Default"
+		  },
+		"slider":{
+		  "visible":true,"enabled":true,"position":5
+		  },
+		"control":{
+		  "method":"simple","data":"Les Miserables","dateRange":false,"animatedSlider":false
+		  },
+		"method":{
+		  "nodeChannels":[
+			{"name":"Gravity Point","inUse":false},
+			{"name":"Node Colour LA","inUse":false},
+			{"name":"Node Colour LB","inUse":false},
+			{"name":"Node Colour RA","inUse":false},
+			{"name":"Node Colour RB","inUse":false},
+			{"name":"Node Size LA","inUse":false},
+			{"name":"Node Size LB","inUse":false},
+			{"name":"Node Size RA","inUse":false},
+			{"name":"Node Size RB","inUse":false}
+		  ],
+		"linkChannels":[
+			{"name":"Link Colour","inUse":false},
+			{"name":"Link Length","inUse":false},
+			{"name":"Link Width","inUse":false}
+		  ]
+		}
+	}
+}

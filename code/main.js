@@ -1176,9 +1176,82 @@ function Exists(i){
 //######################################################################
 //########   Testing
 //######################################################################
+var stockTests = ["tests/test1.json", "tests/test2.json"];
+var loadedTests = [];
+var stockExperiments = ["experiments/exp1.json", "experiments/exp2.json"];
+var loadedExperiments = [];
+var selectedTest;
+var selectedExperiment;
+var expMode = false;
+
 $('#startTestbtn').click(EnterTestMode);
 $('#modalTestQuitBtn').click(ExitTestMode);
+$("#expSelectorDiv").hide();
+$('#modalTestStartBtn').click(CheckforStart);
 
+$('#expModeToggle').change(function() {
+  if($(this).prop('checked')){
+    expMode = true;
+    selectedTest = undefined;
+    $("#testSelectorDiv").hide();
+    $("#expSelectorDiv").show();
+  }else{
+    expMode = false;
+    selectedExperiment = undefined;
+    $("#testSelectorDiv").show();
+    $("#expSelectorDiv").hide();
+  }
+});
+
+$("#testSelector").on('change', function () {
+  selectedTest = $(this).val();
+  LoadTest(selectedTest);
+});
+$("#expSelector").on('change', function () {
+  selectedExperiment = $(this).val();
+  LoadTest(GetNextTest(selectedExperiment));
+});
+
+//load stock tests and experiments
+for (var i = 0; i < stockTests.length; i++) {
+  d3.json(stockTests[i], function (error, newData) {
+    if (error) {
+      console.error(error);
+    } else {
+      loadedTests.push(newData);
+      UpdateTestSelector();
+    }
+  });
+}
+
+function UpdateTestSelector() {
+  //remove all
+  $("#testSelector").empty();
+  for (i = 0; i < loadedTests.length; i++) {
+    $("#testSelector").append("<option>" + loadedTests[i].name + "</option>");
+  }
+  $("#testSelector").selectpicker('refresh');
+  $("#testSelector").selectpicker('val', '');
+}
+for (var i = 0; i < stockExperiments.length; i++) {
+  d3.json(stockExperiments[i], function (error, newData) {
+    if (error) {
+      console.error(error);
+    } else {
+      loadedExperiments.push(newData);
+      UpdateExpSelector();
+    }
+  });
+}
+function UpdateExpSelector() {
+  //remove all
+  $("#expSelector").empty();
+  for (i = 0; i < loadedExperiments.length; i++) {
+    $("#expSelector").append("<option>" + loadedExperiments[i].name + "</option>");
+  }
+  $("#expSelector").selectpicker('refresh');
+  $("#expSelector").selectpicker('val', '');
+}
 var inTestMode = false;
 
 function ExitTestMode() {
@@ -1203,3 +1276,33 @@ function EnterTestMode() {
   //
   $("#infoModal").modal({keyboard: false,backdrop: "static"});
 };
+
+function CheckforStart(){
+  $("#infomodalError").html("");
+  if($("#testInputName").val() == ""){
+     $("#infomodalError").html("Please enter a name");
+    return;
+  }
+  if(expMode && selectedExperiment == undefined){
+     $("#infomodalError").html("Please select an experiment");
+    return;
+  }
+  if(!expMode && selectedTest == undefined){
+     $("#infomodalError").html("Please select a Test");
+    return;
+  }
+  if(!testLoaded){
+     $("#infomodalError").html("Test Loading...");
+    return;
+  }
+}
+
+function GetNextTest(exp){
+  return exp.order[1];
+}
+
+var testLoaded = false;
+function LoadTest(t){
+  testLoaded = true;
+  CheckforStart();
+}
