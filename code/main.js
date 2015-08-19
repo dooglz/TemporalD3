@@ -453,10 +453,27 @@ function checkOptionalChannels(channels, atype) {
   }
 }
 
-
 function DropdownNameToAttributeName(str){
   return str.slice(0,str.lastIndexOf("_"));
 };
+
+function Wipechannels() {
+  //wipe dropdowns
+  $("[id$=_dropdown]").selectpicker('val', "Disabled");
+  //todo remove multidropdowns
+  kmap.WipePairsNoAssign();
+    for (var i = 0; i < selected_method.nodeChannels.length; i++) {
+    var nchannel = selected_method.nodeChannels[i];
+    nchannel.inUse = false;
+    nchannel.dataParam = "";
+  }
+  for (var i = 0; i < selected_method.linkChannels.length; i++) {
+    var lchannel = selected_method.linkChannels[i];
+    lchannel.inUse = false;
+    lchannel.dataParam = "";
+  }
+  selected_method.ChannelChanged();
+}
 
 //reads selected channels from the method and set UI accordingly
 function Readchannels() {
@@ -668,85 +685,90 @@ function changeMethod(methodName) {
   $("#colschmepicker").selectpicker('refresh');
   
   //verify parameters
-  if (!VerifyMethodParmeters(selected_method)) {
+  if (!selected_method.hasOwnProperty("parameters")) {
+    console.log("Method: %o has no parameters", selected_method);
     return;
   }
+  else if (!VerifyMethodParmeters(selected_method)) {
+    //return;
+  } else {
+    for (var i in selected_method.parameters) {
+      //toggle placement div
+      if (pdiv == pdiv1) {
+        pdiv = pdiv2;
+      } else {
+        pdiv = pdiv1;
+      }
+      var param = selected_method.parameters[i];
+      var newdiv = $("<div class='methodParam'/>");
+      switch (param.ptype) {
 
-  for (var i in selected_method.parameters) {
-    //toggle placement div
-    if (pdiv == pdiv1) {
-      pdiv = pdiv2;
-    } else {
-      pdiv = pdiv1;
+        case "slider":
+          newdiv.append("<p>" + param.name + "</p>");
+          var sliderDiv = $("<input id=" + param.name + " data-slider-id='ex1Slider' type='text' data-slider-min=" + param.minval + " data-slider-max=" + param.maxval + " data-slider-step=" + param.step + " data-slider-value=" + param.pval + " />");
+          newdiv.append(sliderDiv);
+          sliderDiv.slider();
+          //register calback using some legit hax
+          ! function outer(pp) {
+            sliderDiv.change('slide', function inner(e) {
+              pp.pval = e.value.newValue;
+              selected_method.ParamChanged(pp);
+            });
+          } (param);
+          break;
+
+        case "checkbox":
+          var boxDiv = $("<input  id=" + param.name + " type='checkbox' " + (param.pval ? "checked" : "") + " data-toggle='toggle' data-size='small'>");
+          newdiv.append(boxDiv).append("  " + param.name);
+          ! function outer(pp, bb) {
+            boxDiv.change(function inner() {
+              pp.pval = bb.is(":checked");
+              selected_method.ParamChanged(pp);
+            });
+          } (param, boxDiv);
+          boxDiv.bootstrapToggle();
+          break;
+
+        case "textbox":
+          newdiv.append("<p>" + param.name + "</p>");
+          var igroup = $("<div class='input-group'></div>");
+          var input = $("<input type='text class='form-control'>");
+          igroup.append(input);
+          var span = $("<span class=input-group-btn'/>");
+          var btn = $("<button class='btn btn-default btn-sm' type='button'>Go!</button>");
+          newdiv.append(igroup.append(span.append(btn)));
+          ! function outer(pp, bb) {
+            btn.click(function inner() {
+              pp.pval = bb.val();
+              selected_method.ParamChanged(pp);
+            });
+          } (param, input);
+          break;
+
+        case "button":
+          var boxDiv = $("<a class='btn btn-sm btn-success' href='#' role='button'>" + param.name + "</a>");
+          newdiv.append(boxDiv)
+          newdiv.css('text-align', 'center');
+          ! function outer(pp, bb) {
+            boxDiv.click(function inner() {
+              selected_method.ParamChanged(pp);
+            });
+          } (param, boxDiv);
+          break;
+
+        default:
+          console.error("Unkown method parameter type : " + param.name + " - " + param.ptype);
+          break;
+      }
+      pdiv.append(newdiv);
     }
-    var param = selected_method.parameters[i];
-    var newdiv = $("<div class='methodParam'/>");
-    switch (param.ptype) {
-
-      case "slider":
-        newdiv.append("<p>" + param.name + "</p>");
-        var sliderDiv = $("<input id=" + param.name + " data-slider-id='ex1Slider' type='text' data-slider-min=" + param.minval + " data-slider-max=" + param.maxval + " data-slider-step=" + param.step + " data-slider-value=" + param.pval + " />");
-        newdiv.append(sliderDiv);
-        sliderDiv.slider();
-        //register calback using some legit hax
-        ! function outer(pp) {
-          sliderDiv.change('slide', function inner(e) {
-            pp.pval = e.value.newValue;
-            selected_method.ParamChanged(pp);
-          });
-        } (param);
-        break;
-
-      case "checkbox":
-        var boxDiv = $("<input  id=" + param.name + " type='checkbox' " + (param.pval ? "checked" : "") + " data-toggle='toggle' data-size='small'>");
-        newdiv.append(boxDiv).append("  " + param.name);
-        ! function outer(pp, bb) {
-          boxDiv.change(function inner() {
-            pp.pval = bb.is(":checked");
-            selected_method.ParamChanged(pp);
-          });
-        } (param, boxDiv);
-        boxDiv.bootstrapToggle();
-        break;
-
-      case "textbox":
-        newdiv.append("<p>" + param.name + "</p>");
-        var igroup = $("<div class='input-group'></div>");
-        var input = $("<input type='text class='form-control'>");
-        igroup.append(input);
-        var span = $("<span class=input-group-btn'/>");
-        var btn = $("<button class='btn btn-default btn-sm' type='button'>Go!</button>");
-        newdiv.append(igroup.append(span.append(btn)));
-        ! function outer(pp, bb) {
-          btn.click(function inner() {
-            pp.pval = bb.val();
-            selected_method.ParamChanged(pp);
-          });
-        } (param, input);
-        break;
-        
-      case "button":
-        var boxDiv = $("<a class='btn btn-sm btn-success' href='#' role='button'>"+param.name+"</a>");
-        newdiv.append(boxDiv)
-        newdiv.css('text-align', 'center');
-        ! function outer(pp, bb) {
-          boxDiv.click(function inner() {
-            selected_method.ParamChanged(pp);
-          });
-        } (param, boxDiv);
-        break;
-        
-      default:
-        console.error("Unkown method parameter type : " + param.name + " - " + param.ptype);
-        break;
-    }
-    pdiv.append(newdiv);
   }
+  Wipechannels();
   pdiv.hide().show(0);
-  Readchannels();
+  //Readchannels();
   resize();
   selected_method.SetData(graphdata);
-  if(graphdata !== null){
+  if (graphdata !== null) {
     slided();
   }
   Update();
@@ -930,7 +952,6 @@ function UpdateSettingsPicker(){
       $("#settingspicker").append("<option>" + loadedSettings[i].name + "</option>");
     }
   }
-  
   $("#settingspicker").selectpicker('refresh');
  $("#settingspicker").selectpicker('val','');
 }

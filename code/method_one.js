@@ -10,6 +10,7 @@ Method_One.prototype.prev_currentDateMin;
 Method_One.prototype.prev_currentDateMax;
 Method_One.prototype.svg;
 Method_One.prototype.svgContainer;
+Method_One.prototype.svgContainerR;
 Method_One.prototype.svgTranslation;
 
 // Subticks are how many times the graph should tick inbetween page updates.
@@ -34,7 +35,7 @@ function Method_One() {
   this.name = "Method One";
   this.parameters = [
     { name: "Disable rest", ptype: "checkbox", pval: false },
-    { name: "Recalculate Layout", ptype: "button", pval: false, func: function () { this.Recalculate(); } },
+    { name: "Recalculate Layout", ptype: "button", pval: false, func: function () {console.log(this); this.Recalculate(); } },
     { name: "Cumulative Links", ptype: "checkbox", pval: true },
     { name: "Cumulative Nodes", ptype: "checkbox", pval: true },
     { name: "Global: Allow Settle", ptype: "checkbox", pval: false, func: function (val) { this.globalForceLayoutAllowSettle = val; } },
@@ -55,6 +56,14 @@ Method_One.prototype.Unload = function () {
   }
   this.svg = undefined;
   this.svgContainer = undefined;
+  
+  if (this.svgR != undefined) {
+    this.svgR.selectAll("*").remove();
+    this.svgR.remove();
+  }
+  this.svgR = undefined;
+  this.svgContainerR = undefined;
+  
   // this.svgTranslation = undefined;
   //this.GlobalLayoutPercentDone = undefined;
   //this.LocalLayoutPercentDone = undefined;
@@ -82,6 +91,7 @@ Method_One.prototype.SetData = function (d) {
   this.ClearVisData();
   this.NewVis();
 };
+
 Method_One.prototype.done = false;
 Method_One.prototype.Loading = function () {
   var gp = this.GlobalLayoutPercentDone;
@@ -98,7 +108,7 @@ Method_One.prototype.Loading = function () {
     this.CalculationDone();
   }
   // $('#progressContainer').hide().show(0);
-}
+};
 
 Method_One.prototype.Recalculate = function () {
   this.StopCalculation();
@@ -110,11 +120,11 @@ Method_One.prototype.Recalculate = function () {
     o.px = o.py = o.x = o.y = 0;
   });
   this.CaluclateGlobalLayout();
-}
+};
 
 Method_One.prototype.CalculationDone = function () {
   Method_One.prototype.done = true;
-}
+};
 
 Method_One.prototype.StopCalculation = function () {
   console.log("Calculation stopped");
@@ -142,7 +152,7 @@ Method_One.prototype.StopCalculation = function () {
       }
     });
   }
-}
+};
 
 //######################################################################
 //########    Global Layout
@@ -155,7 +165,7 @@ Method_One.prototype.GlobalLayoutDone = function () {
   }, this);
   console.log('Global layout Complete!');
   this.CaluclateLocalLayouts();
-}
+};
 
 var timeout = true;
 Method_One.prototype.CaluclateGlobalLayout = function () {
@@ -179,7 +189,7 @@ Method_One.prototype.CaluclateGlobalLayout = function () {
   this.globalForceLayoutStartTime = new Date();
   this.globalForceLayoutTickCount = 0;
   this.globalForceLayoutLoopTimeout = setInterval(this.CaluclateGlobalLayoutLoop.bind(this), 1);
-}
+};
 
 Method_One.prototype.CaluclateGlobalLayoutLoop = function () {
   var elapsedtime = (new Date() - this.globalForceLayoutStartTime);
@@ -204,7 +214,7 @@ Method_One.prototype.CaluclateGlobalLayoutLoop = function () {
     this.globalForceLayout.tick();
   }
   this.globalForceLayoutTickCount += this.globalForceLayoutMaxSubTicks;
-}
+};
 
 Method_One.prototype.StopGlobalLayoutLoop = function () {
   clearTimeout(this.globalForceLayoutLoopTimeout);
@@ -212,7 +222,7 @@ Method_One.prototype.StopGlobalLayoutLoop = function () {
   this.GlobalLayoutPercentDone = 100;
   this.globalForceLayout.stop();
   this.GlobalLayoutDone();
-}
+};
 
 Method_One.prototype.GlobalTick = function (e) {
   var channel = this.getNodeChannel("Gravity Point");
@@ -380,6 +390,7 @@ Method_One.prototype.SetDate = function (higher, lower) {
 Method_One.prototype.Update = function () {
   Base_Method.prototype.Update.call(this);
   if(this.showingGlobal){return;}
+  if(this.data === undefined){return;}
   var discreet = this.getDiscreetfromDate(this.currentDateMin, this.data.date_type);
   if (this.LocalLayouts !== undefined && this.LocalLayouts[discreet] !== undefined
     && this.LocalLayouts[discreet].filteredNodes !== undefined
@@ -400,26 +411,46 @@ Method_One.prototype.Update = function () {
 
 // The page has been resized or some other event that requires a redraw
 Method_One.prototype.Redraw = function (w, h) {
-
-  if (w !== undefined && h !== undefined) {
-    this.width = w;
-    this.height = h;
-    this.halfWidth = w * 0.5;
-    this.halfHeight = h * 0.5;
+ Base_Method.prototype.Redraw.call(this,w,h);
+  var zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", this.zoomed.bind(this));
+  var refresh = false;
+  if (displayMode == 2) {
+    if (this.svgR === undefined) {
+      this.svgR = d3.select("#chart2").append("svg");
+      refresh = true;
+    }
+    if (this.svgContainerR === undefined) {
+      this.svgContainerR = this.svgR.append("g");
+      refresh = true;
+    }
+    this.svgR.attr("width", this.width).attr("height", this.height).call(zoom);
+  } else {
+    if (this.svgR !== undefined) {
+      this.svgR.remove();
+      this.svgR = undefined;
+      this.svgContainerR = undefined;
+      refresh = true;
+    }
   }
-
+  
   if (this.svg === undefined) {
+    //todo do this for Right side
     this.svg = d3.select("#chart").append("svg");
+    refresh = true;
   }
   if (this.svgContainer === undefined) {
     this.svgContainer = this.svg.append("g");
+    refresh = true;
   }
-  var zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", this.zoomed.bind(this));
-  this.svg.attr("width", this.width)
-    .attr("height", this.height)
-    .call(zoom);
-  console.log("Redrawing");
+  this.allsvg = $("svg");
+  this.svg.attr("width", this.width).attr("height", this.height).call(zoom);
   this.SetupSVGFilters();
+  this.RedoNodes();
+  this.RedoLinks();
+  if(refresh){
+      this.NewVis();
+      this.Update();
+  }
 };
 
 Method_One.prototype.zoomed = function () {

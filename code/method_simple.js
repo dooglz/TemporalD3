@@ -10,6 +10,7 @@ Method_Simple.prototype.prev_currentDateMin;
 Method_Simple.prototype.prev_currentDateMax;
 Method_Simple.prototype.svg;
 Method_Simple.prototype.svgContainer;
+Method_Simple.prototype.svgContainerR;
 Method_Simple.prototype.svgTranslation;
 Method_Simple.prototype.forceLayout;
 
@@ -97,7 +98,7 @@ Method_Simple.prototype.Update = function () {
 Method_Simple.prototype.Redraw = function (w, h) {
   Base_Method.prototype.Redraw.call(this,w,h);
 
-  console.log("Redrawing");
+  //console.log("Redrawing");
   // force = customLayout()
   this.forceLayout = d3.layout.force()
     .gravity(.25)
