@@ -460,9 +460,8 @@ function DropdownNameToAttributeName(str){
 function Wipechannels() {
   //wipe dropdowns
   $("[id$=_dropdown]").selectpicker('val', "Disabled");
-  //todo remove multidropdowns
   kmap.WipePairsNoAssign();
-    for (var i = 0; i < selected_method.nodeChannels.length; i++) {
+  for (var i = 0; i < selected_method.nodeChannels.length; i++) {
     var nchannel = selected_method.nodeChannels[i];
     nchannel.inUse = false;
     nchannel.dataParam = "";
@@ -473,14 +472,17 @@ function Wipechannels() {
     lchannel.dataParam = "";
   }
   selected_method.ChannelChanged();
+  //remove multidropdowns
+  $("[id$=minus]").click();
 }
 
 //reads selected channels from the method and set UI accordingly
 function Readchannels() {
   //wipe dropdowns
   $("[id$=_dropdown]").selectpicker('val', "Disabled");
-  //todo remove multidropdowns
   kmap.WipePairsNoAssign();
+  //remove multidropdowns
+  $("[id$=minus]").click();
   
   for (var i = 0; i < selected_method.nodeChannels.length; i++) {
     var nchannel = selected_method.nodeChannels[i];
@@ -494,7 +496,7 @@ function Readchannels() {
       SetChannel("link",lchannel.dataParam,lchannel.name);
     }
   }
-  //selected_method.ChannelChanged();
+  selected_method.ChannelChanged();
 }
 
 //Takes an attribute and a channel, 
@@ -930,12 +932,11 @@ $('#dataloadbtn').click(function () {
 //######################################################################
 //########    Settings Save/load
 //######################################################################
-var stockSettings = [{url: "settings/blank.json" }];
+var stockSettings = ["settings/blank.json","settings/blankDark.json"];
 var loadedSettings = [];
 
 for (i = 0; i < stockSettings.length; i++) {
-  var s = stockSettings[i];
-  d3.json(s.url, function (error, newData) {
+  d3.json(stockSettings[i], function (error, newData) {
     if (error) {
       console.error(error);
     } else {
@@ -1028,15 +1029,15 @@ function LoadSettings(s) {
   if (Exists(s.interface)) {
     if (Exists(s.interface.testMode)) { }
     if (Exists(s.interface.displayMode)) {SetDisplayMode(s.interface.displayMode); }
-    if (Exists(s.interface.colourTheme)) { selected_method.SetColorTheme(s.interface.colourTheme);}
+    if (Exists(s.interface.colourTheme)) { selected_method.SetColorTheme(s.interface.colourTheme); }
   }
   //control
   if (Exists(s.control)) {
-    if (Exists(s.control.method)) { }
-    if (Exists(s.control.data)) { }
-    if (Exists(s.control.dateRange)) { }
-    if (Exists(s.control.animatedSlider)) { }
-    if (Exists(s.control.fullscreen)) { }
+    if (Exists(s.control.method)) { changeMethod(s.control.method); }
+    if (Exists(s.control.data)) { ChangeData(s.control.data); }
+    if (Exists(s.control.dateRange)) { $('#rangetoggle').bootstrapToggle(s.control.dateRange ? 'on' : 'off'); }
+    if (Exists(s.control.animatedSlider)) { $('#rangetoggle').bootstrapToggle(s.control.animatedSlider ? 'on' : 'off'); }
+    if (Exists(s.control.fullscreen)) { $('#rangetoggle').bootstrapToggle(s.control.fullscreen ? 'on' : 'off'); }
   }
   //slider
   if (Exists(s.slider)) {
@@ -1046,8 +1047,22 @@ function LoadSettings(s) {
   }
   //Method
   if (Exists(s.method)) {
-    if (Exists(s.method.nodeChannels) && s.method.nodeChannels.length>0) { }
-    if (Exists(s.method.linkChannels) && s.method.linkChannels.length>0) { }
+    if (Exists(s.method.nodeChannels) && s.method.nodeChannels.length > 0) {
+      for (var i = 0; i < s.method.nodeChannels.length; i++) {
+        var nc = s.method.nodeChannels[i];
+        if (nc.inUse) {
+          SetChannel("node", nc.dataParam, nc.name);
+        }
+      }
+    }
+    if (Exists(s.method.linkChannels) && s.method.linkChannels.length > 0) {
+      for (var i = 0; i < s.method.linkChannels.length; i++) {
+        var lc = s.method.linkChannels[i];
+        if (lc.inUse) {
+          SetChannel("link", lc.dataParam, lc.name);
+        }
+      }
+    }
   }
 }
 

@@ -1,0 +1,12 @@
+{
+    "name":"Blank Dark",
+    "interface":{
+      "testMode":false,"displayMode":"Split","colourTheme":"Dark"
+      },
+    "slider":{
+      "visible":true,"enabled":true,"position":7
+      },
+    "control":{
+      "method":"simple","data":"Les Miserables","dateRange":false,"animatedSlider":false
+      }
+}
