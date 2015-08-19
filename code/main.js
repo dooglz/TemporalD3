@@ -1,21 +1,10 @@
 /* global Handlebars */
 /// <reference path="../typings/jquery/jquery.d.ts"/>
 /// <reference path="../typings/d3/d3.d.ts"/>
-//######################################################################
-//########    Date slider (more complex than it looks)
-//######################################################################
-var startDate;
-var endDate;
-var selectedDate;
-var selectedDateMin;
-var selectedDateMax;
-//------------------------------------------
+
 var canvasWidth = $('#chart').width();
 var canvasHeight = $('#chart').height();
 var selected_method;
-//-----
-var slider_num_ticks = 10;
-var slider_num_steps = 12;
 //-----
 $(document).ready(function(){
   ChangeData("Les Miserables");
@@ -28,6 +17,19 @@ $(window).keypress(function( event ) {
    selected_method.Reset();
   }
 });
+
+//######################################################################
+//########    Date slider (more complex than it looks)
+//######################################################################
+var startDate;
+var endDate;
+var selectedDate;
+var selectedDateMin;
+var selectedDateMax;
+//------------------------------------------
+var slider_num_ticks = 10;
+var slider_num_steps = 12;
+//-----
 
 $('#dateSliderInput').slider({
   formatter: function (value) {
@@ -84,6 +86,7 @@ function CreateSlider(ranged) {
   var spread = 0;
   if (graphdata.date_type == "static") {
     dateSlider = $("#ex13").slider({ enabled: false, min: 0, max: 0, value: 0 }).data('slider');
+    isSliderEnabled = false;
   } else if (graphdata.date_type == "number") {
     spread = (endDate - startDate) / slider_num_ticks;
     spread = Math.ceil((spread) / 1.0) * 1.0;
@@ -198,6 +201,22 @@ function Animate(){
     }
 }
 
+var isSliderVisible = true;
+function SetSliderVisibility(b) {
+  if (b == isSliderVisible) { return; }
+  if(!b){
+    $("#Slidercontainer").hide();
+  }else{
+    $("#Slidercontainer").show();
+  }
+  isSliderVisible = b;
+}
+var isSliderEnabled = true;
+function SetSliderEnabled(b) {
+  if (b == isSliderEnabled) { return; }
+  $("#ex13").slider(b ? "enable":"disable");
+  isSliderEnabled = b;
+}
 //######################################################################
 //########    Main Update functions
 //######################################################################
@@ -219,7 +238,9 @@ $(window).resize(resize);
 function resize() {
   canvasWidth = $('#chart').width();
   canvasHeight = $('#chart').height();
-  selected_method.Redraw(canvasWidth, canvasHeight);
+  if(Exists(selected_method)){
+    selected_method.Redraw(canvasWidth, canvasHeight);
+  }
 }
 
 $("#colschmepicker").on('change', function () {
@@ -1118,8 +1139,10 @@ function SetDisplayMode(mode) {
   }
   displayMode = mode;
   resize();
-  checkOptionalChannels(selected_method.nodeChannels,"node");
-  checkOptionalChannels(selected_method.linkChannels,"link");
+  if(Exists(selected_method)){
+    checkOptionalChannels(selected_method.nodeChannels,"node");
+    checkOptionalChannels(selected_method.linkChannels,"link");
+  }
 };
 
 //######################################################################
@@ -1149,3 +1172,34 @@ function IsJson(str) {
 function Exists(i){
   return (i !== undefined && i !== null);
 }
+
+//######################################################################
+//########   Testing
+//######################################################################
+$('#startTestbtn').click(EnterTestMode);
+$('#modalTestQuitBtn').click(ExitTestMode);
+
+var inTestMode = false;
+
+function ExitTestMode() {
+  inTestmode = false;
+  console.warn("exiting Test Mode");
+  $('#navcontainer').show();
+  $('body').css('padding-top', '70px');
+  $('#libCredits').show();
+  $('#channelDiv').show();
+  $('#optionsDiv').show();
+  $("#infoModal").modal("hide");
+};
+
+function EnterTestMode() {
+  inTestmode = true;
+  console.warn("Entering Test Mode");
+  $('#navcontainer').hide();
+  $('body').css('padding-top', '0');
+  $('#libCredits').hide();
+  $('#channelDiv').hide();
+  $('#optionsDiv').hide();
+  //
+  $("#infoModal").modal({keyboard: false,backdrop: "static"});
+};

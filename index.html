@@ -48,7 +48,7 @@
             <a href="#" data-toggle="modal" data-target="#dataModal">Data Upload</a>
           </li>
           <li>
-            <a href="#" onclick="$('#navcontainer').remove();$('body').css('padding-top','0');">hide navbar</a>
+            <a href="#" onclick="$('#navcontainer').hide();$('body').css('padding-top','0');">hide navbar</a>
           </li>
         </ul>
       </div>
@@ -82,7 +82,7 @@
     </div>
   </div>
   <!-- option collumns -->
-  <div class="container superwide">
+  <div class="container superwide" id="optionsDiv">
     <div class="row">
       <div class="col-sm-3">
         <h2>Interface</h2>
@@ -111,11 +111,12 @@
           <br>
           <a class='btn btn-success' href='#' role='button' id="saveSettingsbtn">Save Settings</a>
         </div>
-        <div class="methodParam">Load Settings <br>
+        <div class="methodParam">Load Settings
+          <br>
           <select id="settingspicker" class="selectpicker" data-width="100%"></select>
         </div>
         <div class="methodParam" style="text-align:center">
-          <a class='btn btn-warning' href='#' role='button' id="startTestbtn" disabled>Enter Test Mode</a>
+          <a class='btn btn-warning' role='button' id="startTestbtn">Enter Test Mode</a>
         </div>
       </div>
       <div class="col-sm-3">
@@ -147,8 +148,8 @@
       </div>
     </div>
   </div>
-  <!-- channel mixer-->
-  <div class="container superwide">
+  <!-- channel mixer -->
+  <div class="container superwide" id="channelDiv">
     <hr>
     <div class="row col-lg-12">
       <div class="panel-group" id="accordion">
@@ -156,8 +157,9 @@
           <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#collapse1">
             <span class="glyphicon glyphicon-collapse-down"></span>Show Channel Mixer</button>
           <span id="channelPanelHeadder">
-              <strong>DataSet:</strong>{{displayName}}
-              <strong>Nodes / Links:</strong>{{nodes}} / {{links}}</span>
+                <strong>DataSet:</strong>{{displayName}}
+                <strong>Nodes / Links:</strong>{{nodes}} / {{links}}
+          </span>
           <div id="collapse1" class="panel-collapse collapse">
             <div class="panel-body" id="channelPanel">
               <div class="row" id="channelPanelInfo">
@@ -168,7 +170,7 @@
                 <strong>Link Channels:</strong>{{linkChannels}}
                 <hr>
               </div>
-              <div id="channelPanelDropdowns" />
+              <div id="channelPanelDropdowns"></div>
               <div class="col-sm-6" id="linkDropdowns"><strong>Links</strong></div>
               <div class="col-sm-6" id="nodeDropdowns"><strong>Nodes</strong></div>
             </div>
@@ -183,24 +185,27 @@
     <footer>
       <div class="row">
         <div class="col-lg-12">
-          <p>D3 Dynamic Data demo - Sam Serrels, Natalie Kerracher - 2015</p>This Project makes use of the following libraries:
-          <ul class="list-inline">
-            <li>
-              <a href="http://d3js.org/">d3js</a>
-            </li>
-            <li>
-              <a href="http://getbootstrap.com/">Bootstrap</a>
-            </li>
-            <li>
-              <a href="http://jquery.com/">jQuery</a>
-            </li>
-            <li>
-              <a href="http://github.com/seiyria/bootstrap-slider">Bootstrap-Slider</a>
-            </li>
-            <li>
-              <a href="http://github.com/silviomoreto/bootstrap-select">Bootstrap-Select</a>
-            </li>
-          </ul>
+          <p>Dynamic Graph Testing Interface - Christopher Stone, Natalie Kerracher, Sam Serrels - 2015</p>
+          <div id="libCredits">
+            This Project makes use of the following libraries:
+            <ul class="list-inline">
+              <li>
+                <a href="http://d3js.org/">d3js</a>
+              </li>
+              <li>
+                <a href="http://getbootstrap.com/">Bootstrap</a>
+              </li>
+              <li>
+                <a href="http://jquery.com/">jQuery</a>
+              </li>
+              <li>
+                <a href="http://github.com/seiyria/bootstrap-slider">Bootstrap-Slider</a>
+              </li>
+              <li>
+                <a href="http://github.com/silviomoreto/bootstrap-select">Bootstrap-Select</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </footer>
@@ -219,6 +224,25 @@
       </div>
     </div>
   </div>
+  <!-- Modal -->
+  <div class="modal fade" id="infoModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          Test Start page
+        </div>
+        <div class="modal-body" style="overflow:auto; max-height:500px;">
+          <div id="infoModalContent" style="width:100%;">
+            Welcome
+            <hr>
+            <a class='btn btn-danger' href='#' role='button' id="modalTestQuitBtn">Quit</a>
+            <a class='btn btn-success' href='#' role='button' id="modalTestStartBtn" disabled>Start</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
   <div class="modal fade" id="myModal2" role="dialog">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -232,6 +256,7 @@
       </div>
     </div>
   </div>
+  <!-- Modal -->
   <div class="modal fade" id="dataModal" role="dialog">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -276,7 +301,7 @@
       </div>
     </div>
   </div>
-  <!-------- Page End ----------->
+  <!-- Page End -->
   <script src="js/jquery-2.1.4.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/bootstrap-slider.min.js"></script>
