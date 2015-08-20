@@ -85,7 +85,26 @@
   <div class="container superwide" id="questionDiv"><h4>
     <div class="row" style="text-align:center;" id="questionText">How round are the Nodes?</div>
     <hr>
-    <div class="row" style="text-align:center;" id="questionOptions">Answers go here</div>
+    <div class="row" style="text-align:center;" id="questionOptions">
+      <form class="form-horizontal"id="questionOptionsForm">
+        {{#each num}}
+        <div class="form-group">
+          <label for="{{id}}" class="col-sm-4 control-label">{{name}}</label>
+          <div class="col-sm-3">
+            <input type="number" class="form-control" id="{{id}} placeholder="Enter a number">
+          </div>
+        </div>
+        {{/each}}
+        {{#each text}}
+        <div class="form-group">
+          <label for="{{id}}" class="col-sm-4 control-label">{{name}}</label>
+          <div class="col-sm-6">
+            <textarea class="form-control" id="{{id}}" placeholder="textbox"rows="3"></textarea>
+          </div>
+        </div>
+        {{/each}}
+      </form>
+      </div>
     </h4><hr>
     <div class="row" style="text-align:center;" id="questionButtons">
       <div class="col-sm-2"></div>

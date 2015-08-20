@@ -1,6 +1,16 @@
 {
     "name":"Test1",
-	"questionText":" Hello world",
+	"questionText":"How round are the nodes (out of 10)?<br>Which one is your favourite? why",
+	
+	"questionInputs":[
+		{"type":"TextBox","name":"Favourite Node"},
+		{"type":"NumberBox","name":"Roundness", "required":true}
+	],
+	
+	"enableNodeHighlight":true,
+	
+	"highlightedNodes":[1,2,3,5],
+	
 	"settings":{
 		"name":"Test1Settings",
 		"interface":{

@@ -1192,6 +1192,10 @@ var selectedTest;
 var selectedExperiment;
 var expMode = false;
 
+var questionOptionsHtmlTemplate = $("#questionOptionsForm").html();
+var questionOptionsTemplate = Handlebars.compile(questionOptionsHtmlTemplate);
+$("#questionOptionsForm").html("");
+
 $('#startTestbtn').click(EnterTestMode);
 $('#modalTestQuitBtn').click(ExitTestMode);
 $('#modalTestQuitBtn2').click(ExitTestMode);
@@ -1236,7 +1240,7 @@ $("#expSelector").on('change', function () {
 for (var i = 0; i < stockTests.length; i++) {
   d3.json(stockTests[i], function (error, newData) {
     if (error) {
-      console.error(error);
+      console.error("error loading test: ",error);
     } else {
       loadedTests.push(newData);
       UpdateTestSelector();
@@ -1284,7 +1288,7 @@ function ExitTestMode() {
   $('#optionsDiv').show();
   $("#infoModal").modal("hide");
   $("#testResultsModal").modal("hide");
-  $('#questionDiv').hide();
+  //$('#questionDiv').hide();
   $("svg").attr('visibility','visible');
   loadedTest = undefined;
    loadedExperiments.forEach(CleanExperiment);
@@ -1306,7 +1310,7 @@ function EnterTestMode() {
   $("#infoModal").modal({keyboard: false,backdrop: "static"});
   $('#questionDiv').show();
   $('#questionText').html("");
-  $('#questionOptions').html("");
+  //$('#questionOptions').html("");
   $("#testReadyBtn").attr("disabled",true);
   $("#testSubmitBtn").attr("disabled",true);
   //
@@ -1443,8 +1447,31 @@ function LoadTest(t){
   //load the question text
   $("#questionText").html(t.questionText);
   //load question answer elements
-    //Todo
+  var qdiv = $("#questionOptionsForm");
+  qdiv.empty();
+  if(Exists(t.questionInputs) && t.questionInputs.length > 0){
+    var qq = {num:[],text:[]};
+    for (var index = 0; index < t.questionInputs.length; index++) {
+      var q = t.questionInputs[index];
+      if(q.type == "TextBox"){
+        q.id = q.name+"_test_TextBox";
+        qq.text.push(q);
+      }else if(q.type == "NumberBox"){
+        q.id = q.name+"_test_NumberBox";
+        qq.num.push(q);
+      }else{
+        console.error("Test %o, has unrecognised Input type: %o",t.name,q.type);
+      }
+    }
+    var rendered = questionOptionsTemplate(qq);
+    qdiv.html(rendered);
+  }
+  
   //highlight selcted nodes if there are any
+  if(Exists(t.highlightedNodes) && t.highlightedNodes.length > 0){
+    //Todo
+  }
+  
   //enable Ready btn
   $("#testReadyBtn").attr("disabled",false);
   $("#testSubmitBtn").attr("disabled",true);
