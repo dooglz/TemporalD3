@@ -36,7 +36,7 @@ function ProcessAttributesInfo(infoObj, keys, values) {
       if (IsDate(sampleValue)) { attributeType = "date"; } else {
         if (IsNumber(sampleValue)) {
           console.warn("Data attribute:'%s' is a valid number, but is encoded with qoutes, treating as String", attribute);
-        } 
+        }
         //pure string
         attributeInfo.values = [];
         //we must find all values of this attribute so we can catagorize them
@@ -95,7 +95,7 @@ function FillAttributeInfo(infoObj, attribute, values) {
   if (attributeType == "string") {
     if (IsNumber(sampleValue)) {
       console.warn("Data attribute:'%s' is a valid number, but is encoded with qoutes, treating as String", attribute);
-    } 
+    }
     //pure string
     infoObj[attribute.name].values = [];
     //we must find all values of this attribute so we can catagorize them
@@ -761,7 +761,7 @@ CoolKeyMap.prototype.RemoveValue = function (val) {
     //remove from values
     this.values.splice(tt, 1);
     console.info("removed V ", val);
-  } 
+  }
   //else{console.error("No such value!");}
 };
 CoolKeyMap.prototype.WipePairsNoAssign = function (key, value) {
@@ -812,3 +812,16 @@ CoolKeyMap.prototype.Pair = function (key, value) {
   this.Assignment(key, oldval, value);
   this.pairs[key] = value;
 };
+
+function zeroPad(num, places) {
+  var zero = places - num.toString().length + 1;
+  return Array(+(zero > 0 && zero)).join("0") + num;
+}
+
+function MillisToTime(millis) {
+  var hours = zeroPad(Math.floor(millis / 36e5), 2),
+      mins = zeroPad(Math.floor((millis % 36e5) / 6e4), 2),
+      secs = zeroPad(Math.floor((millis % 6e4) / 1000), 2),
+      mil = zeroPad(Math.floor((millis % 1000)), 3);
+  return (hours + ':' + mins + ':' + secs + ':' + mil);
+}

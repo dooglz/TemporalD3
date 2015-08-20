@@ -301,9 +301,9 @@
           Test Complete!
         </div>
         <div class="modal-body" style="overflow:auto; max-height:500px;">
-         Test Complete!
+         <div id="results"></div>
          <hr>
-            <a class='btn btn-default' href='#' role='button' id="modalTestQuitBtn2">Quit</a>
+         <a class='btn btn-default' href='#' role='button' id="modalTestQuitBtn2">Quit</a>
         </div>
       </div>
     </div>
@@ -390,7 +390,7 @@
         $('#commitHistory').GithubCommitHistory( {
     			username: "dooglz",
     			repo: "TemporalD3",
-    			limit: 10, 
+    			limit: 10,
     			offset: 0
         });
         var convert = new showdown.Converter().makeHtml;

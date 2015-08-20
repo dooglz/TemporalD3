@@ -1287,6 +1287,8 @@ function ExitTestMode() {
   $('#questionDiv').hide();
   $("svg").attr('visibility','visible');
   loadedTest = undefined;
+   loadedExperiments.forEach(CleanExperiment);
+  loadedTests.forEach(CleanTest);
 };
 
 function EnterTestMode() {
@@ -1314,6 +1316,9 @@ function EnterTestMode() {
   $("#testSelector").selectpicker("val","");
   $("#expSelector").selectpicker("val","");
   $('#expModeToggle').bootstrapToggle('off');
+  //
+  loadedExperiments.forEach(CleanExperiment);
+  loadedTests.forEach(CleanTest);
 };
 
 function CheckforStart(){
@@ -1336,19 +1341,33 @@ function CheckforStart(){
   }
   return true;
 }
-function CleanExperiment(exp){
-  if(typeof(exp) == "string"){
+
+function CleanExperiment(exp) {
+  if (typeof (exp) == "string") {
     for (var i = 0; i < loadedExperiments.length; i++) {
-      if(loadedExperiments[i].name == exp){
+      if (loadedExperiments[i].name == exp) {
         exp = loadedExperiments[i];
+        break;
+      }
+    }
+  }
+  exp.currenPos = 0;
+  exp.done = [];
+}
+function CleanTest(t) {
+     if(typeof(t) == "string"){
+    for (var i = 0; i < loadedTests.length; i++) {
+      if(loadedTests[i].name == t){
+        t = loadedTests[i];
         break;
       } 
     }
   }
-    exp.currenPos = 0;
-    exp.done = [];
-  
+  t.reponce = [];
+  t.startTime = 0;
+  t.endTime = 0;
 }
+
 var loadedExp;
 function GetNextTest(exp){
   console.log("get next test %o",exp);
@@ -1438,11 +1457,13 @@ function StartTest(){
   $("#testReadyBtn").attr("disabled",true);
   $("#testSubmitBtn").attr("disabled",false);
   $("svg").attr('visibility','visible');
+  loadedTest.startTime = new Date();
 }
 
 function FinishTest(){
   var t = loadedTest;
-  console.info("finised test %o",t.name);
+  t.endTime = new Date();
+  console.info("finished test %o, time: %o",t.name,MillisToTime(t.endTime - t.startTime));
   //are we in expirement mode?
   if(expMode){
     t = GetNextTest(loadedExp);
@@ -1456,7 +1477,29 @@ function FinishTest(){
   }
 }
 
+function GetTest(t){
+    if(typeof(t) == "string"){
+    for (var i = 0; i < loadedTests.length; i++) {
+      if(loadedTests[i].name == t){
+        return loadedTests[i];
+      } 
+    }
+  }
+  return t;
+}
+
 function FinishExperiment(){
   //show results modal
   $("#testResultsModal").modal({keyboard: false,backdrop: "static"});
+  var x = "";
+  if(expMode){
+    for (var index = 0; index < loadedExp.done.length; index++) {
+      var t = GetTest(loadedExp.done[index]);
+      x+= t.name + " - " + t.responce + "<br> Time: "+  MillisToTime(t.endTime - t.startTime)+"<br>";
+    }
+  }else{
+    var t = loadedTest
+    x+= t.name + " - " + t.responce + "<br> Time: "+  MillisToTime(t.endTime - t.startTime)+"<br>";
+  }
+  $("#results").html(x);
 }
