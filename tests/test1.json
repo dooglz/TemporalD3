@@ -7,7 +7,7 @@
 		  "testMode":false,"displayMode":"Single","colourTheme":"Default"
 		  },
 		"slider":{
-		  "visible":true,"enabled":true,"position":5
+		  "visible":false,"enabled":false,"position":5
 		  },
 		"control":{
 		  "method":"simple","data":"Les Miserables","dateRange":false,"animatedSlider":false

@@ -1062,8 +1062,8 @@ function LoadSettings(s) {
   }
   //slider
   if (Exists(s.slider)) {
-    if (Exists(s.slider.visible)) { }
-    if (Exists(s.slider.enabled)) { }
+    if (Exists(s.slider.visible)) { SetSliderVisibility(s.slider.visible); }
+    if (Exists(s.slider.enabled)) { SetSliderEnabled(s.slider.enabled); }
     if (Exists(s.slider.position)) { }
   }
   //Method
@@ -1187,7 +1187,17 @@ var expMode = false;
 $('#startTestbtn').click(EnterTestMode);
 $('#modalTestQuitBtn').click(ExitTestMode);
 $("#expSelectorDiv").hide();
-$('#modalTestStartBtn').click(CheckforStart);
+$('#modalTestStartBtn').click(
+  function(){
+    if(CheckforStart()){  
+      //Let's a go!
+      $("#infoModal").modal("hide");
+    }
+  }
+);
+$('#testReadyBtn').click(StartTest);
+$('#testSubmitBtn').click(FinishTest);
+
 
 $('#expModeToggle').change(function() {
   if($(this).prop('checked')){
@@ -1253,7 +1263,7 @@ function UpdateExpSelector() {
   $("#expSelector").selectpicker('val', '');
 }
 var inTestMode = false;
-
+ExitTestMode();
 function ExitTestMode() {
   inTestmode = false;
   console.warn("exiting Test Mode");
@@ -1263,6 +1273,8 @@ function ExitTestMode() {
   $('#channelDiv').show();
   $('#optionsDiv').show();
   $("#infoModal").modal("hide");
+  $('#questionDiv').hide();
+  $("svg").attr('visibility','visible');
 };
 
 function EnterTestMode() {
@@ -1275,6 +1287,10 @@ function EnterTestMode() {
   $('#optionsDiv').hide();
   //
   $("#infoModal").modal({keyboard: false,backdrop: "static"});
+  $('#questionDiv').show();
+  $('#questionText').html("");
+  $('#questionOptions').html("");
+
 };
 
 function CheckforStart(){
@@ -1293,8 +1309,9 @@ function CheckforStart(){
   }
   if(!testLoaded){
      $("#infomodalError").html("Test Loading...");
-    return;
+    return false;
   }
+  return true;
 }
 
 function GetNextTest(exp){
@@ -1303,6 +1320,36 @@ function GetNextTest(exp){
 
 var testLoaded = false;
 function LoadTest(t){
+    if(typeof(t) == "string"){
+    for (var i = 0; i < loadedTests.length; i++) {
+      if(loadedTests[i].name == t){
+        t = loadedTests[i];
+        break;
+      } 
+    }
+  }
+  console.log("Loading test %o",t.name);
+  LoadSettings(t.settings);
+  //Hide graph
+  $("svg").attr('visibility','hidden');
+  //load the question text
+  $("#questionText").html(t.questionText);
+  //load question answer elements
+    //Todo
+  //highlight selcted nodes if there are any
+  //enable Ready btn
+  $("#testReadyBtn").attr("disabled",false);
+  $("#testSubmitBtn").attr("disabled",true);
   testLoaded = true;
   CheckforStart();
+}
+
+function StartTest(){
+  $("#testReadyBtn").attr("disabled",true);
+  $("#testSubmitBtn").attr("disabled",false);
+  $("svg").attr('visibility','visible');
+}
+
+function FinishTest(){
+  
 }
