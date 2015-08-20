@@ -1220,6 +1220,7 @@ $("#testSelector").on('change', function () {
 });
 $("#expSelector").on('change', function () {
   selectedExperiment = $(this).val();
+  CleanExperiment(selectedExperiment);
   LoadTest(GetNextTest(selectedExperiment));
 });
 
@@ -1327,9 +1328,73 @@ function CheckforStart(){
   }
   return true;
 }
-
+function CleanExperiment(exp){
+  if(typeof(exp) == "string"){
+    for (var i = 0; i < loadedExperiments.length; i++) {
+      if(loadedExperiments[i].name == exp){
+        exp = loadedExperiments[i];
+        break;
+      } 
+    }
+  }
+    exp.currenPos = 0;
+    exp.done = [];
+  
+}
+var loadedExp;
 function GetNextTest(exp){
-  return exp.order[1];
+  console.log("get next test %o",exp);
+   if(typeof(exp) == "string"){
+    for (var i = 0; i < loadedExperiments.length; i++) {
+      if(loadedExperiments[i].name == exp){
+        exp = loadedExperiments[i];
+        loadedExp = exp;
+        break;
+      } 
+    }
+  }
+  if(!Exists(exp.currentPos)){
+    exp.currentPos = 0;
+  }
+  if(exp.currentPos ==  exp.order.length){
+    console.log("experiment complete!");
+    return null;
+  }
+  if(!Exists(exp.done)){
+    exp.done = [];
+  }
+  console.log("get next test %o, %o",exp.done,exp.currentPos);
+  var current = exp.order[exp.currentPos];
+  if($.isArray(current)){
+    //random select.
+    var a = current.slice(0);
+    //remove done
+    for (var index = 0; index < a.length; index++) {
+      var e = a[index];
+      if($.inArray(e,exp.done)){
+       a.splice(index, 1);
+       index--;
+      }
+    }
+    if(a.length > 0){
+      current = a[Math.round(Math.random() * (a.length - 1))];
+    }else{
+      exp.currentPos++;
+      return GetNextTest(exp);
+    }
+  }else{
+    //not a random select
+    //but is it a repeat?
+    console.log(current,exp.done);
+    if($.inArray(current,exp.done) != -1){
+      console.warn("%o has duplicate tests!",exp.name);
+      exp.currentPos++;
+      //return GetNextTest(exp);
+    }
+  }
+  exp.currentPos++;
+  exp.done.push(current);
+  return current;
 }
 
 var loadedTest;
@@ -1372,7 +1437,12 @@ function FinishTest(){
   console.info("finised test %o",t.name);
   //are we in expirement mode?
   if(expMode){
-    LoadTest(GetNextTest(selectedExperiment));
+    t = GetNextTest(loadedExp);
+    if(t == null){
+      FinishExperiment();
+      return;
+    }
+    LoadTest(t);
   }else{
     FinishExperiment();
   }
