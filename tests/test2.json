@@ -4,7 +4,7 @@
 	"settings":{
 		"name":"Test1Settings",
 		"interface":{
-		  "testMode":false,"displayMode":"Single","colourTheme":"Default"
+		  "testMode":false,"displayMode":"Split","colourTheme":"Default"
 		  },
 		"slider":{
 		  "visible":true,"enabled":true,"position":5

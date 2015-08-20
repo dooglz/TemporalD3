@@ -1389,7 +1389,7 @@ function GetNextTest(exp){
     if($.inArray(current,exp.done) != -1){
       console.warn("%o has duplicate tests!",exp.name);
       exp.currentPos++;
-      //return GetNextTest(exp);
+      return GetNextTest(exp);
     }
   }
   exp.currentPos++;
