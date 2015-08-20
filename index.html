@@ -248,8 +248,6 @@
         </div>
         <div class="modal-body" style="overflow:auto; max-height:500px;">
           <div id="infoModalContent" style="width:100%;">
-            Welcome
-            <hr>
             <form>
               <div class="form-group">
                 <label for="testInputName">Name</label>
@@ -283,12 +281,29 @@
                   <option>Barbecue</option>
                 </select>
               </div>
-              <div id="infomodalError" class="danger"></div>
+              <div id="infomodalError" class="danger">
+                Please select test options
+              </div>
             </form>
             <hr>
             <a class='btn btn-danger' href='#' role='button' id="modalTestQuitBtn">Quit</a>
             <a class='btn btn-success' href='#' role='button' id="modalTestStartBtn">Start</a>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <!-- Modal -->
+  <div class="modal fade" id="testResultsModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          Test Complete!
+        </div>
+        <div class="modal-body" style="overflow:auto; max-height:500px;">
+         Test Complete!
+         <hr>
+            <a class='btn btn-default' href='#' role='button' id="modalTestQuitBtn2">Quit</a>
         </div>
       </div>
     </div>

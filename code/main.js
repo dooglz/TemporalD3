@@ -1186,6 +1186,7 @@ var expMode = false;
 
 $('#startTestbtn').click(EnterTestMode);
 $('#modalTestQuitBtn').click(ExitTestMode);
+$('#modalTestQuitBtn2').click(ExitTestMode);
 $("#expSelectorDiv").hide();
 $('#modalTestStartBtn').click(
   function(){
@@ -1273,12 +1274,17 @@ function ExitTestMode() {
   $('#channelDiv').show();
   $('#optionsDiv').show();
   $("#infoModal").modal("hide");
+  $("#testResultsModal").modal("hide");
   $('#questionDiv').hide();
   $("svg").attr('visibility','visible');
+  loadedTest = undefined;
 };
 
 function EnterTestMode() {
-  inTestmode = true;
+  inTestMode = true;
+  testLoaded = false
+  expMode = false;
+  loadedTest = undefined;
   console.warn("Entering Test Mode");
   $('#navcontainer').hide();
   $('body').css('padding-top', '0');
@@ -1290,11 +1296,19 @@ function EnterTestMode() {
   $('#questionDiv').show();
   $('#questionText').html("");
   $('#questionOptions').html("");
-
+  $("#testReadyBtn").attr("disabled",true);
+  $("#testSubmitBtn").attr("disabled",true);
+  //
+  $("#testInputName").val("");
+  $("#testInput1").val("");
+  $("#testInput2").val("");
+  $("#testSelector").selectpicker("val","");
+  $("#expSelector").selectpicker("val","");
+  $('#expModeToggle').bootstrapToggle('off');
 };
 
 function CheckforStart(){
-  $("#infomodalError").html("");
+  $("#infomodalError").html("Please select test options");
   if($("#testInputName").val() == ""){
      $("#infomodalError").html("Please enter a name");
     return;
@@ -1318,8 +1332,10 @@ function GetNextTest(exp){
   return exp.order[1];
 }
 
+var loadedTest;
 var testLoaded = false;
 function LoadTest(t){
+  testLoaded = false;
     if(typeof(t) == "string"){
     for (var i = 0; i < loadedTests.length; i++) {
       if(loadedTests[i].name == t){
@@ -1341,6 +1357,7 @@ function LoadTest(t){
   $("#testReadyBtn").attr("disabled",false);
   $("#testSubmitBtn").attr("disabled",true);
   testLoaded = true;
+  loadedTest = t;
   CheckforStart();
 }
 
@@ -1351,5 +1368,17 @@ function StartTest(){
 }
 
 function FinishTest(){
-  
+  var t = loadedTest;
+  console.info("finised test %o",t.name);
+  //are we in expirement mode?
+  if(expMode){
+    LoadTest(GetNextTest(selectedExperiment));
+  }else{
+    FinishExperiment();
+  }
+}
+
+function FinishExperiment(){
+  //show results modal
+  $("#testResultsModal").modal({keyboard: false,backdrop: "static"});
 }
