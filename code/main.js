@@ -403,13 +403,16 @@ function InitChannelMixer(data) {
   var nkeydiv = $("#nodeDropdowns").html("<strong>Nodes</strong>");
   
   for (var key in data.node_keys) {
-    var drop = GetChannelDropdown(selected_method.nodeChannels, data.node_keys[key], "node");
-    $('<div>', { 'class': 'methodParam text-right', 'id': "node_"+data.node_keys[key]+"_dropdowns"  }).html(data.node_keys[key] + " - ")
-      .append(drop).appendTo(nkeydiv);
+    var dropn = GetChannelDropdown(selected_method.nodeChannels, data.node_keys[key], "node");
+    var nid = ("node_"+data.node_keys[key]+"_dropdowns").replace(/\s+/g, '-__-');
+    $('<div>', { 'class': 'methodParam text-right', 'id':nid  }).html(data.node_keys[key] + " - ")
+      .append(dropn).appendTo(nkeydiv);
   }
   for (var key in data.link_keys) {
-    $('<div>', { 'class': 'methodParam text-right', 'id': "link_"+data.link_keys[key]+"_dropdowns" }).html(data.link_keys[key] + " - ")
-      .append(GetChannelDropdown(selected_method.linkChannels, data.link_keys[key], "link")).appendTo(lkeydiv);
+    var dropl = GetChannelDropdown(selected_method.linkChannels, data.link_keys[key], "link");
+    var lid = ("link_"+data.link_keys[key]+"_dropdowns").replace(/\s+/g, '-__-');
+    $('<div>', { 'class': 'methodParam text-right', 'id': lid }).html(data.link_keys[key] + " - ")
+      .append(dropl).appendTo(lkeydiv);
   }
 
   // Init dropdowns
@@ -428,17 +431,17 @@ function GetChannelDropdown(channels, attribute, atype, removeBtn) {
     }
     str += "<option value='" + channels[i].name + "'>" + channels[i].name + "</option>";
   }
-  var divA = $('<div>', { 'style': 'display:inline;', 'id': atype + "_" + attribute + "_" + uniq + "_dropdownContainer" });
-  var divB = $('<select>', { 'class': 'selectpicker', 'data-width': '50%', 'id': atype + "_" + attribute + "_" + uniq + "_dropdown" }).html(str);
+  var divA = $('<div>', { 'style': 'display:inline;', 'id': (atype + "_" + attribute + "_" + uniq + "_dropdownContainer").replace(/\s+/g, '-__-') });
+  var divB = $('<select>', { 'class': 'selectpicker', 'data-width': '50%', 'id': (atype + "_" + attribute + "_" + uniq + "_dropdown").replace(/\s+/g, '-__-') }).html(str);
   divB.on('change', (function () { var suniq = uniq; return function () { ChannelChange(atype, attribute + "_" + suniq, divB.val()) } })());
   var divC;
   if (removeBtn) {
-    divC = $('<button>', { 'class': 'btn btn-default', 'id': atype + "_" + attribute + "_" + uniq + "_minus" }).html('<span class="glyphicon glyphicon-minus"></span>');
+    divC = $('<button>', { 'class': 'btn btn-default', 'id': (atype + "_" + attribute + "_" + uniq + "_minus").replace(/\s+/g, '-__-') }).html('<span class="glyphicon glyphicon-minus"></span>');
     divC.on('click',(function () { var suniq = uniq; return function () { ChannelChange(atype, attribute + "_" + suniq, "Disabled"); kmap.RemoveKey(attribute + "_" + suniq); divA.remove(); } })());
   } else {
-    divC = $('<button>', { 'class': 'btn btn-default', 'id': atype + "_" + attribute + "_" + uniq + "_plus" }).html('<span class="glyphicon glyphicon-plus"></span>');
+    divC = $('<button>', { 'class': 'btn btn-default', 'id': (atype + "_" + attribute + "_" + uniq + "_plus").replace(/\s+/g, '-__-') }).html('<span class="glyphicon glyphicon-plus"></span>');
     divC.on('click', function () {
-      $("#" + atype + "_" + attribute + "_dropdowns").append(GetChannelDropdown((atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels), attribute, atype, true));
+      $(("#" + atype + "_" + attribute + "_dropdowns").replace(/\s+/g, '-__-')).append(GetChannelDropdown((atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels), attribute, atype, true));
       $('.selectpicker').selectpicker();
     });
   }
@@ -475,7 +478,7 @@ function checkOptionalChannels(channels, atype) {
 }
 
 function DropdownNameToAttributeName(str){
-  return str.slice(0,str.lastIndexOf("_"));
+  return (str.slice(0,str.lastIndexOf("_"))).replace(/-__-/g," ");;
 };
 
 function Wipechannels() {
@@ -523,15 +526,20 @@ function Readchannels() {
 //Takes an attribute and a channel, 
 // finds an appropriate dropdown, assigns it, calls ChannelChange.
 function SetChannel(atype, attribute, channelname) {
-  var ddc = $("#" + atype + "_" + attribute + "_dropdowns");
+  var ddc = $(("#" + atype + "_" + attribute + "_dropdowns").replace(/\s+/g, '-__-'));
   var done = false;
+  console.log("SetChannel1: %o, to attribute %o", channelname,attribute);
+      console.log(ddc);
   for (var j = 0; j < $("[id$=_dropdown]", ddc).length; j++) {
     var dropdown = $("[id$=_dropdown]", ddc).eq(j);
-    console.log("SetChannel: %o, to attribute %o", channelname,attribute);
+
+    console.log(dropdown);
+    console.log("SetChannel2: %o, to attribute %o", channelname,attribute);
     //console.log("lookign at %o, %o, value: %o",dropdown,dropdown.val(),dropdown.attr('id'));
     if (dropdown.val() == "Disabled" || dropdown.val() == attribute) {
-      var shortSpecificName =  dropdown.attr('id').slice(5, -9);
-      console.log("SetChannel: %o, to attribute %o, dropdown: %o",channelname,attribute,shortSpecificName);
+     // var shortSpecificName =  (dropdown.attr('id').slice(5, -9)).replace(/-__-/g," ");
+     var shortSpecificName =  (dropdown.attr('id').slice(5, -9));
+      console.log("SetChannel3: %o, to attribute %o, dropdown: %o",channelname,attribute,shortSpecificName);
       ChannelChange(atype,shortSpecificName, channelname);
       done = true;
       break;
