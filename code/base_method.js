@@ -900,21 +900,44 @@ Base_Method.prototype.NodeStrokeColour = function (side, d, half, i) {
 
 Base_Method.prototype.NodeSize = function (side, d, half, i) {
   var channel;
-  if (half == 0) {
+  var channel2;
+  var isSplit = false;
+  if (half == 0) { //A side
     if (side == "left") {
+      isSplit = this.LAttributesPerVisNode > 1;
+      if(isSplit){
+       channel2 = this.getNodeChannel("Node Size LB");
+      }
       channel = this.getNodeChannel("Node Size LA");
     } else {
+      isSplit = this.RAttributesPerVisNode > 1;
+      if(isSplit){
+       channel2 = this.getNodeChannel("Node Size RB");
+      }
       channel = this.getNodeChannel("Node Size RA");
     }
-  } else {
+  } else {  //B Side
     if (side == "left") {
+      isSplit = this.LAttributesPerVisNode > 1;
+      if(isSplit){
+       channel2 = this.getNodeChannel("Node Size LA");
+      }
       channel = this.getNodeChannel("Node Size LB");
     } else {
+      isSplit = this.RAttributesPerVisNode > 1;
+      if(isSplit){
+       channel2 = this.getNodeChannel("Node Size RA");
+      }
       channel = this.getNodeChannel("Node Size RB");
     }
   }
   if (channel.inUse) {
-    return ((this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax));
+    if(isSplit){
+      //we are going to have to normalise both channles.
+       return ((this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, [channel.dataParam,channel2.dataParam], this.currentDateMin, this.currentDateMax));
+    }else{
+      return ((this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax));
+    }
   } else {
     return (this.default_radius - .75);
   }

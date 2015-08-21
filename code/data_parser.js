@@ -28,6 +28,7 @@ function ProcessAttributesInfo(infoObj, keys, values) {
   for (var i in keys) {
     var attribute = keys[i];
     infoObj[attribute] = {};
+    infoObj[attribute].name = attribute;
     var attributeInfo = infoObj[attribute];
     var sampleValue = values[0][attribute];
     var attributeType = typeof (sampleValue);
@@ -89,6 +90,7 @@ function FillAttributeInfo(infoObj, attribute, values) {
   infoObj[attribute.name] = {};
   var attributeType = attribute.type;
   if (attributeType == "numeric") { attributeType = "number" };
+  infoObj[attribute.name].name = attribute.name;
   infoObj[attribute.name].type = attributeType;
   infoObj[attribute.name].dynamic = false;
 
@@ -354,14 +356,18 @@ function getLinkAttributeAsPercentage(data, link, attribute, minDate, maxDate) {
   return getNLAttributeAsPercentage(false, data, link, attribute, minDate, maxDate);
 }
 function getAttributeAsPercentage(data, nodeOrLink, attribute, minDate, maxDate) {
-  if (data.node_keys.indexOf(attribute) != -1) {
+  var at = attribute;
+  if($.isArray(attribute)){
+      at = attribute[0];
+  }
+  if (data.node_keys.indexOf(at) != -1) {
     //node
     return getNLAttributeAsPercentage(true, data, nodeOrLink, attribute, minDate, maxDate);
-  } else if (data.link_keys.indexOf(attribute) != -1) {
+  } else if (data.link_keys.indexOf(at) != -1) {
     //link
     return getNLAttributeAsPercentage(false, data, nodeOrLink, attribute, minDate, maxDate);
   } else {
-    console.error("coudn't determine type of attribute: %o", attribute);
+    console.error("coudn't determine type of attribute: %o", at);
     return 0;
   }
 }
@@ -436,8 +442,92 @@ function getAttributeValue(atype, data, nodeOrLink, attribute, selecteddateMin, 
   }
   return attribute_value;
 }
+var NormalError = true;
+function getNLAttributeArrayAsPercentage(atype, data, nodeOrLink, attributes, selecteddateMin, selecteddateMax) {
+  var keys;
+  var attributes_info = [];
+  var attributeType;
+  if (atype) {
+    //node
+    keys = data.node_keys;
+    for (var k = 0; k < attributes.length; k++) {
+      attributes_info[k] = data.node_attributes_info[attributes[k]];
+      if (attributes_info[k] === undefined) {
+        console.error("can find attribute info: %o", attributes[k]);
+        return 0;
+      }
+      if(attributeType === undefined){
+        attributeType = attributes_info[k].type;
+      }else if(attributes_info[k].type !== attributeType){
+        if(NormalError){
+          console.error("Can't normalise attributes of type %o(%o) with type %o (set NormalError to false to surpress this error)",attributes_info[k].type,attributes_info[k].name,attributeType);
+        }
+        return getNLAttributeAsPercentage(atype, data, nodeOrLink, attributes[0], selecteddateMin, selecteddateMax);
+      }
+    }
+  } else {
+    //link
+    keys = data.link_keys;
+    for (var k = 0; k < attributes.length; k++) {
+      attributes_info[k] = data.link_attributes_info[attributes[k]];
+      if (attributes_info[k] === undefined) {
+        console.error("can find attribute info: %o", attributes[k]);
+        return 0;
+      }
+      if(attributeType === undefined){
+        attributeType = attributes_info[k].type;
+      }else if(attributes_info[k].type !== attributeType){
+        if(NormalError){
+          console.error("Can't normalise attributes of type %o with type %o (set NormalError to false to surpress this error)",attributes_info[k].type,attributeType);
+        }
+       return getNLAttributeAsPercentage(atype, data, nodeOrLink, attributes[0], selecteddateMin, selecteddateMax);
+      }
+    }
+  }
+  
+ // var attribute_values = [];
+  //for (var k = 0; k < attributes.length; k++) {
+  // attribute_values[k] = getAttributeValue(atype, data, nodeOrLink, attributes[k], selecteddateMin, selecteddateMax);
+ // }
+  var attribute_value = getAttributeValue(atype, data, nodeOrLink, attributes[0], selecteddateMin, selecteddateMax);
+
+  if (attributeType == "number") {
+    // console.log("number - val:"+attribute_value + " %: "+attribute_value / (attributes_info.max_val - attributes_info.min_val));
+    var min = attributes_info[0].min_val;
+    var max = attributes_info[0].max_val;
+    for (var k = 0; k < attributes.length; k++) {
+      min = Math.min(min,attributes_info[1].min_val);
+      max = Math.max(max,attributes_info[1].max_val);
+    }
+    return attribute_value / (min - max);
+  } else if (attributeType == "date") {
+    console.warn("Normalising multiple date attributes unlikely to work yet :(");
+    var min = attributes_info[0].min_val;
+    var max = attributes_info[0].max_val;
+    for (var k = 0; k < attributes.length; k++) {
+      min = Math.min(min,attributes_info[1].min_val);
+      max = Math.max(max,attributes_info[1].max_val);
+    }
+    attribute_value = new Date(attribute_value);
+    return (attribute_value - min) / (max - min);
+  } else if (attributeType == "string") {
+    console.warn("Normalising multiple string attributes impossible :(");
+    var aindex = attributes_info[0].values.indexOf(attribute_value);
+    if (aindex == -1) { return 0; }
+    return (aindex * 1.0) / (attributes_info[0].count * 1.0);
+  } else {
+    console.error("unkown type! %o", attributeType);
+  }
+}
 
 function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute, selecteddateMin, selecteddateMax) {
+  if($.isArray(attribute)){
+    if(attribute.length > 1){
+      return getNLAttributeArrayAsPercentage(atype, data, nodeOrLink, attribute, selecteddateMin, selecteddateMax)
+    }else{
+      attribute = attribute[0];
+    }
+  }
   var keys;
   var attributes_info;
   if (atype) {
