@@ -1,6 +1,15 @@
 {
     "name":"Test2",
 	"questionText":" Hello world 2",
+		"questionInputs":[
+		{"type":"TextBox","name":"box1"},
+		{"type":"NumberBox","name":"Nbox1", "required":true},
+		{"type":"TextBox","name":"box2"},
+		{"type":"NumberBox","name":"Nbox2", "required":true},
+		{"type":"TextBox","name":"box3"},
+		{"type":"NumberBox","name":"Nbox3", "required":true}
+	],
+	
 	"settings":{
 		"name":"Test1Settings",
 		"interface":{

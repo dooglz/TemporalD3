@@ -825,3 +825,18 @@ function MillisToTime(millis) {
       mil = zeroPad(Math.floor((millis % 1000)), 3);
   return (hours + ':' + mins + ':' + secs + ':' + mil);
 }
+
+ var entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': '&quot;',
+    "'": '&#39;',
+    "/": '&#x2F;'
+  };
+
+  function EscapeHtml(string) {
+    return String(string).replace(/[&<>"'\/]/g, function (s) {
+      return entityMap[s];
+    });
+  }

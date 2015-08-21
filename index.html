@@ -82,7 +82,7 @@
     </div>
   </div>
   <!-- option collumns -->
-  <div class="container superwide" id="questionDiv"><h4>
+  <div class="container superwide" id="questionDiv" style="display: none;"><h4>
     <div class="row" style="text-align:center;" id="questionText">How round are the Nodes?</div>
     <hr>
     <div class="row" style="text-align:center;" id="questionOptions">
@@ -91,7 +91,7 @@
         <div class="form-group">
           <label for="{{id}}" class="col-sm-4 control-label">{{name}}</label>
           <div class="col-sm-3">
-            <input type="number" class="form-control" id="{{id}} placeholder="Enter a number">
+            <input type="number" class="form-control" id="{{id}}" placeholder="Enter a number">
           </div>
         </div>
         {{/each}}
@@ -269,16 +269,16 @@
           <div id="infoModalContent" style="width:100%;">
             <form>
               <div class="form-group">
-                <label for="testInputName">Name</label>
-                <input type="text" class="form-control" id="testInputName" placeholder="Name">
+                <label for="testInputID">Test Id</label>
+                <input type="text" class="form-control" id="testInputID" readonly>
               </div>
               <div class="form-group">
-              <label for="testInput1">Input 1</label>
-              <input type="text" class="form-control" id="testInput1">
+                <label for="testInput1">Input 1</label>
+                <input type="text" class="form-control" id="testInput1" placeholder="Test info (e.g Location etc..)">
               </div>
               <div class="form-group">
-              <label for="testInput2">Input 2</label>
-              <input type="text" class="form-control" id="testInput2">
+                <label for="testInput2">Input 2</label>
+                <input type="text" class="form-control" id="testInput2">
               </div>
               <div class="form-group">
                 <label for="expModeToggle">Experiment Mode: </label>
@@ -286,19 +286,11 @@
               </div>
               <div class="form-group" id="testSelectorDiv">
                 <label for="testSelector">Select a Test</label><br>
-                <select class="selectpicker" id="testSelector">
-                  <option>Mustard</option>
-                  <option>Ketchup</option>
-                  <option>Barbecue</option>
-                </select>
+                <select class="selectpicker" id="testSelector"></select>
               </div>
               <div class="form-group" id="expSelectorDiv">
                 <label for="expSelector">Select an Experiment</label><br>
-                <select class="selectpicker" id="expSelector">
-                  <option>Mustard</option>
-                  <option>Ketchup</option>
-                  <option>Barbecue</option>
-                </select>
+                <select class="selectpicker" id="expSelector"></select>
               </div>
               <div id="infomodalError" class="danger">
                 Please select test options

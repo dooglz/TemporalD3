@@ -31,20 +31,20 @@ Base_Method.prototype.discreet = false;
 
 Base_Method.prototype.ColorThemes = [
   {
-    LAnodeEdgeBaseColour: "black",
+    LAnodeEdgeBaseColour: "white",
     LAnodeFillBaseColour: "deepskyblue",
     LAnodeEdgeHighlightColour: "black",
     LAnodeFillHighlightColour: "blue",
-    LBnodeEdgeBaseColour: "black",
+    LBnodeEdgeBaseColour: "white",
     LBnodeFillBaseColour: "orangered",
     LBnodeEdgeHighlightColour: "black",
     LBnodeFillHighlightColour: "red",
     //
-    RAnodeEdgeBaseColour: "black",
+    RAnodeEdgeBaseColour: "white",
     RAnodeFillBaseColour: "deepskyblue",
     RAnodeEdgeHighlightColour: "black",
     RAnodeFillHighlightColour: "blue",
-    RBnodeEdgeBaseColour: "black",
+    RBnodeEdgeBaseColour: "white",
     RBnodeFillBaseColour: "orangered",
     RBnodeEdgeHighlightColour: "black",
     RBnodeFillHighlightColour: "red",

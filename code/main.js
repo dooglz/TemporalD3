@@ -1288,12 +1288,13 @@ function ExitTestMode() {
   $('#optionsDiv').show();
   $("#infoModal").modal("hide");
   $("#testResultsModal").modal("hide");
-  //$('#questionDiv').hide();
+  $('#questionDiv').hide();
   $("svg").attr('visibility','visible');
   loadedTest = undefined;
    loadedExperiments.forEach(CleanExperiment);
   loadedTests.forEach(CleanTest);
 };
+
 
 function EnterTestMode() {
   inTestMode = true;
@@ -1314,7 +1315,7 @@ function EnterTestMode() {
   $("#testReadyBtn").attr("disabled",true);
   $("#testSubmitBtn").attr("disabled",true);
   //
-  $("#testInputName").val("");
+  $("#testInputID").val(Math.random().toString(36).slice(2,-1));
   $("#testInput1").val("");
   $("#testInput2").val("");
   $("#testSelector").selectpicker("val","");
@@ -1327,8 +1328,8 @@ function EnterTestMode() {
 
 function CheckforStart(){
   $("#infomodalError").html("Please select test options");
-  if($("#testInputName").val() == ""){
-     $("#infomodalError").html("Please enter a name");
+  if($("#testInput1").val() == ""){
+     $("#infomodalError").html("Please enter a Value for Input 1");
     return;
   }
   if(expMode && selectedExperiment == undefined){
@@ -1454,10 +1455,10 @@ function LoadTest(t){
     for (var index = 0; index < t.questionInputs.length; index++) {
       var q = t.questionInputs[index];
       if(q.type == "TextBox"){
-        q.id = q.name+"_test_TextBox";
+        q.id = (index+"_test_TextBox_q");
         qq.text.push(q);
       }else if(q.type == "NumberBox"){
-        q.id = q.name+"_test_NumberBox";
+        q.id = (index+"_test_NumberBox_q");
         qq.num.push(q);
       }else{
         console.error("Test %o, has unrecognised Input type: %o",t.name,q.type);
@@ -1465,6 +1466,7 @@ function LoadTest(t){
     }
     var rendered = questionOptionsTemplate(qq);
     qdiv.html(rendered);
+    $("[id$=_q]","#questionOptionsForm").attr("disabled",true);
   }
   
   //highlight selcted nodes if there are any
@@ -1484,6 +1486,7 @@ function StartTest(){
   $("#testReadyBtn").attr("disabled",true);
   $("#testSubmitBtn").attr("disabled",false);
   $("svg").attr('visibility','visible');
+  $("[id$=_q]","#questionOptionsForm").attr("disabled",false);
   loadedTest.startTime = new Date();
 }
 
@@ -1491,6 +1494,14 @@ function FinishTest(){
   var t = loadedTest;
   t.endTime = new Date();
   console.info("finished test %o, time: %o",t.name,MillisToTime(t.endTime - t.startTime));
+  // Grab repsonces
+  t.responce = [];
+  var qs =$("[id$=_q]","#questionOptionsForm");
+  var ql =$("label","#questionOptionsForm");
+  for (var i = 0; i < qs.length; i++) {
+    t.responce.push({input:ql.eq(i).html(),responce:EscapeHtml(qs.eq(i).val())});
+  }
+  //
   //are we in expirement mode?
   if(expMode){
     t = GetNextTest(loadedExp);
@@ -1515,18 +1526,41 @@ function GetTest(t){
   return t;
 }
 
-function FinishExperiment(){
+function FinishExperiment() {
   //show results modal
-  $("#testResultsModal").modal({keyboard: false,backdrop: "static"});
+  $("#testResultsModal").modal({ keyboard: false, backdrop: "static" });
   var x = "";
-  if(expMode){
+  x += "Id: " + $("#testInputID").val() + "<br>";
+  x += "Input 1: " + $("#testInput1").val() + "<br>";
+  x += "Input 2: " + $("#testInput2").val() + "<br>";
+  var t;
+  var results = { experimentmode: expMode, id: $("#testInputID").val(), input1: $("#testInput1").val(), input2: $("#testInput2").val(), tests: [] };
+  if (expMode) {
     for (var index = 0; index < loadedExp.done.length; index++) {
-      var t = GetTest(loadedExp.done[index]);
-      x+= t.name + " - " + t.responce + "<br> Time: "+  MillisToTime(t.endTime - t.startTime)+"<br>";
+      t = GetTest(loadedExp.done[index]);
+      results.tests.push({ name: t.name, responces: t.responce, start: t.startTime, end: t.endTime });
+      x += t.name + "<br>" + JSON.stringify(t.responce).replace(/},{/g, "<br>") + "<br> Time: " + MillisToTime(t.endTime - t.startTime) + "<br><br>";
     }
-  }else{
-    var t = loadedTest
-    x+= t.name + " - " + t.responce + "<br> Time: "+  MillisToTime(t.endTime - t.startTime)+"<br>";
+  } else {
+    t = loadedTest;
+    results.tests.push({ name: t.name, responces: t.responce, start: t.startTime, end: t.endTime });
+    x += t.name + "<br>" + JSON.stringify(t.responce).replace(/},{/g, "<br>") + "<br> Time: " + MillisToTime(t.endTime - t.startTime) + "<br><br>";
   }
+  HandleResults(results);
   $("#results").html(x);
+}
+
+var lastRes;
+function HandleResults(res) {
+  lastRes = res;
+  var name = res.id + "_" + ((new Date).toUTCString()).replace(/\s+|:|,/g, '_') + "_results.json";
+  SaveJsonToFile(res, name);
+}
+
+function SaveJsonToFile(j, filename) {
+  var file = 'data:text/json;charset=utf-8;base64,' + btoa(JSON.stringify(j));
+  var a = document.createElement("a");
+  a.download = filename;
+  a.href = file;
+  a.click();
 }
