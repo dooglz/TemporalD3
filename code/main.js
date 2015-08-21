@@ -1033,6 +1033,7 @@ function SaveSettings() {
     }, this);
   }
   console.log(JSON.stringify(out));
+  SaveJsonToFile(JSON.stringify(out),"settings.json");
   saveout = out;
   loadedSettings.push(out);
   UpdateSettingsPicker();
@@ -1554,11 +1555,11 @@ var lastRes;
 function HandleResults(res) {
   lastRes = res;
   var name = res.id + "_" + ((new Date).toUTCString()).replace(/\s+|:|,/g, '_') + "_results.json";
-  SaveJsonToFile(res, name);
+  SaveJsonToFile(JSON.stringify(res), name);
 }
 
 function SaveJsonToFile(j, filename) {
-  var file = 'data:text/json;charset=utf-8;base64,' + btoa(JSON.stringify(j));
+  var file = 'data:text/json;charset=utf-8;base64,' + btoa(j);
   var a = document.createElement("a");
   a.download = filename;
   a.href = file;
