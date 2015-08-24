@@ -1027,3 +1027,7 @@ function MillisToTime(millis) {
       return entityMap[s];
     });
   }
+  
+function EscapeID(string) {
+  return String(string).replace(/\s+|'+|"+|\.+|,+/g, '-_-');
+}

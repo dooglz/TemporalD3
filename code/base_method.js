@@ -185,6 +185,9 @@ Base_Method.prototype.ParamChanged = function (param) {
     //We don't know which parmeter changed, could be more than one. Poll all of them.
     for (var i in this.parameters) {
       param = this.parameters[i];
+      if (param.func !== undefined) {
+        param.func.bind(this)(param.pval);
+      }
       console.log("Parameter: %o is: %o", param.name, param.pval);
     }
   }
@@ -218,7 +221,17 @@ Base_Method.prototype.ChannelChanged = function (channel, ctype) {
   //console.log("method: ChannelChanged: " + channel);
   if (channel === undefined) {
     //We don't know which Channel Changed, could be more than one. Poll all of them.
-    console.log("B_Method: channel changed, Reprocessing all cahnnels");
+    console.log("B_Method: channel changed, Reprocessing all channels");
+    this.nodeChannels.forEach(function (c) {
+      if (c.func !== undefined) {
+        c.func.bind(this)(c.dataParam);
+      }
+    }, this);
+    this.linkChannels.forEach(function (c) {
+      if (c.func !== undefined) {
+        c.func.bind(this)(c.dataParam);
+      }
+    }, this);
     this.RedoNodes();
     this.RedoLinks();
     return;

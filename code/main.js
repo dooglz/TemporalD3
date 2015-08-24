@@ -736,7 +736,7 @@ function changeMethod(methodName) {
 
         case "slider":
           newdiv.append("<p>" + param.name + "</p>");
-          var sliderDiv = $("<input id=" + param.name + " data-slider-id='ex1Slider' type='text' data-slider-min=" + param.minval + " data-slider-max=" + param.maxval + " data-slider-step=" + param.step + " data-slider-value=" + param.pval + " />");
+          var sliderDiv = $("<input id='"+EscapeID(param.name+"_"+param.ptype)+"' data-slider-id='ex1Slider' type='text' data-slider-min=" + param.minval + " data-slider-max=" + param.maxval + " data-slider-step=" + param.step + " data-slider-value=" + param.pval + " />");
           newdiv.append(sliderDiv);
           sliderDiv.slider();
           //register calback using some legit hax
@@ -749,7 +749,7 @@ function changeMethod(methodName) {
           break;
 
         case "checkbox":
-          var boxDiv = $("<input  id=" + param.name + " type='checkbox' " + (param.pval ? "checked" : "") + " data-toggle='toggle' data-size='small'>");
+          var boxDiv = $("<input id='"+EscapeID(param.name+"_"+param.ptype)+"' type='checkbox' " + (param.pval ? "checked" : "") + " data-toggle='toggle' data-size='small'>");
           newdiv.append(boxDiv).append("  " + param.name);
           ! function outer(pp, bb) {
             boxDiv.change(function inner() {
@@ -763,7 +763,7 @@ function changeMethod(methodName) {
         case "textbox":
           newdiv.append(param.name);
           var igroup = $("<div class='input-group'></div>");
-          var input = $("<input type='text class='form-control' style='max-width:80%;' value='"+param.pval+"'>");
+          var input = $("<input type='text class='form-control' style='max-width:80%;' value='"+param.pval+"' id='"+EscapeID(param.name+"_"+param.ptype)+"'>");
           igroup.append(input);
           var span = $("<span class=input-group-btn'/>");
           var btn = $("<button class='btn btn-default btn-sm' type='button'>Go!</button>");
@@ -777,7 +777,7 @@ function changeMethod(methodName) {
           break;
 
         case "button":
-          var boxDiv = $("<a class='btn btn-sm btn-success' href='#' role='button'>" + param.name + "</a>");
+          var boxDiv = $("<a id='"+EscapeID(param.name+"_"+param.ptype)+"' class='btn btn-sm btn-success' href='#' role='button'>" + param.name + "</a>");
           newdiv.append(boxDiv)
           newdiv.css('text-align', 'center');
           ! function outer(pp, bb) {
@@ -1012,9 +1012,15 @@ function SaveSettings() {
   out.control.animatedSlider = false;
   out.control.fullscreen = isFullscreen;
  
-  //Method parameters 
+
   if (selected_method !== undefined && selected_method !== null) {
     out.method ={};
+    //Method parameters
+    out.method.parameters = [];
+    selected_method.parameters.forEach(function (c) {
+       out.method.parameters.push({ name: c.name, pval: c.pval});
+    }, this);
+    //Method channels  
     out.method.nodeChannels = [];
     selected_method.nodeChannels.forEach(function (c) {
       if (c.inUse) {
@@ -1023,7 +1029,7 @@ function SaveSettings() {
         out.method.nodeChannels.push({ name: c.name, inUse: false });
       }
     }, this);
-        out.method.linkChannels = [];
+    out.method.linkChannels = [];
     selected_method.linkChannels.forEach(function (c) {
       if (c.inUse) {
         out.method.linkChannels.push({ name: c.name, inUse: true, dataParam: c.dataParam });
@@ -1033,7 +1039,7 @@ function SaveSettings() {
     }, this);
   }
   console.log(JSON.stringify(out));
-  SaveJsonToFile(JSON.stringify(out),"settings.json");
+  //SaveJsonToFile(JSON.stringify(out),"settings.json");
   saveout = out;
   loadedSettings.push(out);
   UpdateSettingsPicker();
@@ -1077,6 +1083,32 @@ function LoadSettings(s) {
   }
   //Method
   if (Exists(s.method)) {
+      if (Exists(s.method.parameters) && s.method.parameters.length > 0) {
+      for (var i = 0; i < s.method.parameters.length; i++) {
+        var p = s.method.parameters[i];
+        //find the actual 
+        var pa = $.grep(selected_method.parameters, function(e){return e.name == p.name});
+        if( pa.length > 0){
+          pa = pa[0];
+          //do we need to set it again?
+          if (pa.pval != p.pval){
+            //yes, this gets awkward as we need to know the type of attribute
+            //Todo make this a function
+            if(pa.ptype == "checkbox"){
+               var e = $("#"+EscapeID(pa.name+"_checkbox"));
+               e.bootstrapToggle(p.pval ? 'on' : 'off');
+            }else if(pa.ptype == "textbox"){
+              var e = $("#"+EscapeID(pa.name+"_textbox"));
+              e.val(p.pval);
+            }else if(pa.ptype == "slider"){
+              //Todo
+            }
+            pa.pval = p.pval;
+          } 
+        } 
+      }
+      selected_method.ParamChanged();
+    }
     if (Exists(s.method.nodeChannels) && s.method.nodeChannels.length > 0) {
       for (var i = 0; i < s.method.nodeChannels.length; i++) {
         var nc = s.method.nodeChannels[i];
