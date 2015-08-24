@@ -761,9 +761,9 @@ function changeMethod(methodName) {
           break;
 
         case "textbox":
-          newdiv.append("<p>" + param.name + "</p>");
+          newdiv.append(param.name);
           var igroup = $("<div class='input-group'></div>");
-          var input = $("<input type='text class='form-control'>");
+          var input = $("<input type='text class='form-control' style='max-width:80%;' value='"+param.pval+"'>");
           igroup.append(input);
           var span = $("<span class=input-group-btn'/>");
           var btn = $("<button class='btn btn-default btn-sm' type='button'>Go!</button>");

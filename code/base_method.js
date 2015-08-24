@@ -28,6 +28,8 @@ Base_Method.prototype.currentDateMin;
 Base_Method.prototype.minDate;
 Base_Method.prototype.maxDate;
 Base_Method.prototype.discreet = false;
+Base_Method.prototype.max_radius = 8;
+Base_Method.prototype.min_radius = 2;
 
 Base_Method.prototype.ColorThemes = [
   {
@@ -936,10 +938,16 @@ Base_Method.prototype.NodeSize = function (side, d, half, i) {
       //we are going to have to normalise both channles.
     //   return ((this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, [channel.dataParam,channel2.dataParam], this.currentDateMin, this.currentDateMax));
    // }else{
-   return ((this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax,selected_method.getParam("Normalize All").pval));
+   var a = getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax,selected_method.getParam("Normalize All").pval);
+ //  a = this.default_radius;
+   a = a * (this.min_radius * (this.max_radius - this.min_radius));
+   a = Math.min(this.max_radius, a);
+   a = Math.max(this.min_radius, a);
+   return a;
+  // return ((this.default_radius - .75) + this.default_radius * a);
    // }
   } else {
-    return (this.default_radius - .75);
+    return (this.max_radius + this.min_radius) * 0.5;
   }
 };
 

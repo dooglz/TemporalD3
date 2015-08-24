@@ -5,7 +5,6 @@
 //make sure this is called before any additions to Method_Simple.prototype
 Method_Simple.prototype = Object.create(Base_Method.prototype);
 // Important object globals
-Method_Simple.prototype.default_radius = 6;
 Method_Simple.prototype.prev_currentDateMin;
 Method_Simple.prototype.prev_currentDateMax;
 Method_Simple.prototype.svg;
@@ -23,7 +22,9 @@ function Method_Simple() {
     { name: "Disable rest", ptype: "checkbox", pval: false },
     { name: "Cumulative Links", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } },
     { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } },
-    { name: "Normalize All", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } }
+    { name: "Normalize All", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } },
+    { name: "Minimum Radius", ptype: "textbox", pval: this.min_radius, func: function (pval) {this.min_radius = parseFloat(pval);} },
+    { name: "Maximum Radius", ptype: "textbox", pval: this.max_radius, func: function (pval) {this.max_radius = parseFloat(pval);} },
   ];
 }
 
