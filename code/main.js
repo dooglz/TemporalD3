@@ -9,7 +9,7 @@ var selected_method;
 $(document).ready(function(){
   ChangeData("Les Miserables");
   changeMethod(m_simple);
- }) 
+ })
 
 $(window).keypress(function( event ) {
   //r =82
@@ -166,7 +166,7 @@ $('#rangetoggle').change(function () {
     CreateSlider(false);
   }
   isSliderRanged = val;
-});      
+});
 
 
 var isSliderAnimated = false;
@@ -180,7 +180,7 @@ $('#animationtoggle').change(function () {
      clearTimeout(animationtimeout);
   }
   isSliderAnimated = val;
-});  
+});
 
 var updown = false;
 function Animate(){
@@ -256,7 +256,7 @@ var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "freeScaleTime-300-1.9", url: "data/freeScaleTime-300-1.9.json" },
   { name: "graphTest2b", url: "data/graphTest2b.json" },
   { name: "graphTest3b", url: "data/graphTest3b.json" },
-  { name: "graphTest3c.json", url: "data/graphTest3c.json"}, 
+  { name: "graphTest3c.json", url: "data/graphTest3c.json"},
   { name: "circleGraph50-2.json", url: "data/circleGraph50-2.json"},
   { name: "oscillatingValuesNodes.json", url: "data/oscillatingValuesNodes.json"},
   { name: "oscillatingValuesNodesEdges3.json", url: "data/oscillatingValuesNodesEdges3.json" },
@@ -523,7 +523,7 @@ function Readchannels() {
   selected_method.ChannelChanged();
 }
 
-//Takes an attribute and a channel, 
+//Takes an attribute and a channel,
 // finds an appropriate dropdown, assigns it, calls ChannelChange.
 function SetChannel(atype, attribute, channelname) {
   var ddc = $(("#" + atype + "_" + attribute + "_dropdowns").replace(/\s+/g, '-__-'));
@@ -1020,7 +1020,7 @@ function SaveSettings() {
     selected_method.parameters.forEach(function (c) {
        out.method.parameters.push({ name: c.name, pval: c.pval});
     }, this);
-    //Method channels  
+    //Method channels
     out.method.nodeChannels = [];
     selected_method.nodeChannels.forEach(function (c) {
       if (c.inUse) {
@@ -1086,7 +1086,7 @@ function LoadSettings(s) {
       if (Exists(s.method.parameters) && s.method.parameters.length > 0) {
       for (var i = 0; i < s.method.parameters.length; i++) {
         var p = s.method.parameters[i];
-        //find the actual 
+        //find the actual
         var pa = $.grep(selected_method.parameters, function(e){return e.name == p.name});
         if( pa.length > 0){
           pa = pa[0];
@@ -1104,8 +1104,8 @@ function LoadSettings(s) {
               //Todo
             }
             pa.pval = p.pval;
-          } 
-        } 
+          }
+        }
       }
       selected_method.ParamChanged();
     }
@@ -1235,7 +1235,7 @@ $('#modalTestQuitBtn2').click(ExitTestMode);
 $("#expSelectorDiv").hide();
 $('#modalTestStartBtn').click(
   function(){
-    if(CheckforStart()){  
+    if(CheckforStart()){
       //Let's a go!
       $("#infoModal").modal("hide");
     }
@@ -1401,7 +1401,7 @@ function CleanTest(t) {
       if(loadedTests[i].name == t){
         t = loadedTests[i];
         break;
-      } 
+      }
     }
   }
   t.reponce = [];
@@ -1418,7 +1418,7 @@ function GetNextTest(exp){
         exp = loadedExperiments[i];
         loadedExp = exp;
         break;
-      } 
+      }
     }
   }
   if(!Exists(exp.currentPos)){
@@ -1474,7 +1474,7 @@ function LoadTest(t){
       if(loadedTests[i].name == t){
         t = loadedTests[i];
         break;
-      } 
+      }
     }
   }
   console.log("Loading test %o",t.name);
@@ -1564,7 +1564,7 @@ function GetTest(t){
     for (var i = 0; i < loadedTests.length; i++) {
       if(loadedTests[i].name == t){
         return loadedTests[i];
-      } 
+      }
     }
   }
   return t;
@@ -1607,4 +1607,35 @@ function SaveJsonToFile(j, filename) {
   a.download = filename;
   a.href = file;
   a.click();
+}
+
+var xmaslights;
+var cc  =0;
+var bb = true
+var zz = 0;
+var origL;
+var origR;
+function xmas(){
+  if(xmaslights !== undefined){
+    clearTimeout(xmaslights);
+    m_simple.ColorThemes[0].LAnodeFillHighlightColour = origL;
+    m_simple.ColorThemes[0].RAnodeFillHighlightColour = origR;
+    xmaslights = undefined;
+    m_simple.Highlight();
+    return;
+  }
+  origL = m_simple.ColorThemes[0].LAnodeFillHighlightColour;
+  origR = m_simple.ColorThemes[0].RAnodeFillHighlightColour;
+  xmaslights = setInterval(function(){
+      m_simple.ColorThemes[0].LAnodeFillHighlightColour = rainbow(zz);
+      m_simple.ColorThemes[0].RAnodeFillHighlightColour = rainbow(zz+4);
+      zz+=0.1;
+      m_simple.Highlight(cc,bb);
+      cc++;
+      if(cc == graphdata.nodes.length){
+        bb = !bb;
+        cc = 0;
+      }
+    },200
+  );
 }

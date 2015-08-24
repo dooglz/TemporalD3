@@ -1031,3 +1031,11 @@ function MillisToTime(millis) {
 function EscapeID(string) {
   return String(string).replace(/\s+|'+|"+|\.+|,+/g, '-_-');
 }
+
+function rainbow(i){
+  var frequency = .3;
+  red   = Math.floor(Math.sin(frequency*i + 0) * 127 + 128);
+  green = Math.floor(Math.sin(frequency*i + 2) * 127 + 128);
+  blue  = Math.floor(Math.sin(frequency*i + 4) * 127 + 128);
+  return "rgb("+red+","+green+","+blue+")";
+}
