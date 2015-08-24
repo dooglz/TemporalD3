@@ -522,7 +522,9 @@ Base_Method.prototype.UpdateVis = function () {
   
   if (displayMode == 2) {
     this.visNodesR = this.svgContainerR.selectAll("g").data(this.visNodeData);
-    var gR = this.visNodesR.enter().append("g");
+    var gR = this.visNodesR.enter().append("g")
+      .on("click", Nodeclick)
+      .on("dblclick", NodedblClick);
     gR.append("circle");
     this.visNodesR.exit().remove();
   } else {
@@ -541,12 +543,27 @@ Base_Method.prototype.UpdateVis = function () {
         str += o + ": " + getLinkAttributeValue(this.data, d, o, this.currentDateMin, this.currentDateMax) + "<br/>";
       }, this);
       this.visLinkTooltip.transition().duration(200).style("opacity", .9);
-      this.visLinkTooltip.html(str).style("left", (d3.event.pageX) + "px").style("top", (d3.event.pageY - 28) + "px");
+      this.visLinkTooltip.html(str).style("left",(d3.event.pageX) + "px").style("top",(d3.event.pageY - 28) + "px");
     }, this));
     this.visLinks.on("mouseout", $.proxy(function (d) {
       this.visLinkTooltip.transition().duration(500).style("opacity", 0);
     }, this));
+    //Right vis
+    if (displayMode == 2) {
+      this.visLinksR.on("mouseover", $.proxy(function (d) {
+        var str = "";
+        this.data.link_keys.forEach(function (o) {
+          str += o + ": " + getLinkAttributeValue(this.data, d, o, this.currentDateMin, this.currentDateMax) + "<br/>";
+        }, this);
+        this.visLinkTooltip.transition().duration(200).style("opacity", .9);
+        this.visLinkTooltip.html(str).style("left",(d3.event.pageX) + "px").style("top",(d3.event.pageY - 28) + "px");
+      }, this));
+      this.visLinksR.on("mouseout", $.proxy(function (d) {
+        this.visLinkTooltip.transition().duration(500).style("opacity", 0);
+      }, this));
+    }
   }
+  //
   if (this.data.node_keys.length > 0) {
     this.visNodeTooltip = d3.select("body").append("div").attr("class", "tooltip").style("opacity", 0);
     this.visNodes.on("mouseover", $.proxy(function (d) {
@@ -555,13 +572,27 @@ Base_Method.prototype.UpdateVis = function () {
         str += o + ": " + getNodeAttributeValue(this.data, d, o, this.currentDateMin, this.currentDateMax) + "<br/>";
       }, this);
       this.visNodeTooltip.transition().duration(200).style("opacity", .9);
-      this.visNodeTooltip.html(str).style("left", (d3.event.pageX) + "px").style("top", (d3.event.pageY - 28) + "px");
+      this.visNodeTooltip.html(str).style("left",(d3.event.pageX) + "px").style("top",(d3.event.pageY - 28) + "px");
     }, this));
     this.visNodes.on("mouseout", $.proxy(function (d) {
       this.visNodeTooltip.transition().duration(500).style("opacity", 0);
     }, this));
+    //Right vis
+    if (displayMode == 2) {
+      this.visNodesR.on("mouseover", $.proxy(function (d) {
+        var str = "";
+        this.data.node_keys.forEach(function (o) {
+          str += o + ": " + getNodeAttributeValue(this.data, d, o, this.currentDateMin, this.currentDateMax) + "<br/>";
+        }, this);
+        this.visNodeTooltip.transition().duration(200).style("opacity", .9);
+        this.visNodeTooltip.html(str).style("left",(d3.event.pageX) + "px").style("top",(d3.event.pageY - 28) + "px");
+      }, this));
+      this.visNodesR.on("mouseout", $.proxy(function (d) {
+        this.visNodeTooltip.transition().duration(500).style("opacity", 0);
+      }, this));
+    }
   }
- 
+
 }
 
 //shortcut to ClearVis and UpdateVis
@@ -1057,7 +1088,7 @@ Base_Method.prototype.SetupSVGFilters = function () {
 };
 
 Base_Method.prototype.CleanupTooltips= function () {
-    if (this.visNodeTooltip !== undefined) {
+  if (this.visNodeTooltip !== undefined) {
     $(".tooltip").remove();
     this.visNodeTooltip = undefined;
   }
