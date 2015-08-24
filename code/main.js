@@ -1514,6 +1514,7 @@ function LoadTest(t){
   }
   //highlight selcted nodes if there are any
   if(Exists(t.highlightedNodes) && t.highlightedNodes.length > 0){
+    console.log(t.highlightedNodes);
     selected_method.Highlight(t.highlightedNodes);
   }
   

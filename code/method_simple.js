@@ -95,7 +95,7 @@ Method_Simple.prototype.Update = function () {
 };
 
 //######################################################################
-
+var zoom;
 // The page has been resized or some other event that requires a redraw
 Method_Simple.prototype.Redraw = function (w, h) {
   Base_Method.prototype.Redraw.call(this,w,h);
@@ -109,7 +109,7 @@ Method_Simple.prototype.Redraw = function (w, h) {
     .linkDistance(this.LinkLength.bind(this))
     .size([this.width, this.height]);
 
-  var zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", this.zoomed.bind(this));
+  zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", this.zoomed.bind(this));
   var refresh = false;
   if (displayMode == 2) {
     if (this.svgR === undefined) {
@@ -167,6 +167,9 @@ Method_Simple.prototype.Reset = function () {
   if (this.svgR !== undefined) {
     this.svgContainerR.attr("transform", "translate(0,0)scale(1,1)");
   }
+  if(!Exists(zoom)){return;};
+  zoom.scale(1);
+  zoom.translate([0,0]);
 };
 //######################################################################
 //########    Force layout tick

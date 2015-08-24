@@ -643,6 +643,7 @@ Base_Method.prototype.UpdateVisData = function (newNodeData, newLinkData) {
 
 // action to take on mouse click
 function Nodeclick(d) {
+  if(!selected_method.isHighlightingEnabled){return;}
   if (d.highlight) {
     d.highlight = false;
   } else {
@@ -1017,7 +1018,7 @@ Base_Method.prototype.SetupSVGFilters = function () {
   d3.selectAll("svg").attr("style","stroke-width: 0px; background-color: "+this.ColorTheme.BackgroundColour+";");
   // this.svg.attr("fill-opacity",1.0);
   if(d3.selectAll("defs")[0].length == d3.selectAll("svg")[0].length){
-    return;
+    //return;
   }
   d3.selectAll("defs").remove();
   var defs = d3.selectAll("svg").append("defs");
@@ -1066,18 +1067,17 @@ Base_Method.prototype.CleanupTooltips= function () {
   }
 }
 
-Base_Method.prototype.isHighlightingEnabled
+Base_Method.prototype.isHighlightingEnabled = true;
 Base_Method.prototype.EnableHighlighting = function (bool) {
   if (bool == undefined) { bool = !this.isHighlightingEnabled };
   if (this.isHighlightingEnabled == bool) {
     return;
   }
-  
-  //todo
   this.isHighlightingEnabled = bool;
 }
 
-Base_Method.prototype.Highlight = function (id) {
+Base_Method.prototype.Highlight = function (id,bool) {
+  if(!Exists(bool)){bool = true;}
   if (!Exists(id)) {
     this.data.nodes.forEach(function (n) {
       n.highlight = false;
@@ -1085,14 +1085,15 @@ Base_Method.prototype.Highlight = function (id) {
   } else {
     if ($.isArray(id)) {
       id.forEach(function (n) {
-        this.data.nodes[n].highlight = true;
+        this.data.nodes[n].highlight = bool;
       }, this);
     } else {
-      this.data.nodes[id].highlight = true;
+      this.data.nodes[id].highlight = bool;
     }
   }
   this.RedoNodes();
 }
+
 
 Base_Method.prototype.GetHighlightedNodes = function (id) {
   var a = [];
