@@ -1039,7 +1039,7 @@ function SaveSettings() {
     }, this);
   }
   console.log(JSON.stringify(out));
-  //SaveJsonToFile(JSON.stringify(out),"settings.json");
+  SaveJsonToFile(JSON.stringify(out),"settings.json");
   saveout = out;
   loadedSettings.push(out);
   UpdateSettingsPicker();
@@ -1323,8 +1323,11 @@ function ExitTestMode() {
   $("#testResultsModal").modal("hide");
   $('#questionDiv').hide();
   $("svg").attr('visibility','visible');
+  if(Exists(selected_method)){
+    selected_method.EnableHighlighting(true);
+  }
   loadedTest = undefined;
-   loadedExperiments.forEach(CleanExperiment);
+  loadedExperiments.forEach(CleanExperiment);
   loadedTests.forEach(CleanTest);
 };
 
@@ -1501,10 +1504,17 @@ function LoadTest(t){
     qdiv.html(rendered);
     $("[id$=_q]","#questionOptionsForm").attr("disabled",true);
   }
-  
+  //enable/disable highlighting
+  if(Exists(t.enableNodeHighlight) && t.enableNodeHighlight){
+    //enable highlighting
+    selected_method.EnableHighlighting(true);
+  }else{
+    //disable higlighting
+    selected_method.EnableHighlighting(false);
+  }
   //highlight selcted nodes if there are any
   if(Exists(t.highlightedNodes) && t.highlightedNodes.length > 0){
-    //Todo
+    selected_method.Highlight(t.highlightedNodes);
   }
   
   //enable Ready btn

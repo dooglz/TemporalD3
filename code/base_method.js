@@ -1065,3 +1065,41 @@ Base_Method.prototype.CleanupTooltips= function () {
     this.visLinkTooltip = undefined;
   }
 }
+
+Base_Method.prototype.isHighlightingEnabled
+Base_Method.prototype.EnableHighlighting = function (bool) {
+  if (bool == undefined) { bool = !this.isHighlightingEnabled };
+  if (this.isHighlightingEnabled == bool) {
+    return;
+  }
+  
+  //todo
+  this.isHighlightingEnabled = bool;
+}
+
+Base_Method.prototype.Highlight = function (id) {
+  if (!Exists(id)) {
+    this.data.nodes.forEach(function (n) {
+      n.highlight = false;
+    }, this);
+  } else {
+    if ($.isArray(id)) {
+      id.forEach(function (n) {
+        this.data.nodes[n].highlight = true;
+      }, this);
+    } else {
+      this.data.nodes[id].highlight = true;
+    }
+  }
+  this.RedoNodes();
+}
+
+Base_Method.prototype.GetHighlightedNodes = function (id) {
+  var a = [];
+  this.data.nodes.forEach(function (n) {
+    if (n.highlight) {
+      a.push(n);
+    }
+  }, this);
+  return a;
+}
