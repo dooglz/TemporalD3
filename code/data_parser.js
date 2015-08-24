@@ -24,7 +24,10 @@ function IsNumber(numberString) {
 }
 
 function ProcessAttributesInfo(infoObj, keys, values) {
-
+  var global_max_num;
+  var global_min_num;
+  var global_max_date;
+  var global_min_date;
   for (var i in keys) {
     var attribute = keys[i];
     infoObj[attribute] = {};
@@ -57,11 +60,20 @@ function ProcessAttributesInfo(infoObj, keys, values) {
     if (attributeType == "number" || attributeType == "date") {
       var min_val = sampleValue;
       var max_val = sampleValue;
+     
       if (attributeType == "date") {
+        if(global_max_date === undefined){
+          global_max_date = max_val;
+          global_min_date = min_val;
+        }
         min_val = new Date(min_val).valueOf();
         max_val = new Date(max_val).valueOf();
+      }else if(global_max_num === undefined){
+        global_max_num = max_val;
+        global_min_num = min_val;
       }
       for (var j in values) {
+        //TODO: parse cahanging values!
         var nval = values[j][attribute];
         if (attributeType == "date") {
           nval = new Date(nval).valueOf();
@@ -70,18 +82,27 @@ function ProcessAttributesInfo(infoObj, keys, values) {
         min_val = Math.min(min_val, nval);
       }
       if (attributeType == "date") {
-        min_val = new Date(min_val)
-        max_val = new Date(max_val)
+        min_val = new Date(min_val);
+        max_val = new Date(max_val);
+        global_max_date = max_val;
+        global_min_date = min_val;
+      }else{
+        global_max_num = max_val;
+        global_min_num = min_val;
       }
       attributeInfo.min_val = min_val;
       attributeInfo.max_val = max_val;
     }
-
     // console.log(keys[i] + " - " + sampleValue + " - " + attributeType);
     // console.log(attributeInfo);
     attributeInfo.type = attributeType;
     attributeInfo.dynamic = false;
   }
+  console.log(global_max_num,global_min_num,global_max_date,global_min_date);
+  infoObj.global_max_num = global_max_num;
+  infoObj.global_min_num =global_min_num;
+  infoObj.global_max_date = global_max_date;
+  infoObj.global_min_date = global_min_date;
 }
 
 
@@ -164,7 +185,6 @@ function FillAttributeInfo(infoObj, attribute, values) {
     infoObj[attribute.name].min_val = min_val;
     infoObj[attribute.name].max_val = max_val;
   }
-
 }
 
 function FindDateSmaple(data) {
@@ -235,23 +255,81 @@ function ParseData(data) {
     //grab link attributes
     data.links = data.edges;
     data.link_keys = [];
+    var l_global_max_num = -Infinity;
+    var l_global_min_num = Infinity;
+    var l_global_max_date;
+    var l_global_min_date;
     if (data.links[0].attributes !== undefined) {
       for (var i = 0; i < data.links[0].attributes.length; i++) {
         var attribute = data.links[0].attributes[i];
         data.link_keys.push(attribute.name);
         FillAttributeInfo(data.link_attributes_info, attribute, data.links);
+        attribute = attribute.name;
+        if (data.link_attributes_info[attribute].type == "date") {
+          if (l_global_max_date === undefined) {
+            l_global_min_date = data.link_attributes_info[attribute].min_val;
+            l_global_max_date = data.link_attributes_info[attribute].max_val;
+          } else {
+            if (data.link_attributes_info[attribute].max_val.valueOf() > l_global_max_date.valueOf()) {
+              l_global_max_date = data.link_attributes_info[attribute].max_val;
+            }
+            if (data.link_attributes_info[attribute].min_val.valueOf() > l_global_max_date.valueOf()) {
+              l_global_min_date = data.link_attributes_info[attribute].min_val;
+            }
+          }
+        } else if (data.link_attributes_info[attribute].type == "number") {
+          l_global_max_num = Math.max(l_global_max_num, data.link_attributes_info[attribute].max_val);
+          l_global_min_num = Math.min(l_global_min_num, data.link_attributes_info[attribute].min_val);
+        }
       }
     }
+    // console.log(global_max_num,global_min_num,global_max_date,global_min_date);
+    data.link_attributes_info.global_max_num = l_global_max_num;
+    data.link_attributes_info.global_min_num = l_global_min_num;
+    data.link_attributes_info.global_max_date = l_global_max_date;
+    data.link_attributes_info.global_min_date = l_global_min_date;
     
     //grab node attributes
     data.node_keys = []
+    var n_global_max_num;
+    var n_global_min_num;
+    var n_global_max_date;
+    var n_global_min_date;
     if (data.nodes[0].attributes != undefined) {
+
       for (var i = 0; i < data.nodes[0].attributes.length; i++) {
-        var attribute = data.nodes[0].attributes[i];
-        data.node_keys.push(attribute.name);
-        FillAttributeInfo(data.node_attributes_info, attribute, data.nodes);
+        var n_attribute = data.nodes[0].attributes[i];
+        data.node_keys.push(n_attribute.name);
+        FillAttributeInfo(data.node_attributes_info, n_attribute, data.nodes);
+        n_attribute = n_attribute.name;
+        if (data.node_attributes_info[n_attribute].type == "date") {
+          if (n_global_max_date === undefined) {
+            n_global_min_date = data.node_attributes_info[n_attribute].min_val;
+            n_global_max_date = data.node_attributes_info[n_attribute].max_val;
+          } else {
+            if (data.node_attributes_info[n_attribute].max_val.valueOf() > n_global_max_date.valueOf()) {
+              n_global_max_date = data.node_attributes_info[n_attribute].max_val;
+            }
+            if (data.node_attributes_info[n_attribute].min_val.valueOf() > n_global_max_date.valueOf()) {
+              n_global_min_date = data.node_attributes_info[n_attribute].min_val;
+            }
+          }
+        } else if (data.node_attributes_info[n_attribute].type == "number") {
+          if (n_global_max_num === undefined) {
+            n_global_max_num = data.node_attributes_info[n_attribute].max_val;
+            n_global_min_num = data.node_attributes_info[n_attribute].min_val;
+          } else {
+            n_global_max_num = Math.max(n_global_max_num, data.node_attributes_info[n_attribute].max_val);
+            n_global_min_num = Math.min(n_global_min_num, data.node_attributes_info[n_attribute].min_val);
+          }
+        }
       }
     }
+    // console.log(global_max_num,global_min_num,global_max_date,global_min_date);
+    data.node_attributes_info.global_max_num = n_global_max_num;
+    data.node_attributes_info.global_min_num = n_global_min_num;
+    data.node_attributes_info.global_max_date = n_global_max_date;
+    data.node_attributes_info.global_min_date = n_global_min_date;
 
     if (data.date_type !== undefined) {
       console.log("Json file specified date-type as %o", data.date_type);
@@ -340,32 +418,43 @@ function ParseData(data) {
   data.minDate = range.min;
   data.formattedMaxDate = (data.date_type == "date" ? data.maxDate.toDateString() : data.maxDate);
   data.formattedMinDate = (data.date_type == "date" ? data.minDate.toDateString() : data.minDate);
+  //Grab Global ranges
+  if(data.link_attributes_info.global_max_num > data.node_attributes_info.global_max_num){
+     data.maxNumber = data.link_attributes_info.global_max_num;
+  }else{
+    data.maxNumber = data.node_attributes_info.global_max_num;
+  }
+  if(data.link_attributes_info.global_min_num < data.node_attributes_info.global_min_num){
+     data.minNumber = data.link_attributes_info.global_min_num;
+  }else{
+    data.minNumber = data.node_attributes_info.global_min_num;
+  }
   return true;
 }
 
-function getNodeAttributeValue(data, node, attribute, minDate, maxDate) {
-  return getAttributeValue(true, data, node, attribute, minDate, maxDate);
+function getNodeAttributeValue(data, node, attribute, minDate, maxDate,global) {
+  return getAttributeValue(true, data, node, attribute, minDate, maxDate,global);
 }
-function getLinkAttributeValue(data, link, attribute, minDate, maxDate) {
-  return getAttributeValue(false, data, link, attribute, minDate, maxDate);
+function getLinkAttributeValue(data, link, attribute, minDate, maxDate,global) {
+  return getAttributeValue(false, data, link, attribute, minDate, maxDate,global);
 }
-function getNodeAttributeAsPercentage(data, node, attribute, minDate, maxDate) {
-  return getNLAttributeAsPercentage(true, data, node, attribute);
+function getNodeAttributeAsPercentage(data, node, attribute, minDate, maxDate,global) {
+  return getNLAttributeAsPercentage(true, data, node, attribute,global);
 }
-function getLinkAttributeAsPercentage(data, link, attribute, minDate, maxDate) {
-  return getNLAttributeAsPercentage(false, data, link, attribute, minDate, maxDate);
+function getLinkAttributeAsPercentage(data, link, attribute, minDate, maxDate,global) {
+  return getNLAttributeAsPercentage(false, data, link, attribute, minDate, maxDate,global);
 }
-function getAttributeAsPercentage(data, nodeOrLink, attribute, minDate, maxDate) {
+function getAttributeAsPercentage(data, nodeOrLink, attribute, minDate, maxDate,global) {
   var at = attribute;
   if($.isArray(attribute)){
       at = attribute[0];
   }
   if (data.node_keys.indexOf(at) != -1) {
     //node
-    return getNLAttributeAsPercentage(true, data, nodeOrLink, attribute, minDate, maxDate);
+    return getNLAttributeAsPercentage(true, data, nodeOrLink, attribute, minDate, maxDate,global);
   } else if (data.link_keys.indexOf(at) != -1) {
     //link
-    return getNLAttributeAsPercentage(false, data, nodeOrLink, attribute, minDate, maxDate);
+    return getNLAttributeAsPercentage(false, data, nodeOrLink, attribute, minDate, maxDate,global);
   } else {
     console.error("coudn't determine type of attribute: %o", at);
     return 0;
@@ -520,7 +609,7 @@ function getNLAttributeArrayAsPercentage(atype, data, nodeOrLink, attributes, se
   }
 }
 
-function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute, selecteddateMin, selecteddateMax) {
+function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute, selecteddateMin, selecteddateMax,global) {
   if($.isArray(attribute)){
     if(attribute.length > 1){
       return getNLAttributeArrayAsPercentage(atype, data, nodeOrLink, attribute, selecteddateMin, selecteddateMax)
@@ -549,10 +638,18 @@ function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute, selected
 
   if (attributes_info.type == "number") {
     // console.log("number - val:"+attribute_value + " %: "+attribute_value / (attributes_info.max_val - attributes_info.min_val));
-    return attribute_value / (attributes_info.max_val - attributes_info.min_val);
+    if(global){
+      return attribute_value / (data.maxNumber - data.minNumber);
+    }else{
+      return attribute_value / (attributes_info.max_val - attributes_info.min_val);
+    }
   } else if (attributes_info.type == "date") {
     attribute_value = new Date(attribute_value);
-    return (attribute_value - attributes_info.min_val) / (attributes_info.max_val - attributes_info.min_val);
+    if(global){
+      return attribute_value / (data.maxNumber - data.minNumber);
+    }else{
+      return (attribute_value - attributes_info.minDate) / (attributes_info.maxDate - attributes_info.minDate);
+    }
   } else if (attributes_info.type == "string") {
     var aindex = attributes_info.values.indexOf(attribute_value);
     if (aindex == -1) { return 0; }

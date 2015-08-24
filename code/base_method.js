@@ -781,7 +781,7 @@ Base_Method.prototype.Linkcolour = function (d) {
 Base_Method.prototype.LinkWidth = function (d) {
   var channel = this.getLinkChannel("Link Width");
   if (channel.inUse) {
-    var a = getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
+    var a = getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax,selected_method.getParam("Normalize All").pval);
     a = Math.max(a,0.1);
     return (3.5 * a) + "px";
   } else {
@@ -792,7 +792,7 @@ Base_Method.prototype.LinkWidth = function (d) {
 Base_Method.prototype.LinkLength = function (d) {
   var channel = this.getLinkChannel("Link Length");
   if (channel.inUse) {
-    return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax);
+    return 100 * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax,selected_method.getParam("Normalize All").pval);
   } else {
     return 50;
   }
@@ -932,12 +932,12 @@ Base_Method.prototype.NodeSize = function (side, d, half, i) {
     }
   }
   if (channel.inUse) {
-    if(isSplit){
+  //  if(isSplit){
       //we are going to have to normalise both channles.
-       return ((this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, [channel.dataParam,channel2.dataParam], this.currentDateMin, this.currentDateMax));
-    }else{
-      return ((this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax));
-    }
+    //   return ((this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, [channel.dataParam,channel2.dataParam], this.currentDateMin, this.currentDateMax));
+   // }else{
+   return ((this.default_radius - .75) + this.default_radius * getAttributeAsPercentage(this.data, d, channel.dataParam, this.currentDateMin, this.currentDateMax,selected_method.getParam("Normalize All").pval));
+   // }
   } else {
     return (this.default_radius - .75);
   }

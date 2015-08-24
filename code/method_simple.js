@@ -22,7 +22,8 @@ function Method_Simple() {
     //{ name: "Test TextBox", ptype: "textbox", pval: "" },
     { name: "Disable rest", ptype: "checkbox", pval: false },
     { name: "Cumulative Links", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } },
-    { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } }
+    { name: "Cumulative Nodes", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } },
+    { name: "Normalize All", ptype: "checkbox", pval: true, func: function () {/*Todo: refilter*/ } }
   ];
 }
 
