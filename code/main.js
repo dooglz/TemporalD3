@@ -1344,7 +1344,7 @@ function EnterTestMode() {
   $('#channelDiv').hide();
   $('#optionsDiv').hide();
   //
-  $("#infoModal").modal({keyboard: false,backdrop: "static"});
+  $("#infoModal").modal({backdrop: 'static'});
   $('#questionDiv').show();
   $('#questionText').html("");
   //$('#questionOptions').html("");
