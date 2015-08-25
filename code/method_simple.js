@@ -62,12 +62,22 @@ Method_Simple.prototype.foci = [
 ];
 
 Method_Simple.prototype.SetData = function (d) {
+  console.warn("newdata",d);
   Base_Method.prototype.SetData.call(this, d);
   this.data = d;
-  this.RedoNodes();
-  this.RedoLinks();
-  this.ClearVisData();
-  this.NewVis();
+  if (Exists(d)){
+    this.RedoNodes();
+    this.RedoLinks();
+    this.ClearVisData();
+    this.NewVis();
+  }else{
+    if (this.forceLayout != undefined) {
+      console.log("layout stopped");
+      this.forceLayout.stop();
+    }
+    this.ClearVisData();
+        this.ClearVis();
+  }
 };
 
 //######################################################################
@@ -76,7 +86,7 @@ Method_Simple.prototype.SetData = function (d) {
 
 Method_Simple.prototype.Update = function () {
   Base_Method.prototype.Update.call(this);
-  if (this.data == null) { return; }
+  if (!Exists(this.data)) { return; }
   //force a tick
   this.forceLayout.resume();
   //restart simulation
@@ -84,6 +94,7 @@ Method_Simple.prototype.Update = function () {
   //console.log("staring force %o, nodes: %o, links:%o",this.forceLayout,this.data.nodes,this.filteredLinks);
   var n = this.data.nodes.filter($.proxy(this.StandardNodeFilter, this));
   var l = this.data.links.filter($.proxy(this.QuickLinkFilter, this));
+  console.log("layout started");
   this.forceLayout.nodes(n).links(l).on("tick", this.Tick.bind(this)).start();
   
   //Update Vis

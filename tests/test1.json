@@ -8,7 +8,7 @@
 	],
 	
 	"enableNodeHighlight":true,
-	
+	"showKey": true,
 	"highlightedNodes":[1,2,3,5],
 	
 	"settings":{
@@ -25,9 +25,9 @@
 		"method":{
 		  "nodeChannels":[
 			{"name":"Gravity Point","inUse":false},
-			{"name":"Node Colour LA","inUse":false},
+			{"name":"Node Colour LA","inUse":true,"dataParam":"group"},
 			{"name":"Node Colour LB","inUse":false},
-			{"name":"Node Colour RA","inUse":false},
+			{"name":"Node Colour RA","inUse":true,"dataParam":"group"},
 			{"name":"Node Colour RB","inUse":false},
 			{"name":"Node Size LA","inUse":false},
 			{"name":"Node Size LB","inUse":false},

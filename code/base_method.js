@@ -466,8 +466,13 @@ Base_Method.prototype.UpdateVisPositions = function (positionAttribute, position
           +")"; });
      }
   } else {
+        
     this.visNodes
       .attr("transform",function (d) {
+        if(isNaN(d[positionAttribute + "x"])){
+       ///   console.log(d,positionAttribute,d[positionAttribute + "x"]);
+         // debugger;
+        }
         return "translate("
           +d[positionAttribute + "x"]
           +","+d[positionAttribute + "y"]
@@ -484,7 +489,7 @@ Base_Method.prototype.UpdateVisPositions = function (positionAttribute, position
      }
   }
 }
-
+var lol = false;
 //Add and remove nodes/links to the scene (Normally called after UpdateVisData(), and before UpdateVisPositions())
 Base_Method.prototype.UpdateVis = function () {
   if (this.data === undefined || this.data === null) {
@@ -690,8 +695,9 @@ Base_Method.prototype.LAttributesPerVisNode = 0;
 Base_Method.prototype.RAttributesPerVisNode = 0;
 
 Base_Method.prototype.NodeSplit = function () {
+  if(!Exists(this.visNodes)){return;}
   this.NodeSplitL();
-   this.NodeSplitR();
+  this.NodeSplitR();
 }
 Base_Method.prototype.NodeSplitL = function () {
   var channelLA = this.getNodeChannel("Node Size LA").inUse || this.getNodeChannel("Node Colour LA").inUse;
@@ -708,6 +714,7 @@ Base_Method.prototype.NodeSplitL = function () {
   }
   
   //cleanup any stale circles first
+  
   this.visNodes.selectAll("#secondary").remove();
   //only chan A
   if (channelLA && !channelLB) {
@@ -1131,6 +1138,22 @@ Base_Method.prototype.GetHighlightedNodes = function (id) {
   this.data.nodes.forEach(function (n) {
     if (n.highlight) {
       a.push(n);
+    }
+  }, this);
+  return a;
+}
+
+
+Base_Method.prototype.GetChannelAssignments = function () {
+  var a = { node: [], link: [] };
+  this.nodeChannels.forEach(function (c) {
+    if (c.inUse) {
+      a.node.push({ name: c.name, attribute: c.dataParam });
+    }
+  }, this);
+  this.linkChannels.forEach(function (c) {
+    if (c.inUse) {
+      a.link.push({ name: c.name, attribute: c.dataParam });
     }
   }, this);
   return a;

@@ -287,7 +287,10 @@ function ChangeData(dataName) {
   console.log("changing Data to: " + dataName);
   for (i = 0; i < loadedData.length; i++) {
     if (loadedData[i].displayName == dataName) {
-      //yep, set and bail.
+      //alert the method
+      if(Exists(selected_method)){
+        selected_method.SetData(null);
+      }
       if(selected_method !== null){
         InitChannelMixer(loadedData[i]);
       }
@@ -300,7 +303,7 @@ function ChangeData(dataName) {
       selectedDateMax = startDate;
      // console.log("Main setting mindate to: %o and maxdate to: %o", startDate, endDate);
       ReCreateSlider();
-      if(selected_method !== null){
+      if(Exists(selected_method)){
         selected_method.SetDateBounds(startDate, endDate);
         selected_method.SetData(graphdata);
       }
@@ -1069,8 +1072,8 @@ function LoadSettings(s) {
   }
   //control
   if (Exists(s.control)) {
-    if (Exists(s.control.method)) { changeMethod(s.control.method); }
     if (Exists(s.control.data)) { ChangeData(s.control.data); }
+    if (Exists(s.control.method)) { changeMethod(s.control.method); }
     if (Exists(s.control.dateRange)) { $('#rangetoggle').bootstrapToggle(s.control.dateRange ? 'on' : 'off'); }
     if (Exists(s.control.animatedSlider)) { $('#rangetoggle').bootstrapToggle(s.control.animatedSlider ? 'on' : 'off'); }
     if (Exists(s.control.fullscreen)) { $('#rangetoggle').bootstrapToggle(s.control.fullscreen ? 'on' : 'off'); }
@@ -1079,7 +1082,10 @@ function LoadSettings(s) {
   if (Exists(s.slider)) {
     if (Exists(s.slider.visible)) { SetSliderVisibility(s.slider.visible); }
     if (Exists(s.slider.enabled)) { SetSliderEnabled(s.slider.enabled); }
-    if (Exists(s.slider.position)) { }
+    if (Exists(s.slider.position)) { 
+      //THIS BREAKs EVERYTHING, IDK WHY IT JUST DOES
+   //   dateSlider.setValue(s.slider.position,true,true);
+    }
   }
   //Method
   if (Exists(s.method)) {
@@ -1228,6 +1234,9 @@ var expMode = false;
 var questionOptionsHtmlTemplate = $("#questionOptionsForm").html();
 var questionOptionsTemplate = Handlebars.compile(questionOptionsHtmlTemplate);
 $("#questionOptionsForm").html("");
+var questionLegendHtmlTemplate = $("#questionKeyDiv").html();
+var questionLegendTemplate = Handlebars.compile(questionLegendHtmlTemplate);
+$("#questionKeyDiv").html("");
 
 $('#startTestbtn').click(EnterTestMode);
 $('#modalTestQuitBtn').click(ExitTestMode);
@@ -1504,6 +1513,13 @@ function LoadTest(t){
     qdiv.html(rendered);
     $("[id$=_q]","#questionOptionsForm").attr("disabled",true);
   }
+  //load legened
+  if(Exists(t.showKey) && t.showKey == true){
+    $("#questionKeyDiv").html(questionLegendTemplate(selected_method.GetChannelAssignments()));
+  }else{
+    $("#questionKeyDiv").html("");
+  }
+
   //enable/disable highlighting
   if(Exists(t.enableNodeHighlight) && t.enableNodeHighlight){
     //enable highlighting
@@ -1513,6 +1529,7 @@ function LoadTest(t){
     selected_method.EnableHighlighting(false);
   }
   //highlight selcted nodes if there are any
+  selected_method.Highlight();
   if(Exists(t.highlightedNodes) && t.highlightedNodes.length > 0){
     console.log(t.highlightedNodes);
     selected_method.Highlight(t.highlightedNodes);
