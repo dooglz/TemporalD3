@@ -639,9 +639,9 @@ function getNLAttributeAsPercentage(atype, data, nodeOrLink, attribute, selected
   if (attributes_info.type == "number") {
     // console.log("number - val:"+attribute_value + " %: "+attribute_value / (attributes_info.max_val - attributes_info.min_val));
     if(global){
-      return attribute_value / (data.maxNumber - data.minNumber);
+      return (attribute_value - data.minNumber) / (data.maxNumber - data.minNumber);
     }else{
-      return attribute_value / (attributes_info.max_val - attributes_info.min_val);
+      return (attribute_value - attributes_info.min_val) / (attributes_info.max_val - attributes_info.min_val);
     }
   } else if (attributes_info.type == "date") {
     attribute_value = new Date(attribute_value);
