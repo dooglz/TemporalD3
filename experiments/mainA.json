@@ -1,4 +1,5 @@
 {
-    "name":"Main B",
-	"order":["Training1a","Training2a","Training3a","Insight1a","Insight2a","Insight3a","Insight4a"]
+    "name":"Main A",
+	"order":["Training1a","Training2a","Training3a","Insight1a","Insight2a","Insight3a","Insight4a",
+			"Task1a","Task2a","Task3a","Task4a"]
 }

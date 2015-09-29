@@ -1227,7 +1227,11 @@ var stockTests = ["tests/test1.json", "tests/test2.json", "tests/Training1a.json
   "tests/Training2a.json", "tests/Training2b.json",
   "tests/Training3a.json", "tests/Training3b.json",
   "tests/Insight1a.json", "tests/Insight2a.json",
-  "tests/Insight3a.json", "tests/Insight4a.json"
+  "tests/Insight3a.json", "tests/Insight4a.json",
+  "tests/Task1a.json", "tests/Task1b.json",
+  "tests/Task2a.json", "tests/Task2b.json",
+  "tests/Task3a.json", "tests/Task3b.json",
+  "tests/Task4a.json", "tests/Task4b.json"
 ];
 var loadedTests = [];
 var stockExperiments = ["experiments/exp1.json", "experiments/exp2.json", "experiments/mainA.json", "experiments/mainb.json"];
