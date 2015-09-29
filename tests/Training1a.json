@@ -2,7 +2,6 @@
     "name":"Training1a",
 	"questionText":"How many friends does student A have?",
 		"questionInputs":[
-		{"type":"TextBox","name":"box1"},
 		{"type":"NumberBox","name":"Friends", "required":true}
 	],
 	
