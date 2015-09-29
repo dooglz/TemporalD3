@@ -1223,9 +1223,9 @@ function Exists(i){
 //######################################################################
 //########   Testing
 //######################################################################
-var stockTests = ["tests/test1.json", "tests/test2.json"];
+var stockTests = ["tests/test1.json", "tests/test2.json", "tests/Training1a.json", "tests/Training1b.json"];
 var loadedTests = [];
-var stockExperiments = ["experiments/exp1.json", "experiments/exp2.json"];
+var stockExperiments = ["experiments/exp1.json", "experiments/exp2.json", "experiments/mainA.json"];
 var loadedExperiments = [];
 var selectedTest;
 var selectedExperiment;
