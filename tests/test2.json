@@ -10,6 +10,10 @@
 		{"type":"NumberBox","name":"Nbox3", "required":true}
 	],
 	
+	"CenterGraphHeadder" : "",
+	"LeftGraphHeadder" :"Left Title",
+	"RightGraphHeadder":"Right Title",
+	
 	"settings":{
 		"name":"Test1Settings",
 		"interface":{

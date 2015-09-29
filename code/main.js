@@ -2,6 +2,10 @@
 /// <reference path="../typings/jquery/jquery.d.ts"/>
 /// <reference path="../typings/d3/d3.d.ts"/>
 
+$('#LeftGraphHeadder').html("");
+$('#CenterGraphHeadder').html("");
+$('#RightGraphHeadder').html("");
+
 var canvasWidth = $('#chart').width();
 var canvasHeight = $('#chart').height();
 var selected_method;
@@ -1341,6 +1345,9 @@ function ExitTestMode() {
   $("#testResultsModal").modal("hide");
   $('#questionDiv').hide();
   $("svg").attr('visibility','visible');
+  $('#LeftGraphHeadder').html("");
+  $('#CenterGraphHeadder').html("");
+  $('#RightGraphHeadder').html("");
   if(Exists(selected_method)){
     selected_method.EnableHighlighting(true);
   }
@@ -1368,6 +1375,10 @@ function EnterTestMode() {
   //$('#questionOptions').html("");
   $("#testReadyBtn").attr("disabled",true);
   $("#testSubmitBtn").attr("disabled",true);
+  //
+  $('#LeftGraphHeadder').html("");
+  $('#CenterGraphHeadder').html("");
+  $('#RightGraphHeadder').html("");
   //
   $("#testInputID").val(Math.random().toString(36).slice(2,-1));
   $("#testInput1").val("");
@@ -1528,7 +1539,23 @@ function LoadTest(t){
   }else{
     $("#questionKeyDiv").html("");
   }
-
+  //show headders
+  if(Exists(t.CenterGraphHeadder) && t.CenterGraphHeadder != ""){
+    $('#CenterGraphHeadder').html(t.CenterGraphHeadder);
+  }else{
+     $('#CenterGraphHeadder').html("");
+  }
+  if(Exists(t.LeftGraphHeadder) && t.LeftGraphHeadder != ""){
+    $('#LeftGraphHeadder').html(t.LeftGraphHeadder);
+  }else{
+     $('#LeftGraphHeadder').html("");
+  }
+  if(Exists(t.RightGraphHeadder) && t.RightGraphHeadder != ""){
+    $('#RightGraphHeadder').html(t.RightGraphHeadder);
+  }else{
+     $('#RightGraphHeadder').html("");
+  }
+  
   //enable/disable highlighting
   if(Exists(t.enableNodeHighlight) && t.enableNodeHighlight){
     //enable highlighting

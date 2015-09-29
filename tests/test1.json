@@ -10,7 +10,9 @@
 	"enableNodeHighlight":true,
 	"showKey": true,
 	"highlightedNodes":[1,2,3,5],
-	
+	"CenterGraphHeadder" : "Hello world",
+	"LeftGraphHeadder" :"",
+	"RightGraphHeadder":"",
 	"settings":{
 		"name":"Test1Settings",
 		"interface":{
