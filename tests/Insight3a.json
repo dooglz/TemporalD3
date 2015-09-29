@@ -1,0 +1,41 @@
+{
+    "name":"Insight3a",
+	"questionText":"For this part of the study, you will be shown student data from four different years. \nPlease spend as much time as you need considering each visualisation and tell us about any interesting observations you make relating to friendships and module marks.",
+	"questionInputs":[
+		{"type":"TextBox","name":"Thoughts", "required":true}
+	],
+	
+	"enableNodeHighlight":true,
+	"showKey": true,
+	
+	"settings":{
+		"name":"Test1Settings",
+		"interface":{
+		  "testMode":false,"displayMode":"Split","colourTheme":"Default"
+		  },
+		"slider":{
+		  "visible":false,"enabled":false,"position":5
+		  },
+		"control":{
+		  "method":"simple","data":"Les Miserables","dateRange":false,"animatedSlider":false
+		  },
+		"method":{
+		  "nodeChannels":[
+			{"name":"Gravity Point","inUse":false},
+			{"name":"Node Colour LA","inUse":false},
+			{"name":"Node Colour LB","inUse":false},
+			{"name":"Node Colour RA","inUse":false},
+			{"name":"Node Colour RB","inUse":false},
+			{"name":"Node Size LA","inUse":false},
+			{"name":"Node Size LB","inUse":false},
+			{"name":"Node Size RA","inUse":false},
+			{"name":"Node Size RB","inUse":false}
+		  ],
+		"linkChannels":[
+			{"name":"Link Colour","inUse":false},
+			{"name":"Link Length","inUse":false},
+			{"name":"Link Width","inUse":false}
+		  ]
+		}
+	}
+}

@@ -1,4 +1,4 @@
 {
-    "name":"Main Experiment",
-	"order":["Training1a","Training1b"]
+    "name":"Main B",
+	"order":["Training1a","Training2a","Training3a","Insight1a","Insight2a","Insight3a","Insight4a"]
 }
