@@ -1571,6 +1571,15 @@ function FinishTest(){
   for (var i = 0; i < qs.length; i++) {
     t.responce.push({input:ql.eq(i).html(),responce:EscapeHtml(qs.eq(i).val())});
   }
+  //also grab selected nodes
+  if(Exists(t.enableNodeHighlight) && t.enableNodeHighlight){
+    var h = selected_method.GetHighlightedNodes();
+    var ids = [];
+    for (var i = 0; i < h.length; i++) {
+      ids.push(h[i].index);
+    }
+    t.responce.push({input:"hilightedNodes",responce:ids});
+  }
   //
   //are we in expirement mode?
   if(expMode){

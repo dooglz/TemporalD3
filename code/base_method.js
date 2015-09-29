@@ -1133,7 +1133,7 @@ Base_Method.prototype.Highlight = function (id,bool) {
 }
 
 
-Base_Method.prototype.GetHighlightedNodes = function (id) {
+Base_Method.prototype.GetHighlightedNodes = function () {
   var a = [];
   this.data.nodes.forEach(function (n) {
     if (n.highlight) {
