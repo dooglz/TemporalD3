@@ -1,13 +1,13 @@
 {
     "name":"Training1a",
-	"questionText":"How many friends does student A have?.",
+	"questionText":"How many friends does the highlighted student have?",
 		"questionInputs":[
 		{"type":"NumberBox","name":"Friends", "required":true}
 	],
 	
-	"enableNodeHighlight":true,
-	"showKey": true,
-	"highlightedNodes":[1,2],
+	"enableNodeHighlight":false,
+	"showKey": false,
+	"highlightedNodes":[1],
 	
 	"CenterGraphHeadder" : "",
 	"LeftGraphHeadder" :"",
@@ -16,7 +16,7 @@
 	"settings":{
 		"name":"Test1Settings",
 		"interface":{
-		  "testMode":false,"displayMode":"Split","colourTheme":"Default"
+		  "testMode":false,"displayMode":"Single","colourTheme":"Default"
 		  },
 		"slider":{
 		  "visible":false,"enabled":false,"position":5
