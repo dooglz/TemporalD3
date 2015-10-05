@@ -264,9 +264,34 @@ var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "circleGraph50-2.json", url: "data/circleGraph50-2.json"},
   { name: "oscillatingValuesNodes.json", url: "data/oscillatingValuesNodes.json"},
   { name: "oscillatingValuesNodesEdges3.json", url: "data/oscillatingValuesNodesEdges3.json" },
-  { name: "NodesLife.json", url: "data/NodesLife.json" }
+  { name: "NodesLife.json", url: "data/NodesLife.json" },
+  { name: "studentsClust-101-5-1", url: "data/studentsClust-101-5-1.json" },
+  { name: "studentsClust-101-11", url: "data/studentsClust-101-11.json" },
+  { name: "studentsFabClust-75-6-1", url: "data/studentsFabClust-75-6-1.json" }
 ];
 UpdateDataPicker();
+//preload all data
+{
+  var url = "";
+  for (i = 0; i < stockData.length; i++) {
+     (function(i) {
+     url = stockData[i].url;
+      d3.json(url, function (error, newData) {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log("Loaded");
+          newData.url = url;
+          newData.displayName = stockData[i].name;
+          if(ParseData(newData)){
+            loadedData.push(newData);
+          }else{
+            window.alert("Parse error!");
+          }
+        }
+      });
+      })(i);
+}}
 
 var loadedData = [];
 
@@ -340,7 +365,7 @@ function ChangeData(dataName) {
     return;
   }
 
-  console.log("Loading Data");
+  console.log("Loading new Data");
   d3.json(url, function (error, newData) {
     if (error) {
       console.error(error);
@@ -1558,16 +1583,18 @@ function LoadTest(t){
   
   //enable/disable highlighting
   if(Exists(t.enableNodeHighlight) && t.enableNodeHighlight){
+    console.log("Enabeling Highlighting");
     //enable highlighting
     selected_method.EnableHighlighting(true);
   }else{
+     console.log("disable Highlighting");
     //disable higlighting
     selected_method.EnableHighlighting(false);
   }
   //highlight selcted nodes if there are any
   selected_method.Highlight();
   if(Exists(t.highlightedNodes) && t.highlightedNodes.length > 0){
-    console.log(t.highlightedNodes);
+    console.log("Highlighting:",t.highlightedNodes);
     selected_method.Highlight(t.highlightedNodes);
   }
   

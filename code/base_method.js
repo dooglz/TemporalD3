@@ -1115,6 +1115,9 @@ Base_Method.prototype.EnableHighlighting = function (bool) {
 }
 
 Base_Method.prototype.Highlight = function (id,bool) {
+  console.log("High1 ",this.GetHighlightedNodes());
+    console.log("High1 ",this.data);
+  console.log("00000000 ",id,bool);
   if(!Exists(bool)){bool = true;}
   if (!Exists(id)) {
     this.data.nodes.forEach(function (n) {
@@ -1130,6 +1133,7 @@ Base_Method.prototype.Highlight = function (id,bool) {
     }
   }
   this.RedoNodes();
+  console.log("High2 ",this.GetHighlightedNodes());
 }
 
 

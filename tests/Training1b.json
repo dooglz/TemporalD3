@@ -5,6 +5,14 @@
 		{"type":"NumberBox","name":"Friends", "required":true}
 	],
 	
+	"enableNodeHighlight":true,
+	"showKey": true,
+	"highlightedNodes":[1,2],
+	
+	"CenterGraphHeadder" : "",
+	"LeftGraphHeadder" :"",
+	"RightGraphHeadder":"",
+	
 	"settings":{
 		"name":"Test1Settings",
 		"interface":{
@@ -14,7 +22,7 @@
 		  "visible":false,"enabled":false,"position":5
 		  },
 		"control":{
-		  "method":"simple","data":"Les Miserables","dateRange":false,"animatedSlider":false
+		  "method":"simple","data":"studentsFabClust-75-6-1","dateRange":false,"animatedSlider":false
 		  },
 		"method":{
 		  "nodeChannels":[
