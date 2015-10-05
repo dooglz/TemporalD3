@@ -522,6 +522,10 @@ Base_Method.prototype.UpdateVis = function () {
     .on("click", Nodeclick)
     .on("dblclick", NodedblClick);
   g.append("circle");
+  g.append("text")
+      .attr("dx", 12)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.label });
    //when a node is no longer in the set, remove it from the graph.
   this.visNodes.exit().remove();
   
@@ -531,6 +535,10 @@ Base_Method.prototype.UpdateVis = function () {
       .on("click", Nodeclick)
       .on("dblclick", NodedblClick);
     gR.append("circle");
+      gR.append("text")
+      .attr("dx", 12)
+      .attr("dy", ".35em")
+      .text(function(d) { return d.label });
     this.visNodesR.exit().remove();
   } else {
     if (this.visNodesR !== undefined) {
