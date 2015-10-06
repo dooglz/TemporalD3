@@ -1,13 +1,13 @@
 {
     "name":"Training1b",
-	"questionText":"How many friends does student B have? ",
+	"questionText":"How many friends does Student A have?",
 		"questionInputs":[
 		{"type":"NumberBox","name":"Friends", "required":true}
 	],
 	
-	"enableNodeHighlight":true,
-	"showKey": true,
-	"highlightedNodes":[1,2],
+	"enableNodeHighlight":false,
+	"showKey": false,
+	"highlightedNodes":[],
 	
 	"CenterGraphHeadder" : "",
 	"LeftGraphHeadder" :"",
@@ -22,7 +22,7 @@
 		  "visible":false,"enabled":false,"position":5
 		  },
 		"control":{
-		  "method":"simple","data":"studentsFabClust-75-6-1","dateRange":false,"animatedSlider":false
+		  "method":"simple","data":"studentsClust-101-5-1","dateRange":false,"animatedSlider":false
 		  },
 		"method":{
 		  "nodeChannels":[

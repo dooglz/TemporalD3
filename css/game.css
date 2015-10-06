@@ -110,3 +110,7 @@ div.tooltip {
 div.tooltip.link {   
 background: #99cc99;  
 }
+
+div.nodeLabelp {   
+  z-index: 999;        
+}

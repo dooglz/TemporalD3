@@ -1,10 +1,13 @@
 {
     "name":"Training3b",
-	"questionText":"Select a student with a lower mark in Information Systems than in Software Development",
+	"questionText":"Select a student with a higher mark in Software Development than in Information Systems",
 	"questionInputs":[],
 	
 	"enableNodeHighlight":true,
 	"showKey": true,
+	"CenterGraphHeadder" : "",
+	"LeftGraphHeadder" :"Information Systems",
+	"RightGraphHeadder":"Software Development",
 	
 	"settings":{
 		"name":"Test1Settings",
@@ -15,7 +18,7 @@
 		  "visible":false,"enabled":false,"position":5
 		  },
 		"control":{
-		  "method":"simple","data":"Les Miserables","dateRange":false,"animatedSlider":false
+		  "method":"simple","data":"studentsClust-60-4","dateRange":false,"animatedSlider":false
 		  },
 		"method":{
 		  "nodeChannels":[
@@ -24,9 +27,9 @@
 			{"name":"Node Colour LB","inUse":false},
 			{"name":"Node Colour RA","inUse":false},
 			{"name":"Node Colour RB","inUse":false},
-			{"name":"Node Size LA","inUse":false},
+			{"name":"Node Size LA","inUse":true,"dataParam" : "Information Systems"},
 			{"name":"Node Size LB","inUse":false},
-			{"name":"Node Size RA","inUse":false},
+			{"name":"Node Size RA","inUse":true,"dataParam" : "Software Development"},
 			{"name":"Node Size RB","inUse":false}
 		  ],
 		"linkChannels":[

@@ -8,7 +8,7 @@
 	"settings":{
 		"name":"Test1Settings",
 		"interface":{
-		  "testMode":false,"displayMode":"Split","colourTheme":"Default"
+		  "testMode":false,"displayMode":"Single","colourTheme":"Default"
 		  },
 		"slider":{
 		  "visible":false,"enabled":false,"position":5

@@ -265,10 +265,21 @@ var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "oscillatingValuesNodes.json", url: "data/oscillatingValuesNodes.json"},
   { name: "oscillatingValuesNodesEdges3.json", url: "data/oscillatingValuesNodesEdges3.json" },
   { name: "NodesLife.json", url: "data/NodesLife.json" },
-  { name: "studentsClust-101-5-1", url: "data/studentsClust-101-5-1.json" },
-  { name: "studentsClust-101-11", url: "data/studentsClust-101-11.json" },
-  { name: "studentsFabClust-75-6-1", url: "data/studentsFabClust-75-6-1.json" }
+  { name: "studentsClust-100-10",  url: "data/studentsClust-100-10.json"},
+  { name: "studentsClust-100-11",  url: "data/studentsClust-100-11.json"},
+  { name: "studentsClust-100-12",  url: "data/studentsClust-100-12.json"},
+  { name: "studentsClust-100-12a",  url:"data/studentsClust-100-12a.json"},
+  { name: "studentsClust-101-11-1",  url:"data/studentsClust-101-11-1.json"},
+  { name: "studentsClust-101-11",  url:"data/studentsClust-101-11.json"},
+  { name: "studentsClust-101-11int",  url:"data/studentsClust-101-11int.json"},
+  { name: "studentsClust-101-5-1",  url:"data/studentsClust-101-5-1.json"},
+  { name: "studentsClust-60-4",  url:"data/studentsClust-60-4.json"},
+  { name: "studentsClust-80-4",  url:"data/studentsClust-80-4.json"},
+  { name: "studentsFabClust-70-6-1",  url:"data/studentsFabClust-70-6-1.json"},
+  { name: "studentsFabClust-75-6-1",  url:"data/studentsFabClust-75-6-1.json"}
 ];
+
+
 UpdateDataPicker();
 //preload all data
 {
@@ -1597,7 +1608,6 @@ function LoadTest(t){
     console.log("Highlighting:",t.highlightedNodes);
     selected_method.Highlight(t.highlightedNodes);
   }
-  
   //enable Ready btn
   $("#testReadyBtn").attr("disabled",false);
   $("#testSubmitBtn").attr("disabled",true);

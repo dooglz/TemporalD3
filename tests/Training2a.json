@@ -1,20 +1,24 @@
 {
     "name":"Training2a",
-	"questionText":"Does student  A have low, average, or high marks in Software Development?",
+	"questionText":"Does student A have low, average, or high marks in Software Development?",
 		"questionInputs":[
 		{"type":"TextBox","name":"Marks", "required":true}
 	],
 	
+	"enableNodeHighlight":false,
+	"showKey": true,
+	"highlightedNodes":[],
+	
 	"settings":{
 		"name":"Test1Settings",
 		"interface":{
-		  "testMode":false,"displayMode":"Split","colourTheme":"Default"
+		  "testMode":false,"displayMode":"Single","colourTheme":"Default"
 		  },
 		"slider":{
 		  "visible":false,"enabled":false,"position":5
 		  },
 		"control":{
-		  "method":"simple","data":"Les Miserables","dateRange":false,"animatedSlider":false
+		  "method":"simple","data":"studentsClust-101-11-1","dateRange":false,"animatedSlider":false
 		  },
 		"method":{
 		  "nodeChannels":[
@@ -23,8 +27,8 @@
 			{"name":"Node Colour LB","inUse":false},
 			{"name":"Node Colour RA","inUse":false},
 			{"name":"Node Colour RB","inUse":false},
-			{"name":"Node Size LA","inUse":false},
-			{"name":"Node Size LB","inUse":false},
+			{"name":"Node Size LA","inUse":true,"dataParam" : "Information Systems"},
+			{"name":"Node Size LB","inUse":true,"dataParam" : "Software Development"},
 			{"name":"Node Size RA","inUse":false},
 			{"name":"Node Size RB","inUse":false}
 		  ],

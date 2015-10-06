@@ -32,6 +32,30 @@ Base_Method.prototype.max_radius = 8;
 Base_Method.prototype.min_radius = 2;
 
 Base_Method.prototype.ColorThemes = [
+    {
+    LAnodeEdgeBaseColour: "white",
+    LAnodeFillBaseColour: "#af8dc3",
+    LAnodeEdgeHighlightColour: "black",
+    LAnodeFillHighlightColour: "blue",
+    LBnodeEdgeBaseColour: "white",
+    LBnodeFillBaseColour: "#7fbf7b",
+    LBnodeEdgeHighlightColour: "black",
+    LBnodeFillHighlightColour: "red",
+    //
+    RAnodeEdgeBaseColour: "white",
+    RAnodeFillBaseColour: "#af8dc3",
+    RAnodeEdgeHighlightColour: "black",
+    RAnodeFillHighlightColour: "blue",
+    RBnodeEdgeBaseColour: "white",
+    RBnodeFillBaseColour: "#7fbf7b",
+    RBnodeEdgeHighlightColour: "black",
+    RBnodeFillHighlightColour: "red",
+    //
+    LinkStrokeBaseColour: "grey",
+    LinkStrokeHighlightColour: "orange",
+    BackgroundColour: "white",
+    name: "Default"
+  },
   {
     LAnodeEdgeBaseColour: "white",
     LAnodeFillBaseColour: "deepskyblue",
@@ -524,6 +548,7 @@ Base_Method.prototype.UpdateVis = function () {
   g.append("circle");
   g.append("text")
       .attr("dx", 12)
+      .attr("class", "nodeLabel")
       .attr("dy", ".35em")
       .text(function(d) { return d.label });
    //when a node is no longer in the set, remove it from the graph.
@@ -537,6 +562,7 @@ Base_Method.prototype.UpdateVis = function () {
     gR.append("circle");
       gR.append("text")
       .attr("dx", 12)
+      .attr("class", "nodeLabel")
       .attr("dy", ".35em")
       .text(function(d) { return d.label });
     this.visNodesR.exit().remove();
