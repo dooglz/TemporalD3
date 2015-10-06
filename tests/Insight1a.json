@@ -17,7 +17,7 @@
 		  "visible":false,"enabled":false,"position":5
 		  },
 		"control":{
-		  "method":"simple","data":"Les Miserables","dateRange":false,"animatedSlider":false
+		  "method":"simple","data":"studentsClust-100-12","dateRange":false,"animatedSlider":false
 		  },
 		"method":{
 		  "nodeChannels":[
@@ -26,8 +26,8 @@
 			{"name":"Node Colour LB","inUse":false},
 			{"name":"Node Colour RA","inUse":false},
 			{"name":"Node Colour RB","inUse":false},
-			{"name":"Node Size LA","inUse":false},
-			{"name":"Node Size LB","inUse":false},
+			{"name":"Node Size LA","inUse":true,"dataParam" : "Information Systems"},
+			{"name":"Node Size LB","inUse":true,"dataParam" : "Software Development"},
 			{"name":"Node Size RA","inUse":false},
 			{"name":"Node Size RB","inUse":false}
 		  ],
