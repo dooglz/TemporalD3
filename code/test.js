@@ -12,10 +12,20 @@ var chartsDiv = $("#chartsDiv");
 var LeftGraphHeadder = $('#LeftGraphHeadder');
 var CenterGraphHeadder = $('#CenterGraphHeadder');
 var RightGraphHeadder = $('#RightGraphHeadder');
+var questionOptionsHtmlTemplate = $("#questionOptionsForm").html();
+var questionOptionsTemplate = Handlebars.compile(questionOptionsHtmlTemplate);
+$("#questionOptionsForm").html("");
+var questionLegendHtmlTemplate = $("#questionKeyDiv").html();
+var questionLegendTemplate = Handlebars.compile(questionLegendHtmlTemplate);
+$("#questionKeyDiv").html("");
+$('#testReadyBtn').click(StartTest);
+$('#testSubmitBtn').click(FinishTest);
+
 var expMode = false;
 var loadedTests = [];
 var loadedExperiments = [];
 var loadedData = [];
+var loadedExp;
 var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "Napier Publications", url: "data/napierPublications.json" },
   { name: "studentsClust-100-10", url: "data/studentsClust-100-10.json" },
@@ -165,7 +175,7 @@ $("#expSelector").on('change', function () {
 $('#modalTestStartBtn').click(
   function () {
     if (CheckforStart()) {
-      StartTest();
+      BeginExp();
     }
   }
   );
@@ -252,9 +262,9 @@ function SetDisplayMode(mode) {
 function Resize() {
   canvasWidth = $('#chart').width();
   canvasHeight = $('#chart').height();
-  if(Exists(selected_method)){
-    selected_method.Redraw(canvasWidth, canvasHeight);
-  }
+  //if(Exists(selected_method)){
+  //   selected_method.Redraw(canvasWidth, canvasHeight);
+  // }
 }
 
 function GetNextTest(exp) {
@@ -312,35 +322,27 @@ function GetNextTest(exp) {
 }
 
 function LoadSettings(s) {
-  if(typeof(s) == "string"){
-     console.error("I have no idea man");
-     return;
+  if (typeof (s) == "string") {
+    console.error("I have no idea man");
+    return;
   }
-  console.log("Load Settings, %o",s);
+  console.log("Load Settings, %o", s);
   //Load interface
   if (Exists(s.interface)) {
     if (Exists(s.interface.testMode)) { }
-    if (Exists(s.interface.displayMode)) {SetDisplayMode(s.interface.displayMode); }
-    if (Exists(s.interface.colourTheme)) { selected_method.SetColorTheme(s.interface.colourTheme); }
+    if (Exists(s.interface.displayMode)) { SetDisplayMode(s.interface.displayMode); }
+    // if (Exists(s.interface.colourTheme)) { selected_method.SetColorTheme(s.interface.colourTheme); }
   }
   //control
   if (Exists(s.control)) {
     if (Exists(s.control.data)) { ChangeData(s.control.data); }
-    if (Exists(s.control.method)) { changeMethod(s.control.method); }
-    if (Exists(s.control.dateRange)) { $('#rangetoggle').bootstrapToggle(s.control.dateRange ? 'on' : 'off'); }
-    if (Exists(s.control.animatedSlider)) { $('#rangetoggle').bootstrapToggle(s.control.animatedSlider ? 'on' : 'off'); }
-    if (Exists(s.control.fullscreen)) { $('#rangetoggle').bootstrapToggle(s.control.fullscreen ? 'on' : 'off'); }
-  }
-  //slider
-  if (Exists(s.slider)) {
-    if (Exists(s.slider.visible)) { SetSliderVisibility(s.slider.visible); }
-    if (Exists(s.slider.enabled)) { SetSliderEnabled(s.slider.enabled); }
-    if (Exists(s.slider.position)) { 
-      //THIS BREAKs EVERYTHING, IDK WHY IT JUST DOES
-   //   dateSlider.setValue(s.slider.position,true,true);
-    }
+    // if (Exists(s.control.method)) { changeMethod(s.control.method); }
+    //f (Exists(s.control.dateRange)) { $('#rangetoggle').bootstrapToggle(s.control.dateRange ? 'on' : 'off'); }
+    //if (Exists(s.control.animatedSlider)) { $('#rangetoggle').bootstrapToggle(s.control.animatedSlider ? 'on' : 'off'); }
+    //if (Exists(s.control.fullscreen)) { $('#rangetoggle').bootstrapToggle(s.control.fullscreen ? 'on' : 'off'); }
   }
   //Method
+  /*
   if (Exists(s.method)) {
       if (Exists(s.method.parameters) && s.method.parameters.length > 0) {
       for (var i = 0; i < s.method.parameters.length; i++) {
@@ -384,9 +386,9 @@ function LoadSettings(s) {
         }
       }
     }
-  }
+  }*/
 }
-
+var loadedTest;
 
 function LoadTest(t) {
   testLoaded = false;
@@ -422,7 +424,7 @@ function LoadTest(t) {
   }
   //load legened
   if (Exists(t.showKey) && t.showKey == true) {
-    $("#questionKeyDiv").html(questionLegendTemplate(selected_method.GetChannelAssignments()));
+    //  $("#questionKeyDiv").html(questionLegendTemplate(selected_method.GetChannelAssignments()));
   } else {
     $("#questionKeyDiv").html("");
   }
@@ -447,17 +449,17 @@ function LoadTest(t) {
   if (Exists(t.enableNodeHighlight) && t.enableNodeHighlight) {
     console.log("Enabeling Highlighting");
     //enable highlighting
-    selected_method.EnableHighlighting(true);
+    EnableHighlighting(true);
   } else {
     console.log("disable Highlighting");
     //disable higlighting
-    selected_method.EnableHighlighting(false);
+    EnableHighlighting(false);
   }
   //highlight selcted nodes if there are any
-  selected_method.Highlight();
+  Highlight();
   if (Exists(t.highlightedNodes) && t.highlightedNodes.length > 0) {
     console.log("Highlighting:", t.highlightedNodes);
-    selected_method.Highlight(t.highlightedNodes);
+    Highlight(t.highlightedNodes);
   }
   //enable Ready btn
   $("#testReadyBtn").attr("disabled", false);
@@ -467,21 +469,184 @@ function LoadTest(t) {
   CheckforStart();
 }
 
-function StartTest() {
+function BeginExp() {
   testSetupDiv.hide();
   questionDiv.show();
   chartsDiv.show();
 }
+function StartTest() {
+  $("#testReadyBtn").attr("disabled", true);
+  $("#testSubmitBtn").attr("disabled", false);
+  $("svg").attr('visibility', 'visible');
+  $("[id$=_q]", "#questionOptionsForm").attr("disabled", false);
+  loadedTest.startTime = new Date();
+}
+
+function FinishTest() {
+  var t = loadedTest;
+  t.endTime = new Date();
+  console.info("finished test %o, time: %o", t.name, MillisToTime(t.endTime - t.startTime));
+  // Grab repsonces
+  t.responce = [];
+  var qs = $("[id$=_q]", "#questionOptionsForm");
+  var ql = $("label", "#questionOptionsForm");
+  for (var i = 0; i < qs.length; i++) {
+    t.responce.push({ input: ql.eq(i).html(), responce: EscapeHtml(qs.eq(i).val()) });
+  }
+  //also grab selected nodes
+  if (Exists(t.enableNodeHighlight) && t.enableNodeHighlight) {
+    var h = GetHighlightedNodes();
+    var ids = [];
+    for (var i = 0; i < h.length; i++) {
+      ids.push(h[i].index);
+    }
+    t.responce.push({ input: "hilightedNodes", responce: ids });
+  }
+  //
+  //are we in expirement mode?
+  if (expMode) {
+    t = GetNextTest(loadedExp);
+    if (t == null) {
+      FinishExperiment();
+      return;
+    }
+    LoadTest(t);
+  } else {
+    FinishExperiment();
+  }
+}
 
 
+function ChangeData(dataName) {
+  //loaded?
+  console.log("changing Data to: " + dataName);
+  var data = $.grep(loadedData, function (a) { return a.displayName == dataName })[0];
+  if (Exists(data)) {
+    //alert the method
+    //if (Exists(selected_method)) {
+    //   selected_method.SetData(null);
+    // }
+    graphdata = data;
+    Update();
+  } else {
+    //no, load it
+    var url = $.grep(stockData, function (a) { return a.name == dataName })[0].url;
 
+    if (!Exists(url) || url == "") {
+      console.error("Can't load custom url data yet :(");
+      return;
+    }
+    console.log("Loading new Data ", dataName);
+    d3.json(url, function (error, newData) {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log("Loaded");
+        newData.url = url;
+        newData.displayName = dataName;
+        if (ParseData(newData)) {
+          loadedData.push(newData);
+          ChangeData(dataName);
+        } else {
+          window.alert("Parse error!");
+        }
+      }
+    });
+  }
+}
 
+var isHighlightingEnabled = true;
+function EnableHighlighting(bool) {
+  if (bool == undefined) { bool = !this.isHighlightingEnabled };
+  if (this.isHighlightingEnabled == bool) {
+    return;
+  }
+  this.isHighlightingEnabled = bool;
+}
+function Highlight(id, bool) {
+  if (!Exists(bool)) { bool = true; }
+  if (!Exists(id)) {
+    graphdata.nodes.forEach(function (n) {
+      n.highlight = false;
+    }, this);
+  } else {
+    if ($.isArray(id)) {
+      id.forEach(function (n) {
+        graphdata.nodes[n].highlight = bool;
+      }, this);
+    } else {
+      graphdata.nodes[id].highlight = bool;
+    }
+  }
+  // this.RedoNodes();
+  console.log("High2 ", this.GetHighlightedNodes());
+}
+
+function FinishExperiment() {
+  //show results modal
+  $("#testResultsModal").modal({ keyboard: false, backdrop: "static" });
+  var x = "";
+  x += "Id: " + $("#testInputID").val() + "<br>";
+  x += "Input 1: " + $("#testInput1").val() + "<br>";
+  x += "Input 2: " + $("#testInput2").val() + "<br>";
+  var t;
+  var results = { experimentmode: expMode, id: $("#testInputID").val(), input1: $("#testInput1").val(), input2: $("#testInput2").val(), tests: [] };
+  if (expMode) {
+    for (var index = 0; index < loadedExp.done.length; index++) {
+      t = GetTest(loadedExp.done[index]);
+      results.tests.push({ name: t.name, responces: t.responce, start: t.startTime, end: t.endTime });
+      x += t.name + "<br>" + JSON.stringify(t.responce).replace(/},{/g, "<br>") + "<br> Time: " + MillisToTime(t.endTime - t.startTime) + "<br><br>";
+    }
+  } else {
+    t = loadedTest;
+    results.tests.push({ name: t.name, responces: t.responce, start: t.startTime, end: t.endTime });
+    x += t.name + "<br>" + JSON.stringify(t.responce).replace(/},{/g, "<br>") + "<br> Time: " + MillisToTime(t.endTime - t.startTime) + "<br><br>";
+  }
+  HandleResults(results);
+  $("#results").html(x);
+}
+
+var lastRes;
+function HandleResults(res) {
+  lastRes = res;
+  var name = res.id + "_" + ((new Date).toUTCString()).replace(/\s+|:|,/g, '_') + "_results.json";
+  SaveJsonToFile(JSON.stringify(res), name);
+}
+function SaveJsonToFile(j, filename) {
+  var file = 'data:text/json;charset=utf-8;base64,' + btoa(j);
+  var a = document.createElement("a");
+  a.download = filename;
+  a.href = file;
+  a.click();
+}
+
+function GetTest(t) {
+  if (typeof (t) == "string") {
+    for (var i = 0; i < loadedTests.length; i++) {
+      if (loadedTests[i].name == t) {
+        return loadedTests[i];
+      }
+    }
+  }
+  return t;
+}
+
+function GetHighlightedNodes() {
+  var a = [];
+  graphdata.nodes.forEach(function (n) {
+    if (n.highlight) {
+      a.push(n);
+    }
+  }, this);
+  return a;
+}
+
+function Update() {
+}
 
 function Exists(i) {
   return (i !== undefined && i !== null);
 }
-
-
 
 Load();
 Reset();
