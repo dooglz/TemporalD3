@@ -16,8 +16,7 @@ $(document).ready(function(){
  })
 
 $(window).keypress(function( event ) {
-  //r =82
-  if ( event.keyCode == 114 ) {
+  if ( event.keyCode == 96 ) {
    selected_method.Reset();
   }
 });
@@ -1273,7 +1272,8 @@ var stockTests = ["tests/test1.json", "tests/test2.json", "tests/Training1a.json
   "tests/Task3a.json", "tests/Task3b.json",
   "tests/Task4a.json", "tests/Task4b.json"
 ];
-var loadedTests = [];
+var , function( n, i ) {
+  return ( n !== 5 && i > 4 );loadedTests = [];
 var stockExperiments = ["experiments/exp1.json", "experiments/exp2.json", "experiments/mainA.json", "experiments/mainb.json"];
 var loadedExperiments = [];
 var selectedTest;

@@ -250,7 +250,7 @@ function ParseData(data) {
     ) {
     
     //new format
-    console.warn("New Json Format");
+    //console.warn("New Json Format");
     
     //grab link attributes
     data.links = data.edges;

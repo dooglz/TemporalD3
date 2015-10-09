@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dynamic Data Test">
+  <meta name="author" content="Sam serrels">
+  <title>Dynamic Data</title>
+  <!-- Bootstrap Core CSS -->
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <link href="css/bootstrap-slider.min.css" rel="stylesheet">
+  <link href="css/bootstrap-select.min.css" rel="stylesheet">
+  <link href="css/bootstrap-toggle.min.css" rel="stylesheet">
+  <link href="css/game.css" rel="stylesheet">
+  <link href="css/git-commit-style.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- main content -->
+
+  <div id="chartsDiv">
+    <div class="container">
+      <div class="row">
+        <h4>
+        <div class="col-sm-4 text-center" id="LeftGraphHeadder">
+          Hello Left
+        </div>
+        <div class="col-sm-4 text-center" id="CenterGraphHeadder">
+          Hello Center
+        </div>
+        <div class="col-sm-4 text-center" id="RightGraphHeadder">
+          Hello Right
+        </div>
+        </h4>
+      </div>
+    </div>
+    <div class="container superwide" id="canvcont">
+      <div class='stopbox  centered' id="stopbox">
+        <div class='box2' id="chartBoxLeft">
+          <div class='sbncontent' id="chart"></div>
+        </div>
+        <div class='box2' id="chartBoxRight">
+          <div class='sbncontent' id="chart2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- option collumns -->
+  <div class="container superwide" id="testSetupDiv">
+    <div class="col-sm-3 text-center"></div>
+    <div class="col-sm-6 text-center">
+      <form>
+        <div class="form-group">
+          <label for="testInputID">Test Id</label>
+          <input type="text" class="form-control" id="testInputID" readonly>
+        </div>
+        <div class="form-group">
+          <label for="testInput1">Input 1</label>
+          <input type="text" class="form-control" id="testInput1" placeholder="Test info (e.g Location etc..)">
+        </div>
+        <div class="form-group">
+          <label for="testInput2">Input 2</label>
+          <input type="text" class="form-control" id="testInput2">
+        </div>
+        <div class="form-group">
+          <label for="expModeToggle">Experiment Mode: </label>
+          <input id="expModeToggle" type="checkbox" data-toggle="toggle" data-width="150" data-size="normal" data-onstyle="info" data-on="Experiment"
+          data-off="Single Test">
+        </div>
+        <div class="form-group" id="testSelectorDiv">
+          <label for="testSelector">Select a Test</label>
+          <br>
+          <select class="selectpicker" id="testSelector"></select>
+        </div>
+        <div class="form-group" id="expSelectorDiv">
+          <label for="expSelector">Select an Experiment</label>
+          <br>
+          <select class="selectpicker" id="expSelector"></select>
+        </div>
+        <div id="infomodalError" class="danger">
+          Please select test options
+        </div>
+      </form>
+      <hr>
+      <a class='btn btn-success' href='#' role='button' id="modalTestStartBtn">Start</a>
+    </div>
+  </div>
+  <div class="container superwide" id="questionDiv">
+    <h4>
+      <div class="row" style="text-align:center;" id="questionText">How round are the Nodes?</div>
+      <hr>
+      <div class="row" style="text-align:center;" id="questionOptions">
+        <form class="form-horizontal"id="questionOptionsForm">
+          {{#each num}}
+          <div class="form-group">
+            <label for="{{id}}" class="col-sm-4 control-label">{{name}}</label>
+            <div class="col-sm-3">
+              <input type="number" class="form-control" id="{{id}}" placeholder="Enter a number">
+            </div>
+          </div>
+          {{/each}}
+          {{#each text}}
+          <div class="form-group">
+            <label for="{{id}}" class="col-sm-4 control-label">{{name}}</label>
+            <div class="col-sm-6">
+              <textarea class="form-control" id="{{id}}" placeholder="textbox"rows="3"></textarea>
+            </div>
+          </div>
+          {{/each}}
+        </form>
+        </div>
+      </h4>
+    <div class="row" style="text-align:center;" id="questionKeyDiv">
+      <hr>
+      <div class="col-sm-3"></div>
+      <div class="col-sm-3" id="questionNodeKey">
+        <p>Node Keys</p>
+        {{#each node}}{{name}} : {{attribute}}
+        <br>{{/each}}
+      </div>
+      <div class="col-sm-3" id="questionLinkKey">
+        <p>Link Keys</p>
+        {{#each link}}{{name}} : {{attribute}}
+        <br>{{/each}}
+      </div>
+    </div>
+    <hr>
+    <div class="row" style="text-align:center;" id="questionButtons">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-4">
+        <a class='btn btn-success' role='button' id="testReadyBtn">Ready</a>
+      </div>
+      <div class="col-sm-4">
+        <a class='btn btn-info' role='button' id="testSubmitBtn" disabled>Submit</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+  <div class="container superwide">
+    <hr>
+    <footer>
+      <div class="row">
+        <div class="col-lg-12">
+          <p>Dynamic Graph Testing Interface - Christopher Stone, Natalie Kerracher, Sam Serrels - 2015</p>
+          <div id="libCredits">
+            This Project makes use of the following libraries:
+            <ul class="list-inline">
+              <li>
+                <a href="http://d3js.org/">d3js</a>
+              </li>
+              <li>
+                <a href="http://getbootstrap.com/">Bootstrap</a>
+              </li>
+              <li>
+                <a href="http://jquery.com/">jQuery</a>
+              </li>
+              <li>
+                <a href="http://github.com/seiyria/bootstrap-slider">Bootstrap-Slider</a>
+              </li>
+              <li>
+                <a href="http://github.com/silviomoreto/bootstrap-select">Bootstrap-Select</a>
+              </li>
+              <li>
+                <a href="http://bootstraptoggle.com">Bootstrap-Toggle</a>
+              </li>
+              <li>
+                <a href="http://github.com/showdownjs/showdown">Showdown</a>
+              </li>
+              <li>
+                <a href="http://handlebarsjs.com">Handlebars</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="testResultsModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          Test Complete!
+        </div>
+        <div class="modal-body" style="overflow:auto; max-height:500px;">
+          <div id="results"></div>
+          <hr>
+          <a class='btn btn-default' href='#' role='button' id="modalTestQuitBtn2">Quit</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Page End -->
+  <script src="js/jquery-2.1.4.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/bootstrap-slider.min.js"></script>
+  <script src="js/bootstrap-select.min.js"></script>
+  <script src="js/bootstrap-toggle.min.js"></script>
+  <script src="js/jquery.md5.js"></script>
+  <script src="js/github-commit-history.js"></script>
+  <script src="js/mustache.js"></script>
+  <script src="js/handlebars.js"></script>
+  <script src="js/d3.js" charset="utf-8"></script>
+  <script src="js/showdown.js"></script>
+    <script src="code/data_parser.js"></script>
+  <script src="code/test.js"></script>
+</body>
+
+</html>

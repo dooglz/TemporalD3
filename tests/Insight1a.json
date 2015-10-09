@@ -1,6 +1,6 @@
 {
     "name":"Insight1a",
-	"questionText":"For this part of the study, you will be shown student data from four different years. \nPlease spend as much time as you need considering each visualisation and tell us about any interesting observations you make relating to friendships and module marks.",
+	"questionText":"For this part of the study, you will be shown student data from four different years. Please spend as much time as you need considering each visualisation and tell us about any interesting observations you make relating to friendships and module marks. This visualisation shows data from 2011.",
 	"questionInputs":[
 		{"type":"TextBox","name":"Thoughts", "required":true}
 	],
