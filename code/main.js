@@ -1272,8 +1272,7 @@ var stockTests = ["tests/test1.json", "tests/test2.json", "tests/Training1a.json
   "tests/Task3a.json", "tests/Task3b.json",
   "tests/Task4a.json", "tests/Task4b.json"
 ];
-var , function( n, i ) {
-  return ( n !== 5 && i > 4 );loadedTests = [];
+var loadedTests = [];
 var stockExperiments = ["experiments/exp1.json", "experiments/exp2.json", "experiments/mainA.json", "experiments/mainb.json"];
 var loadedExperiments = [];
 var selectedTest;

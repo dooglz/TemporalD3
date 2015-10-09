@@ -6,6 +6,7 @@ $(window).keypress(function (event) {
   }
 });
 
+//Jquery selectors
 var testSetupDiv = $("#testSetupDiv");
 var questionDiv = $("#questionDiv");
 var chartsDiv = $("#chartsDiv");
@@ -21,11 +22,15 @@ $("#questionKeyDiv").html("");
 $('#testReadyBtn').click(StartTest);
 $('#testSubmitBtn').click(FinishTest);
 
+//important globals
 var expMode = false;
 var loadedTests = [];
 var loadedExperiments = [];
 var loadedData = [];
 var loadedExp;
+var selected_method;
+var m_static;
+
 var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "Napier Publications", url: "data/napierPublications.json" },
   { name: "studentsClust-100-10", url: "data/studentsClust-100-10.json" },
@@ -146,6 +151,9 @@ function Reset() {
   selectedTest = "";
   selectedExperiment = "";
   testLoaded = false;
+
+  m_static = new Method_Static();
+  selected_method = m_static;
 }
 
 $('#expModeToggle').change(function () {
@@ -219,7 +227,7 @@ function CleanExperiment(exp) {
 var displayMode;
 var chartBoxLeft = $("#chartBoxLeft");
 var chartBoxRight = $("#chartBoxRight");
-
+SetDisplayMode(1);
 function SetDisplayMode(mode) {
   if (typeof (mode) == "string") {
     if (mode == "Split") {
@@ -262,9 +270,9 @@ function SetDisplayMode(mode) {
 function Resize() {
   canvasWidth = $('#chart').width();
   canvasHeight = $('#chart').height();
-  //if(Exists(selected_method)){
-  //   selected_method.Redraw(canvasWidth, canvasHeight);
-  // }
+  if (Exists(selected_method)) {
+    selected_method.Redraw(canvasWidth, canvasHeight);
+  }
 }
 
 function GetNextTest(exp) {
@@ -331,37 +339,36 @@ function LoadSettings(s) {
   if (Exists(s.interface)) {
     if (Exists(s.interface.testMode)) { }
     if (Exists(s.interface.displayMode)) { SetDisplayMode(s.interface.displayMode); }
-    // if (Exists(s.interface.colourTheme)) { selected_method.SetColorTheme(s.interface.colourTheme); }
+    if (Exists(s.interface.colourTheme)) { selected_method.SetColorTheme(s.interface.colourTheme); }
   }
   //control
   if (Exists(s.control)) {
     if (Exists(s.control.data)) { ChangeData(s.control.data); }
     // if (Exists(s.control.method)) { changeMethod(s.control.method); }
-    //f (Exists(s.control.dateRange)) { $('#rangetoggle').bootstrapToggle(s.control.dateRange ? 'on' : 'off'); }
+    //if (Exists(s.control.dateRange)) { $('#rangetoggle').bootstrapToggle(s.control.dateRange ? 'on' : 'off'); }
     //if (Exists(s.control.animatedSlider)) { $('#rangetoggle').bootstrapToggle(s.control.animatedSlider ? 'on' : 'off'); }
     //if (Exists(s.control.fullscreen)) { $('#rangetoggle').bootstrapToggle(s.control.fullscreen ? 'on' : 'off'); }
   }
   //Method
-  /*
   if (Exists(s.method)) {
-      if (Exists(s.method.parameters) && s.method.parameters.length > 0) {
+    if (Exists(s.method.parameters) && s.method.parameters.length > 0) {
       for (var i = 0; i < s.method.parameters.length; i++) {
         var p = s.method.parameters[i];
         //find the actual
-        var pa = $.grep(selected_method.parameters, function(e){return e.name == p.name});
-        if( pa.length > 0){
+        var pa = $.grep(selected_method.parameters, function (e) { return e.name == p.name });
+        if (pa.length > 0) {
           pa = pa[0];
           //do we need to set it again?
-          if (pa.pval != p.pval){
+          if (pa.pval != p.pval) {
             //yes, this gets awkward as we need to know the type of attribute
             //Todo make this a function
-            if(pa.ptype == "checkbox"){
-               var e = $("#"+EscapeID(pa.name+"_checkbox"));
-               e.bootstrapToggle(p.pval ? 'on' : 'off');
-            }else if(pa.ptype == "textbox"){
-              var e = $("#"+EscapeID(pa.name+"_textbox"));
+            if (pa.ptype == "checkbox") {
+              var e = $("#" + EscapeID(pa.name + "_checkbox"));
+              e.bootstrapToggle(p.pval ? 'on' : 'off');
+            } else if (pa.ptype == "textbox") {
+              var e = $("#" + EscapeID(pa.name + "_textbox"));
               e.val(p.pval);
-            }else if(pa.ptype == "slider"){
+            } else if (pa.ptype == "slider") {
               //Todo
             }
             pa.pval = p.pval;
@@ -386,8 +393,33 @@ function LoadSettings(s) {
         }
       }
     }
-  }*/
+  }
 }
+function ChannelChange(atype, attribute, newChannel) {
+  console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
+  if (newChannel == "Disabled") {
+    selected_method.ChannelChanged();
+  } else {
+    //find the actual channel
+    var channel = (atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels).filter(function (obj) {
+      return obj.name == newChannel;
+    });
+    if (channel.length != 1) {
+      console.error("Can't find " + atype + " Channel '" + newChannel + "' in method %o", selected_method.name);
+      return;
+    }
+    channel = channel[0];
+    selected_method.ChannelChanged(channel);
+  }
+  return;
+}
+
+
+function SetChannel(atype, attribute, channelname) {
+  vChannelChange(atype,shortSpecificName, channelname);
+}
+
+
 var loadedTest;
 
 function LoadTest(t) {
@@ -449,17 +481,17 @@ function LoadTest(t) {
   if (Exists(t.enableNodeHighlight) && t.enableNodeHighlight) {
     console.log("Enabeling Highlighting");
     //enable highlighting
-    EnableHighlighting(true);
+    selected_method.EnableHighlighting(true);
   } else {
     console.log("disable Highlighting");
     //disable higlighting
-    EnableHighlighting(false);
+    selected_method.EnableHighlighting(false);
   }
   //highlight selcted nodes if there are any
-  Highlight();
+  selected_method.Highlight();
   if (Exists(t.highlightedNodes) && t.highlightedNodes.length > 0) {
     console.log("Highlighting:", t.highlightedNodes);
-    Highlight(t.highlightedNodes);
+    selected_method.Highlight(t.highlightedNodes);
   }
   //enable Ready btn
   $("#testReadyBtn").attr("disabled", false);
@@ -495,7 +527,7 @@ function FinishTest() {
   }
   //also grab selected nodes
   if (Exists(t.enableNodeHighlight) && t.enableNodeHighlight) {
-    var h = GetHighlightedNodes();
+    var h = selected_method.GetHighlightedNodes();
     var ids = [];
     for (var i = 0; i < h.length; i++) {
       ids.push(h[i].index);
@@ -523,9 +555,10 @@ function ChangeData(dataName) {
   var data = $.grep(loadedData, function (a) { return a.displayName == dataName })[0];
   if (Exists(data)) {
     //alert the method
-    //if (Exists(selected_method)) {
-    //   selected_method.SetData(null);
-    // }
+    if (Exists(selected_method)) {
+      selected_method.SetData(null);
+      selected_method.SetData(graphdata);
+    }
     graphdata = data;
     Update();
   } else {
@@ -553,33 +586,6 @@ function ChangeData(dataName) {
       }
     });
   }
-}
-
-var isHighlightingEnabled = true;
-function EnableHighlighting(bool) {
-  if (bool == undefined) { bool = !this.isHighlightingEnabled };
-  if (this.isHighlightingEnabled == bool) {
-    return;
-  }
-  this.isHighlightingEnabled = bool;
-}
-function Highlight(id, bool) {
-  if (!Exists(bool)) { bool = true; }
-  if (!Exists(id)) {
-    graphdata.nodes.forEach(function (n) {
-      n.highlight = false;
-    }, this);
-  } else {
-    if ($.isArray(id)) {
-      id.forEach(function (n) {
-        graphdata.nodes[n].highlight = bool;
-      }, this);
-    } else {
-      graphdata.nodes[id].highlight = bool;
-    }
-  }
-  // this.RedoNodes();
-  console.log("High2 ", this.GetHighlightedNodes());
 }
 
 function FinishExperiment() {
@@ -650,3 +656,6 @@ function Exists(i) {
 
 Load();
 Reset();
+
+///----- here be d3 stuff
+
