@@ -45,16 +45,6 @@
 .centered{
 	text-align: center;
 }
-.sbncontentdyn{
-	display: inline-block;
-	position:  absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
-  	border-style: solid;
-  	border-width: 2px;
-}
 .stopboxdyn{
 	margin-left: auto;
 	white-space: nowrap;

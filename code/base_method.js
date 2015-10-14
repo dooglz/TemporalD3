@@ -732,7 +732,10 @@ Base_Method.prototype.NodeSplit = function () {
   if(!Exists(this.visNodes) || this.visNodes.length ==0 ){
     console.error("No visnodes");
     return;
-    }
+  }
+  this.NodeSplitL();
+  this.NodeSplitR();
+}
 Base_Method.prototype.NodeSplitL = function () {
   var channelLA = this.getNodeChannel("Node Size LA").inUse || this.getNodeChannel("Node Colour LA").inUse;
   var channelLB = this.getNodeChannel("Node Size LB").inUse || this.getNodeChannel("Node Colour LB").inUse;
@@ -1198,12 +1201,12 @@ Base_Method.prototype.GetChannelAssignments = function () {
   var a = { node: [], link: [] };
   this.nodeChannels.forEach(function (c) {
     if (c.inUse) {
-      a.node.push({ name: c.name, attribute: c.dataParam });
+      a.node.push({ name: c.name, attribute: c.dataParam, id: EscapeID(c.name) });
     }
   }, this);
   this.linkChannels.forEach(function (c) {
     if (c.inUse) {
-      a.link.push({ name: c.name, attribute: c.dataParam });
+      a.link.push({ name: c.name, attribute: c.dataParam, id: EscapeID(c.name) });
     }
   }, this);
   return a;

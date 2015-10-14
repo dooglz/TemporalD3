@@ -117,13 +117,17 @@
       <div class="col-sm-3"></div>
       <div class="col-sm-3" id="questionNodeKey">
         <p>Node Keys</p>
-        {{#each node}}{{name}} : {{attribute}}
-        <br>{{/each}}
+        {{#each node}}
+        <span id="{{id}}_key"><b>●{{name}}●</b></span>
+        <br>{{attribute}}
+        <hr>{{/each}}
       </div>
       <div class="col-sm-3" id="questionLinkKey">
         <p>Link Keys</p>
-        {{#each link}}{{name}} : {{attribute}}
-        <br>{{/each}}
+        {{#each link}}
+        <span id="{{id}}_key"><b>●{{name}}●</b></span>
+        <br>{{attribute}}
+        <hr>{{/each}}
       </div>
     </div>
     <hr>

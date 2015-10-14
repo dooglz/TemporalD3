@@ -391,7 +391,7 @@ function LoadSettings(s) {
       }
       selected_method.ParamChanged();
     }
-      selected_method.Update();
+    selected_method.Update();
     if (Exists(s.method.nodeChannels) && s.method.nodeChannels.length > 0) {
       for (var i = 0; i < s.method.nodeChannels.length; i++) {
         var nc = s.method.nodeChannels[i];
@@ -412,11 +412,11 @@ function LoadSettings(s) {
   selected_method.Update();
 }
 function ChannelChange(atype, attribute, newChannel) {
-   console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
+  console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
   var c = $.grep(atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels, function (n, i) { return (n.name == newChannel) })[0];
   c.inUse = true;
   c.dataParam = attribute;
-   selected_method.ChannelChanged();
+  selected_method.ChannelChanged();
   return;
   //fuck the rest of this noise
  
@@ -479,7 +479,32 @@ function LoadTest(t) {
   }
   //load legened
   if (Exists(t.showKey) && t.showKey == true) {
-    //  $("#questionKeyDiv").html(questionLegendTemplate(selected_method.GetChannelAssignments()));
+    var ass = selected_method.GetChannelAssignments();
+    $("#questionKeyDiv").html(questionLegendTemplate(ass));
+    //woooo
+    ass.node.forEach(function (c) {
+      var colour;
+      switch (c.name) {
+        case "Node Size LA":
+          colour = selected_method.ColorTheme.LAnodeFillBaseColour;
+          break;
+        case "Node Size LB":
+          colour = selected_method.ColorTheme.LBnodeFillBaseColour;
+          break;
+        case "Node Size RA":
+          colour = selected_method.ColorTheme.RAnodeFillBaseColour;
+          break;
+        case "Node Size RB":
+          colour = selected_method.ColorTheme.RBnodeFillBaseColour;
+          break;
+        default:
+          colour = 'black';
+          break;
+      }
+    //  selected_method.NodeColour(side, )
+      $("#" + c.id + "_key").css('color', colour);
+    }, this);
+    // 
   } else {
     $("#questionKeyDiv").html("");
   }
