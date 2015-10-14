@@ -729,10 +729,10 @@ Base_Method.prototype.LAttributesPerVisNode = 0;
 Base_Method.prototype.RAttributesPerVisNode = 0;
 
 Base_Method.prototype.NodeSplit = function () {
-  if(!Exists(this.visNodes)){return;}
-  this.NodeSplitL();
-  this.NodeSplitR();
-}
+  if(!Exists(this.visNodes) || this.visNodes.length ==0 ){
+    console.error("No visnodes");
+    return;
+    }
 Base_Method.prototype.NodeSplitL = function () {
   var channelLA = this.getNodeChannel("Node Size LA").inUse || this.getNodeChannel("Node Colour LA").inUse;
   var channelLB = this.getNodeChannel("Node Size LB").inUse || this.getNodeChannel("Node Colour LB").inUse;
@@ -755,13 +755,17 @@ Base_Method.prototype.NodeSplitL = function () {
     this.LAttributesPerVisNode = 1;
     return;
   }
+  console.warn("hello");
   //chan A + B
   if (channelLA && channelLB) {
     if(this.LAttributesPerVisNode < 2){
+        console.warn("yo");
+        console.warn(this.visNodes);
       //add extra nodes
       this.visNodes.append("circle").attr("id","secondary");
     }else{
       //remove extra nodes
+       console.warn("awww");
       this.visNodes.selectAll("#secondary").remove();
     }
     this.LAttributesPerVisNode = 2;

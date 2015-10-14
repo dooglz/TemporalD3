@@ -270,17 +270,17 @@ function SetDisplayMode(mode) {
   Resize();
 };
 function Resize() {
-  if(displayMode ==1){
-    var a = Math.min($("#stopbox").width(),648);
-      $("#chartBoxLeft").width(a);
-      $("#chartBoxLeft").height(a);
-  }else if(displayMode ==2){
-      var a = Math.min($("#stopbox").width()*0.5,648);
-      $("#chartBoxLeft").width(a);
-      $("#chartBoxLeft").height(a);
-      $("#chartBoxRight").width(a);
-      $("#chartBoxRight").height(a);
-  //    $("#stopbox").height(a);
+  if (displayMode == 1) {
+    var a = Math.min($("#stopbox").width(), 648);
+    $("#chartBoxLeft").width(a);
+    $("#chartBoxLeft").height(a);
+  } else if (displayMode == 2) {
+    var a = Math.min($("#stopbox").width() * 0.5, 648);
+    $("#chartBoxLeft").width(a);
+    $("#chartBoxLeft").height(a);
+    $("#chartBoxRight").width(a);
+    $("#chartBoxRight").height(a);
+    //    $("#stopbox").height(a);
   }
   canvasWidth = $('#chart').width();
   canvasHeight = $('#chart').height();
@@ -357,7 +357,7 @@ function LoadSettings(s) {
   }
   //control
   if (Exists(s.control)) {
-    if (Exists(s.control.data)) { ChangeData(s.control.data);}
+    if (Exists(s.control.data)) { ChangeData(s.control.data); }
     // if (Exists(s.control.method)) { changeMethod(s.control.method); }
     //if (Exists(s.control.dateRange)) { $('#rangetoggle').bootstrapToggle(s.control.dateRange ? 'on' : 'off'); }
     //if (Exists(s.control.animatedSlider)) { $('#rangetoggle').bootstrapToggle(s.control.animatedSlider ? 'on' : 'off'); }
@@ -391,6 +391,7 @@ function LoadSettings(s) {
       }
       selected_method.ParamChanged();
     }
+      selected_method.Update();
     if (Exists(s.method.nodeChannels) && s.method.nodeChannels.length > 0) {
       for (var i = 0; i < s.method.nodeChannels.length; i++) {
         var nc = s.method.nodeChannels[i];
@@ -408,10 +409,17 @@ function LoadSettings(s) {
       }
     }
   }
-   selected_method.Update();
+  selected_method.Update();
 }
 function ChannelChange(atype, attribute, newChannel) {
-  console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
+   console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
+  var c = $.grep(atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels, function (n, i) { return (n.name == newChannel) })[0];
+  c.inUse = true;
+  c.dataParam = attribute;
+   selected_method.ChannelChanged();
+  return;
+  //fuck the rest of this noise
+ 
   if (newChannel == "Disabled") {
     selected_method.ChannelChanged();
   } else {
@@ -431,7 +439,7 @@ function ChannelChange(atype, attribute, newChannel) {
 
 
 function SetChannel(atype, attribute, channelname) {
-  ChannelChange(atype,attribute, channelname);
+  ChannelChange(atype, attribute, channelname);
 }
 
 
