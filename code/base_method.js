@@ -461,19 +461,20 @@ Base_Method.prototype.UpdateVisPositions = function (positionAttribute, position
         .attr("y2", function (d) { return d.target[positionAttribute + "y"]; });
         }
     } else {
-      this.visLinks
-        .attr("x1", function (d) { return d.source[positionAttribute + "x"]; })
-        .attr("y1", function (d) { return d.source[positionAttribute + "y"]; })
-        .attr("x2", function (d) { return d.target[positionAttribute + "x"]; })
-        .attr("y2", function (d) { return d.target[positionAttribute + "y"]; });
-      if (this.visLinksR !== undefined) {
-        this.visLinksR
-          .attr("x1", function (d) { return d.source[positionAttribute + "x"]; })
-          .attr("y1", function (d) { return d.source[positionAttribute + "y"]; })
-          .attr("x2", function (d) { return d.target[positionAttribute + "x"]; })
-          .attr("y2", function (d) { return d.target[positionAttribute + "y"]; });
-      }
+    if (!Exists(this.data)) { return; }
+    this.visLinks
+      .attr("x1", function (d) { if (IsNumber(d.source)) { d.source = graphdata.nodes[d.source]; } return d.source[positionAttribute + "x"]; })
+      .attr("y1", function (d) { if (IsNumber(d.source)) { d.source = graphdata.nodes[d.source]; } return d.source[positionAttribute + "y"]; })
+      .attr("x2", function (d) { if (IsNumber(d.target)) { d.target = graphdata.nodes[d.target]; } return d.target[positionAttribute + "x"]; })
+      .attr("y2", function (d) { if (IsNumber(d.target)) { d.target = graphdata.nodes[d.target]; } return d.target[positionAttribute + "y"]; });
+    if (this.visLinksR !== undefined) {
+      this.visLinksR
+        .attr("x1", function (d) { if (IsNumber(d.source)) { d.source = graphdata.nodes[d.source]; } return d.source[positionAttribute + "x"]; })
+        .attr("y1", function (d) { if (IsNumber(d.source)) { d.source = graphdata.nodes[d.source]; } return d.source[positionAttribute + "y"]; })
+        .attr("x2", function (d) { if (IsNumber(d.target)) { d.target = graphdata.nodes[d.target]; } return d.target[positionAttribute + "x"]; })
+        .attr("y2", function (d) { if (IsNumber(d.target)) { d.target = graphdata.nodes[d.target]; } return d.target[positionAttribute + "y"]; });
     }
+  }
   
   //update Nodes
   if (positionAttributeOffset != null) {
@@ -1223,4 +1224,12 @@ Base_Method.prototype.ChannelNameToNiceName = function (name) {
     postfix = (slice2 == "A" ? ", Left Half" : ", Right Half");
   }
   return prefix + name.slice(0,-3) + postfix;
+}
+
+Base_Method.prototype.PrintPositions = function (name) {
+  var positions = [];
+  this.data.nodes.forEach(function (e) {
+    positions.push({ x: e.x, y: e.y });
+  }, this);
+  return positions;
 }

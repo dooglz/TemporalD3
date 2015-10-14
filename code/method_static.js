@@ -59,10 +59,6 @@ Method_Static.prototype.SetData = function (d) {
     this.ClearVisData();
     this.NewVis();
   } else {
-    if (this.forceLayout != undefined) {
-      console.log("layout stopped");
-      this.forceLayout.stop();
-    }
     this.ClearVisData();
     this.ClearVis();
   }
@@ -76,15 +72,12 @@ Method_Static.prototype.Update = function () {
   Base_Method.prototype.Update.call(this);
   if (!Exists(this.data)) { return; }
   //force a tick
-  this.forceLayout.resume();
-  //restart simulation
-  //force.stop();
+
   //console.log("staring force %o, nodes: %o, links:%o",this.forceLayout,this.data.nodes,this.filteredLinks);
   var n = this.data.nodes.filter($.proxy(this.StandardNodeFilter, this));
   var l = this.data.links.filter($.proxy(this.QuickLinkFilter, this));
   console.log("layout started");
-  this.forceLayout.nodes(n).links(l).on("tick", this.Tick.bind(this)).start();
-  
+  this.Tick();
   //Update Vis
   this.UpdateVisData(n, l);
   this.UpdateVis();
@@ -151,21 +144,23 @@ Method_Static.prototype.zoomed = function () {
   }
 };
 Method_Static.prototype.Reset = function () {
-  this.svgTranslation = [0, 0];
-  this.scalefactor = [1, 1];
+this.svgTranslation = [this.width*0.5,this.height*0.5];
+  console.log(this.svgTranslation,this.width,this.height);
+  this.scalefactor = [1,1];
   this.svgContainer.attr("transform", "translate(0,0)scale(1,1)");
   if (this.svgR !== undefined) {
     this.svgContainerR.attr("transform", "translate(0,0)scale(1,1)");
   }
-  if (!Exists(zoom)) { return; };
+  if(!Exists(zoom)){console.error("no zoom");return;};
+  zoom.translate(this.svgTranslation);
   zoom.scale(1);
-  zoom.translate([0, 0]);
+  zoom.event(this.svgContainer);
 };
 
 Method_Static.prototype.Tick = function (e) {
   this.data.nodes.forEach($.proxy(function (o, i, array) {
-    o.y += o.sx;
-    o.x += o.sy;
+    o.x = this.data.positions[i].x;
+    o.y = this.data.positions[i].y;
   }, this));
   this.UpdateVisPositions("", null);
 };

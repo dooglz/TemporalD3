@@ -158,7 +158,8 @@ function Reset() {
 
   m_static = new Method_Static();
   m_simple = new Method_Simple();
-  selected_method = m_simple;
+  //selected_method = m_simple;
+  selected_method = m_static;
 }
 
 $('#expModeToggle').change(function () {
