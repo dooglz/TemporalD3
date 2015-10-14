@@ -289,6 +289,7 @@ function Resize() {
   canvasHeight = $('#chart').height();
   if (Exists(selected_method)) {
     selected_method.Redraw(canvasWidth, canvasHeight);
+    selected_method.Reset();
   }
 }
 
@@ -412,6 +413,7 @@ function LoadSettings(s) {
       }
     }
   }
+  selected_method.Reset();
   selected_method.Update();
 }
 function ChannelChange(atype, attribute, newChannel) {

@@ -173,15 +173,17 @@ Method_Simple.prototype.zoomed = function () {
   }
 };
 Method_Simple.prototype.Reset = function () {
-  this.svgTranslation = [0,0];
+  this.svgTranslation = [this.width*0.5,this.height*0.5];
+  console.log(this.svgTranslation,this.width,this.height);
   this.scalefactor = [1,1];
   this.svgContainer.attr("transform", "translate(0,0)scale(1,1)");
   if (this.svgR !== undefined) {
     this.svgContainerR.attr("transform", "translate(0,0)scale(1,1)");
   }
-  if(!Exists(zoom)){return;};
+  if(!Exists(zoom)){console.error("no zoom");return;};
+  zoom.translate(this.svgTranslation);
   zoom.scale(1);
-  zoom.translate([0,0]);
+  zoom.event(this.svgContainer);
 };
 //######################################################################
 //########    Force layout tick
