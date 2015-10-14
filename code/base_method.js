@@ -170,7 +170,7 @@ Base_Method.prototype.Update = function () {
 Base_Method.prototype.Load = function () { };
 Base_Method.prototype.Unload = function () { };
 Base_Method.prototype.Redraw = function (w, h) {
-  console.log("baseRedrawing");
+  console.log("Base_Method Redrawing",w,h);
   if (w !== undefined && h !== undefined) {
     this.width = w;
     this.height = h;
@@ -1149,9 +1149,13 @@ Base_Method.prototype.EnableHighlighting = function (bool) {
 }
 
 Base_Method.prototype.Highlight = function (id,bool) {
-  console.log("High1 ",this.GetHighlightedNodes());
-    console.log("High1 ",this.data);
-  console.log("00000000 ",id,bool);
+  if(!Exists(this.data) || !Exists(this.data.nodes)){
+    console.error("Highlight, Data is null");
+    return ;
+  }
+  //console.log("High1 ",this.GetHighlightedNodes());
+  //console.log("High1 ",this.data);
+  //console.log("00000000 ",id,bool);
   if(!Exists(bool)){bool = true;}
   if (!Exists(id)) {
     this.data.nodes.forEach(function (n) {
@@ -1172,6 +1176,10 @@ Base_Method.prototype.Highlight = function (id,bool) {
 
 
 Base_Method.prototype.GetHighlightedNodes = function () {
+  if(!Exists(this.data) || !Exists(this.data.nodes)){
+    console.error("GetHighlightedNodes, Data is null");
+    return [];
+  }
   var a = [];
   this.data.nodes.forEach(function (n) {
     if (n.highlight) {

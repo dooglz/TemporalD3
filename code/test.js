@@ -1,5 +1,5 @@
 
-
+$(window).resize(Resize);
 $(window).keypress(function (event) {
   if (event.keyCode == 96) {
     Reset();
@@ -30,6 +30,7 @@ var loadedData = [];
 var loadedExp;
 var selected_method;
 var m_static;
+var m_simple;
 
 var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "Napier Publications", url: "data/napierPublications.json" },
@@ -125,8 +126,8 @@ function Reset() {
   questionDiv.hide();
   chartsDiv.hide();
   $("#testInputID").val(Math.random().toString(36).slice(2, -1));
-  $("#testInput1").val("");
-  $("#testInput2").val("");
+  $("#testInput1").val("foo");
+  $("#testInput2").val("bar");
   $("#infomodalError").html("");
   $("#testSelector").selectpicker("val", "");
   $("#expSelector").selectpicker("val", "");
@@ -153,7 +154,8 @@ function Reset() {
   testLoaded = false;
 
   m_static = new Method_Static();
-  selected_method = m_static;
+  m_simple = new Method_Simple();
+  selected_method = m_simple;
 }
 
 $('#expModeToggle').change(function () {
@@ -268,6 +270,18 @@ function SetDisplayMode(mode) {
   Resize();
 };
 function Resize() {
+  if(displayMode ==1){
+    var a = Math.min($("#stopbox").width(),648);
+      $("#chartBoxLeft").width(a);
+      $("#chartBoxLeft").height(a);
+  }else if(displayMode ==2){
+      var a = Math.min($("#stopbox").width()*0.5,648);
+      $("#chartBoxLeft").width(a);
+      $("#chartBoxLeft").height(a);
+      $("#chartBoxRight").width(a);
+      $("#chartBoxRight").height(a);
+  //    $("#stopbox").height(a);
+  }
   canvasWidth = $('#chart').width();
   canvasHeight = $('#chart').height();
   if (Exists(selected_method)) {
@@ -343,7 +357,7 @@ function LoadSettings(s) {
   }
   //control
   if (Exists(s.control)) {
-    if (Exists(s.control.data)) { ChangeData(s.control.data); }
+    if (Exists(s.control.data)) { ChangeData(s.control.data);}
     // if (Exists(s.control.method)) { changeMethod(s.control.method); }
     //if (Exists(s.control.dateRange)) { $('#rangetoggle').bootstrapToggle(s.control.dateRange ? 'on' : 'off'); }
     //if (Exists(s.control.animatedSlider)) { $('#rangetoggle').bootstrapToggle(s.control.animatedSlider ? 'on' : 'off'); }
@@ -394,6 +408,7 @@ function LoadSettings(s) {
       }
     }
   }
+   selected_method.Update();
 }
 function ChannelChange(atype, attribute, newChannel) {
   console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
@@ -416,7 +431,7 @@ function ChannelChange(atype, attribute, newChannel) {
 
 
 function SetChannel(atype, attribute, channelname) {
-  vChannelChange(atype,shortSpecificName, channelname);
+  ChannelChange(atype,attribute, channelname);
 }
 
 
@@ -505,6 +520,7 @@ function BeginExp() {
   testSetupDiv.hide();
   questionDiv.show();
   chartsDiv.show();
+  Resize();
 }
 function StartTest() {
   $("#testReadyBtn").attr("disabled", true);
@@ -554,12 +570,12 @@ function ChangeData(dataName) {
   console.log("changing Data to: " + dataName);
   var data = $.grep(loadedData, function (a) { return a.displayName == dataName })[0];
   if (Exists(data)) {
+    graphdata = data;
     //alert the method
     if (Exists(selected_method)) {
       selected_method.SetData(null);
       selected_method.SetData(graphdata);
     }
-    graphdata = data;
     Update();
   } else {
     //no, load it

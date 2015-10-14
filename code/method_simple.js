@@ -118,7 +118,6 @@ Method_Simple.prototype.Redraw = function (w, h) {
     .charge(-840)
     .friction(0.3)
     .linkDistance(this.LinkLength.bind(this))
-    .size([this.width, this.height]);
 
   zoom = d3.behavior.zoom().scaleExtent([0.5, 10]).on("zoom", this.zoomed.bind(this));
   var refresh = false;
@@ -140,21 +139,23 @@ Method_Simple.prototype.Redraw = function (w, h) {
       refresh = true;
     }
   }
-  
-  if (this.svg === undefined) {
+
+  if (!Exists(this.svg)) {
     //todo do this for Right side
     this.svg = d3.select("#chart").append("svg");
     refresh = true;
   }
-  if (this.svgContainer === undefined) {
+  if (!Exists(this.svgContainer)) {
     this.svgContainer = this.svg.append("g");
     refresh = true;
   }
+
   this.allsvg = $("svg");
   this.svg.attr("width", this.width).attr("height", this.height).call(zoom);
   this.SetupSVGFilters();
   this.RedoNodes();
   this.RedoLinks();
+
   if(refresh){
       this.NewVis();
       this.Update();
