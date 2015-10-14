@@ -2,7 +2,8 @@
 $(window).resize(Resize);
 $(window).keypress(function (event) {
   if (event.keyCode == 96) {
-    Reset();
+   // Reset();
+    selected_method.Reset();
   }
 });
 
@@ -32,20 +33,22 @@ var selected_method;
 var m_static;
 var m_simple;
 
-var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
-  { name: "Napier Publications", url: "data/napierPublications.json" },
-  { name: "studentsClust-100-10", url: "data/studentsClust-100-10.json" },
-  { name: "studentsClust-100-11", url: "data/studentsClust-100-11.json" },
-  { name: "studentsClust-100-12", url: "data/studentsClust-100-12.json" },
-  { name: "studentsClust-100-12a", url: "data/studentsClust-100-12a.json" },
-  { name: "studentsClust-101-11-1", url: "data/studentsClust-101-11-1.json" },
-  { name: "studentsClust-101-11", url: "data/studentsClust-101-11.json" },
-  { name: "studentsClust-101-11int", url: "data/studentsClust-101-11int.json" },
-  { name: "studentsClust-101-5-1", url: "data/studentsClust-101-5-1.json" },
-  { name: "studentsClust-60-4", url: "data/studentsClust-60-4.json" },
-  { name: "studentsClust-80-4", url: "data/studentsClust-80-4.json" },
-  { name: "studentsFabClust-70-6-1", url: "data/studentsFabClust-70-6-1.json" },
-  { name: "studentsFabClust-75-6-1", url: "data/studentsFabClust-75-6-1.json" }
+var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },  
+  { name: "IBE1ISB-60-3-1", url: "data/official/IBE1ISB-60-3-1.json" },
+  { name: "IBE1SDB-60-3-1", url: "data/official/IBE1SDB-60-3-1.json" },
+  { name: "IBE2CentralFav-120-5-1", url: "data/official/IBE2CentralFav-120-5-1.json" },
+  { name: "IBE2CentralUnfav-120-5-1", url: "data/official/IBE2CentralUnfav-120-5-1.json" },
+  { name: "T1SNP-15-3-2", url: "data/official/T1SNP-15-3-2.json" },
+  { name: "T2SNP-45-3-1", url: "data/official/T2SNP-45-3-1.json" },
+  { name: "T3SNP-55-3-1", url: "data/official/T3SNP-55-3-1.json" },
+  { name: "T4SNP-155-5-1", url: "data/official/T4SNP-155-5-1.json" },
+  { name: "T5SNP-10-1-1", url: "data/official/T5SNP-10-1-1.json" },
+  { name: "TBQ1ISCF-120-5-1", url: "data/official/TBQ1ISCF-120-5-1.json" },
+  { name: "TBQ1SDCF-150-6-1", url: "data/official/TBQ1SDCF-150-6-1.json" },
+  { name: "TBQ2ISFC-90-4-1", url: "data/official/TBQ2ISFC-90-4-1.json" },
+  { name: "TBQ2SDFC-90-4-1", url: "data/official/TBQ2SDFC-90-4-1.json" },
+  { name: "TBQ3TwistCent-80-5-1", url: "data/official/TBQ3TwistCent-80-5-1.json" },
+  { name: "TBQ4Inv70-4-1", url: "data/official/TBQ4Inv70-4-1.json" }
 ];
 var stockTests = ["tests/test1.json", "tests/test2.json", "tests/Training1a.json", "tests/Training1b.json",
   "tests/Training2a.json", "tests/Training2b.json",

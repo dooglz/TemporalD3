@@ -758,17 +758,13 @@ Base_Method.prototype.NodeSplitL = function () {
     this.LAttributesPerVisNode = 1;
     return;
   }
-  console.warn("hello");
   //chan A + B
   if (channelLA && channelLB) {
     if(this.LAttributesPerVisNode < 2){
-        console.warn("yo");
-        console.warn(this.visNodes);
       //add extra nodes
       this.visNodes.append("circle").attr("id","secondary");
     }else{
       //remove extra nodes
-       console.warn("awww");
       this.visNodes.selectAll("#secondary").remove();
     }
     this.LAttributesPerVisNode = 2;

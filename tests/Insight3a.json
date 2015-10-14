@@ -17,7 +17,7 @@
 		  "visible":false,"enabled":false,"position":5
 		  },
 		"control":{
-		  "method":"simple","data":"studentsClust-100-12","dateRange":false,"animatedSlider":false
+		  "method":"simple","data":"IBE2CentralFav-120-5-1","dateRange":false,"animatedSlider":false
 		  },
 		"method":{
 		  "nodeChannels":[

@@ -22,7 +22,7 @@
 		  "visible":false,"enabled":false,"position":5
 		  },
 		"control":{
-		  "method":"simple","data":"studentsClust-101-11-1","dateRange":false,"animatedSlider":false
+		  "method":"simple","data":"T2SNP-45-3-1","dateRange":false,"animatedSlider":false
 		  },
 		"method":{
 		  "nodeChannels":[
