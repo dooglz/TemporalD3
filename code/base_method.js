@@ -1197,13 +1197,30 @@ Base_Method.prototype.GetChannelAssignments = function () {
   var a = { node: [], link: [] };
   this.nodeChannels.forEach(function (c) {
     if (c.inUse) {
-      a.node.push({ name: c.name, attribute: c.dataParam, id: EscapeID(c.name) });
+      a.node.push({ name:c.name, nicename:this.ChannelNameToNiceName(c.name), attribute: c.dataParam, id: EscapeID(c.name) });
     }
   }, this);
   this.linkChannels.forEach(function (c) {
     if (c.inUse) {
-      a.link.push({ name: c.name, attribute: c.dataParam, id: EscapeID(c.name) });
+      a.link.push({ name:c.name, nicename:this.ChannelNameToNiceName(c.name), attribute: c.dataParam, id: EscapeID(c.name) });
     }
   }, this);
   return a;
+}
+
+
+Base_Method.prototype.ChannelNameToNiceName = function (name) {
+  var prefix = "";
+  var slice = name.slice(-2,-1);
+  var slice2 = name.slice(-1);
+  if (displayMode == 2){
+    //split view, show prefix
+    prefix = (slice == "L" ? "Left " : "Right ");
+  }
+  var postfix = "";
+  if ((slice == "L" && this.LAttributesPerVisNode > 1) || (slice == "R" && this.LAttributesPerVisNode > 1)){
+    //split view, show prefix
+    postfix = (slice2 == "A" ? ", Left Half" : ", Right Half");
+  }
+  return prefix + name.slice(0,-3) + postfix;
 }

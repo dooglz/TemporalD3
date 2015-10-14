@@ -2,7 +2,7 @@
 $(window).resize(Resize);
 $(window).keypress(function (event) {
   if (event.keyCode == 96) {
-   // Reset();
+    // Reset();
     selected_method.Reset();
   }
 });
@@ -33,7 +33,7 @@ var selected_method;
 var m_static;
 var m_simple;
 
-var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },  
+var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "IBE1ISB-60-3-1", url: "data/official/IBE1ISB-60-3-1.json" },
   { name: "IBE1SDB-60-3-1", url: "data/official/IBE1SDB-60-3-1.json" },
   { name: "IBE2CentralFav-120-5-1", url: "data/official/IBE2CentralFav-120-5-1.json" },
@@ -396,11 +396,13 @@ function LoadSettings(s) {
       selected_method.ParamChanged();
     }
     selected_method.Update();
+    //wipe all channels
+    ChannelChange();
     if (Exists(s.method.nodeChannels) && s.method.nodeChannels.length > 0) {
       for (var i = 0; i < s.method.nodeChannels.length; i++) {
         var nc = s.method.nodeChannels[i];
         if (nc.inUse) {
-          SetChannel("node", nc.dataParam, nc.name);
+          ChannelChange("node", nc.dataParam, nc.name);
         }
       }
     }
@@ -408,7 +410,7 @@ function LoadSettings(s) {
       for (var i = 0; i < s.method.linkChannels.length; i++) {
         var lc = s.method.linkChannels[i];
         if (lc.inUse) {
-          SetChannel("link", lc.dataParam, lc.name);
+          ChannelChange("link", lc.dataParam, lc.name);
         }
       }
     }
@@ -417,6 +419,25 @@ function LoadSettings(s) {
   selected_method.Update();
 }
 function ChannelChange(atype, attribute, newChannel) {
+  if (!Exists(atype)) {
+    console.log("wiping all channels");
+    selected_method.nodeChannels.forEach(function (c) {
+      c.inUse = false;
+      c.dataParam = "";
+    }, this);
+    selected_method.linkChannels.forEach(function (c) {
+      c.inUse = false;
+      c.dataParam = "";
+    }, this);
+    return;
+  } else if (!Exists(attribute)) {
+    console.log("wiping "+atype+" channels");
+    (atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels).forEach(function (c) {
+      c.inUse = false;
+      c.dataParam = "";
+    }, this);
+    return;
+  }
   console.log("Data " + atype + " Attribute:'" + attribute + "' reassigned to " + atype + " channel: " + newChannel);
   var c = $.grep(atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels, function (n, i) { return (n.name == newChannel) })[0];
   c.inUse = true;
@@ -441,12 +462,6 @@ function ChannelChange(atype, attribute, newChannel) {
   }
   return;
 }
-
-
-function SetChannel(atype, attribute, channelname) {
-  ChannelChange(atype, attribute, channelname);
-}
-
 
 var loadedTest;
 
@@ -506,7 +521,7 @@ function LoadTest(t) {
           colour = 'black';
           break;
       }
-    //  selected_method.NodeColour(side, )
+      //  selected_method.NodeColour(side, )
       $("#" + c.id + "_key").css('color', colour);
     }, this);
     // 

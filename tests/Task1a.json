@@ -5,6 +5,8 @@
 		{"type":"TextBox","name":"Thoughts", "required":true}
 	],
 	
+	"showKey": true,
+		
 	"settings":{
 		"name":"Test1Settings",
 		"interface":{
