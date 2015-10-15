@@ -1,6 +1,6 @@
 {
     "name":"Training3b",
-	"questionText":"Select a student with a higher mark in Software Development than in Information Systems",
+	"questionText":"Select a student with a higher mark in <span class='sdev'>Software Development</span> than in <span class='infsys'>Information Systems</span> ",
 	"questionInputs":[],
 	
 	"enableNodeHighlight":true,

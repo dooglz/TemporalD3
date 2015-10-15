@@ -1,6 +1,6 @@
 {
     "name":"Training2b",
-	"questionText":"Does student A have low, average, or high marks in Software Development?",
+	"questionText":"Does student A have low, average, or high marks in <span class='sdev'>Software Development</span>?",
 		"questionInputs":[
 		{"type":"TextBox","name":"Marks", "required":true}
 	],

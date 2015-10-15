@@ -1,6 +1,6 @@
 {
     "name":"Task2a",
-	"questionText":"Select the group of students with very high marks in Software Development",
+	"questionText":"Select the group of students with very high marks in <span class='sdev'>Software Development</span>",
 	"questionInputs":[],
 	
 	"enableNodeHighlight":true,

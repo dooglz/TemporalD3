@@ -1,6 +1,6 @@
 {
     "name":"Task3a",
-	"questionText":"Compare the distributions of Software Development marks and Information Systems marks.",
+	"questionText":"Compare the distributions of <span class='sdev'>Software Development</span> marks and <span class='infsys'>Information Systems</span>  marks.",
 	"questionInputs":[
 		{"type":"TextBox","name":"Thoughts", "required":true}
 	],

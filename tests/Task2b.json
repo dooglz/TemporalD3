@@ -1,6 +1,6 @@
 {
     "name":"Task2b",
-	"questionText":"Select the group of students with very high marks in Information Systems",
+	"questionText":"Select the group of students with very high marks in <span class='infsys'>Information Systems</span> ",
 	"questionInputs":[],
 	
 	"enableNodeHighlight":false,
