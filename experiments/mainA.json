@@ -1,5 +1,18 @@
 {
-    "name":"Main A",
-	"order":["Training1a","Training2a","Training3a","Insight1a","Insight2a","Insight3a","Insight4a",
-			"Task1a","Task2a","Task3a","Task4a"]
+	"name": "Main A",
+	"order": [
+		"Training1a","Training3b",
+		"Training2a","Training1b",
+		"Training3a","Training2b",
+		
+		"Insight1a","Insight3b",
+		"Insight2a","Insight4b",
+		"Insight3a","Insight2b",
+		"Insight4a","Insight1b",
+		
+		"Task1a","Task3a",
+		"Task2a","Task4a",
+		"Task3a","Task2a",
+		"Task4a","Task1a"
+	]
 }

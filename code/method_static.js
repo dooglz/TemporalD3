@@ -159,6 +159,9 @@ this.svgTranslation = [this.width*0.5,this.height*0.5];
 
 Method_Static.prototype.Tick = function (e) {
   this.data.nodes.forEach($.proxy(function (o, i, array) {
+    if( !Exists(this.data.positions[i])){
+      console.error("Uh oh", i,this.data.positions);
+    }
     o.x = this.data.positions[i].x;
     o.y = this.data.positions[i].y;
   }, this));

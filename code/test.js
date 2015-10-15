@@ -50,15 +50,28 @@ var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "TBQ3TwistCent-80-5-1", url: "data/official/TBQ3TwistCent-80-5-1.json" },
   { name: "TBQ4Inv70-4-1", url: "data/official/TBQ4Inv70-4-1.json" }
 ];
-var stockTests = ["tests/test1.json", "tests/test2.json", "tests/Training1a.json", "tests/Training1b.json",
-  "tests/Training2a.json", "tests/Training2b.json",
-  "tests/Training3a.json", "tests/Training3b.json",
-  "tests/Insight1a.json", "tests/Insight2a.json",
-  "tests/Insight3a.json", "tests/Insight4a.json",
-  "tests/Task1a.json", "tests/Task1b.json",
-  "tests/Task2a.json", "tests/Task2b.json",
-  "tests/Task3a.json", "tests/Task3b.json",
-  "tests/Task4a.json", "tests/Task4b.json"
+var stockTests = ["tests/Training1a.json",
+  "tests/Training3b.json",
+  "tests/Training2a.json",
+  "tests/Training1b.json",
+  "tests/Training3a.json",
+  "tests/Training2b.json",
+  "tests/Insight1a.json",
+  "tests/Insight3b.json",
+  "tests/Insight2a.json",
+  "tests/Insight4b.json",
+  "tests/Insight3a.json",
+  "tests/Insight2b.json",
+  "tests/Insight4a.json",
+  "tests/Insight1b.json",
+  "tests/Task1a.json",
+  "tests/Task3a.json",
+  "tests/Task2a.json",
+  "tests/Task4a.json",
+  "tests/Task3a.json",
+  "tests/Task2a.json",
+  "tests/Task4a.json",
+  "tests/Task1.json"
 ];
 var stockExperiments = ["experiments/exp1.json", "experiments/exp2.json", "experiments/mainA.json", "experiments/mainb.json"];
 
@@ -567,7 +580,12 @@ function LoadTest(t) {
   $("#testSubmitBtn").attr("disabled", true);
   testLoaded = true;
   loadedTest = t;
-  CheckforStart();
+  var t = "";
+  if(expMode){
+    t = ", "+loadedExp.currentPos+" of "+loadedExp.order.length;
+  }
+  $("#questionStatus").html("Test: "+loadedTest.name +t);
+  CheckforStart();  
 }
 
 function BeginExp() {

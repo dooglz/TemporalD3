@@ -5,18 +5,18 @@
 		{"type":"TextBox","name":"Thoughts", "required":true}
 	],
 	
-	"enableNodeHighlight":false,
+	"enableNodeHighlight":true,
 	"showKey": true,
 	"highlightedNodes":[],
 	
 	"CenterGraphHeadder" : "",
-	"LeftGraphHeadder" :"Information Systems",
-	"RightGraphHeadder":"Software Development",
+	"LeftGraphHeadder" :"",
+	"RightGraphHeadder":"",
 	
 	"settings":{
 		"name":"Test1Settings",
 		"interface":{
-		  "testMode":false,"displayMode":"Split","colourTheme":"Default"
+		  "testMode":false,"displayMode":"Single","colourTheme":"Default"
 		  },
 		"slider":{
 		  "visible":false,"enabled":false,"position":5
@@ -32,8 +32,8 @@
 			{"name":"Node Colour RA","inUse":false},
 			{"name":"Node Colour RB","inUse":false},
 			{"name":"Node Size LA","inUse":true,"dataParam" : "Information Systems"},
-			{"name":"Node Size LB","inUse":false},
-			{"name":"Node Size RA","inUse":true,"dataParam" : "Software Development"},
+			{"name":"Node Size LB","inUse":true,"dataParam" : "Software Development"},
+			{"name":"Node Size RA","inUse":false},
 			{"name":"Node Size RB","inUse":false}
 		  ],
 		"linkChannels":[
