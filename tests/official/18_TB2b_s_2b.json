@@ -2,7 +2,8 @@
     "name":"18_TB2b_s_2b",
 	"questionText":"Select the students belonging to the group with very high marks in Information Systems",
 	"questionInputs":[],
-	
+		
+	"enableNodeHighlight":true,
 	"showKey": true,
 		
 	"settings":{

@@ -5,6 +5,7 @@
 		{"type":"TextBox","name":"Thoughts", "required":true}
 	],
 	
+	"enableNodeHighlight":true,
 	"showKey": true,
 		
 	"settings":{

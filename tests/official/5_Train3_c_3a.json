@@ -2,7 +2,8 @@
     "name":"5_Train3_c_3a",
 	"questionText":"Select three nodes with very high marks in Software Development",
 	"questionInputs":[],
-	
+		
+	"enableNodeHighlight":true,
 	"showKey": true,
 		
 	"settings":{

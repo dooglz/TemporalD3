@@ -2,7 +2,8 @@
     "name":"19_TB3ai_c_3ai",
 	"questionText":"Select the students belonging to the group with very high marks in Software Development",
 	"questionInputs":[],
-	
+		
+	"enableNodeHighlight":true,
 	"showKey": true,
 		
 	"settings":{

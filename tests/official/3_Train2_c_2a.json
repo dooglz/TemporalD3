@@ -4,9 +4,11 @@
 	"questionInputs":[
 		{"type":"TextBox","name":"Marks", "required":true}
 	],
-	
-	"showKey": true,
 		
+	"enableNodeHighlight":true,
+	"showKey": true,
+	"nodeText":[{"id":10,"text":" Student A"}],
+	
 	"settings":{
 		"name":"3_Train2_c_2aSettings",
 		"interface":{

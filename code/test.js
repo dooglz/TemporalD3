@@ -527,6 +527,7 @@ function LoadTest(t) {
     t = $.grep(loadedTests, function (n, i) { return (n.name == t) })[0];
   }
   console.log("Loading test %o", t.name);
+
   LoadSettings(t.settings);
   //Hide graph
   $("svg").attr('visibility', 'hidden');
@@ -617,6 +618,15 @@ function LoadTest(t) {
     console.log("Highlighting:", t.highlightedNodes);
     selected_method.Highlight(t.highlightedNodes);
   }
+  
+    //wipe all labels
+  selected_method.SetLabel();
+  if (Exists(t.nodeText) && t.nodeText.length != 0) {
+    for (var i = 0; i < t.nodeText.length; i++) {
+      selected_method.SetLabel(t.nodeText[i].id,t.nodeText[i].text)
+    }
+  }
+  
   //enable Ready btn
   $("#testReadyBtn").attr("disabled", false);
   $("#testSubmitBtn").attr("disabled", true);

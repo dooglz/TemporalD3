@@ -4,7 +4,8 @@
 	"questionInputs":[
 		{"type":"TextBox","name":"Pattern", "required":true}
 	],
-	
+		
+	"enableNodeHighlight":true,
 	"showKey": true,
 		
 	"settings":{

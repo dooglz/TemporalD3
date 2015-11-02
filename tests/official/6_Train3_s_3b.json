@@ -2,7 +2,8 @@
     "name":"6_Train3_s_3b",
 	"questionText":"Select three nodes with very high marks in Information Systems",
 	"questionInputs":[],
-	
+		
+	"enableNodeHighlight":true,
 	"showKey": true,
 		
 	"settings":{

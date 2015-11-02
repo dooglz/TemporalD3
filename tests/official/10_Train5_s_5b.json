@@ -5,6 +5,7 @@
 		{"type":"TextBox","name":"freinds", "required":true}
 	],
 	
+	"enableNodeHighlight":true,
 	"showKey": true,
 		
 	"settings":{

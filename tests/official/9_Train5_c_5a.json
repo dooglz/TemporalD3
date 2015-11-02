@@ -2,7 +2,8 @@
     "name":"9_Train5_c_5a",
 	"questionText":"Select a student with a higher mark in Software Development than in Information Systems",
 	"questionInputs":[],
-	
+		
+	"enableNodeHighlight":true,
 	"showKey": true,
 		
 	"settings":{

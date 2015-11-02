@@ -540,14 +540,14 @@ Base_Method.prototype.UpdateVis = function () {
     }
   }
 
-
   //Create nodes
   this.visNodes = this.svgContainer.selectAll("g").data(this.visNodeData);
   var g = this.visNodes.enter().append("g")
     .on("click", Nodeclick)
     .on("dblclick", NodedblClick);
   g.append("circle");
-  g.append("text")
+  
+  this.visNodesT = g.append("text")
       .attr("dx", 12)
       .attr("class", "nodeLabel")
       .attr("dy", ".35em")
@@ -1178,6 +1178,20 @@ Base_Method.prototype.Highlight = function (id,bool) {
   console.log("High2 ",this.GetHighlightedNodes());
 }
 
+Base_Method.prototype.SetLabel = function (id,str) {
+  if(!Exists(this.data) || !Exists(this.data.nodes)){
+    console.error("SetText, Data is null");
+    return ;
+  }
+  if(!Exists(id)){
+    this.data.nodes.forEach(function (n) {
+      n.label = "";
+    }, this);
+  }else{
+    this.data.nodes[id].label = str;
+  }
+  selected_method.visNodes.selectAll("text").text(function(d) { return d.label });
+}
 
 Base_Method.prototype.GetHighlightedNodes = function () {
   if(!Exists(this.data) || !Exists(this.data.nodes)){
@@ -1192,7 +1206,6 @@ Base_Method.prototype.GetHighlightedNodes = function () {
   }, this);
   return a;
 }
-
 
 Base_Method.prototype.GetChannelAssignments = function () {
   var a = { node: [], link: [] };
