@@ -2,7 +2,7 @@
     "name":"24_TB4b_s_4b",
 	"questionText":"Describe the relationship between the marks for Software Development and Information Systems over the whole network.",
 	"questionInputs":[
-		{"type":"TextBox","name":"freinds", "required":true}
+		{"type":"TextBox","name":"Thoughts", "required":true}
 	],
 	
 	"showKey": true,

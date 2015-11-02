@@ -308,7 +308,8 @@ var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
   { name: "TB3ai", url: "data/official/TB3ai.json" },
   { name: "TB3aii", url: "data/official/TB3aii.json" },
   { name: "TB3b", url: "data/official/TB3b.json" },
-  { name: "TB4a", url: "data/official/TB4a.json" }
+  { name: "TB4a", url: "data/official/TB4a.json" },
+  { name: "TB4b", url: "data/official/TB4b.json" }
 ];
 
 

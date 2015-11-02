@@ -2,7 +2,7 @@
     "name":"8_Train4_s_4b",
 	"questionText":"In which module does Student B gain better marks– Software Development or Information Systems?",
 	"questionInputs":[
-		{"type":"TextBox","name":"freinds", "required":true}
+		{"type":"TextBox","name":"Module", "required":true}
 	],
 	
 	"showKey": true,

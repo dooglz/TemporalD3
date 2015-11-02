@@ -2,7 +2,7 @@
     "name":"4_Train2_s_2b",
 	"questionText":"Does Student B have low, average, or high marks in Software Development?",
 	"questionInputs":[
-		{"type":"TextBox","name":"freinds", "required":true}
+		{"type":"TextBox","name":"Marks", "required":true}
 	],
 	
 	"showKey": true,

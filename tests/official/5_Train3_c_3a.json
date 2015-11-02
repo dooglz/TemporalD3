@@ -1,9 +1,7 @@
 {
     "name":"5_Train3_c_3a",
 	"questionText":"Select three nodes with very high marks in Software Development",
-	"questionInputs":[
-		{"type":"TextBox","name":"freinds", "required":true}
-	],
+	"questionInputs":[],
 	
 	"showKey": true,
 		

@@ -1,9 +1,7 @@
 {
     "name":"19_TB3ai_c_3ai",
 	"questionText":"Select the students belonging to the group with very high marks in Software Development",
-	"questionInputs":[
-		{"type":"TextBox","name":"freinds", "required":true}
-	],
+	"questionInputs":[],
 	
 	"showKey": true,
 		

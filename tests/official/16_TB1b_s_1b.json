@@ -2,7 +2,7 @@
     "name":"16_TB1b_s_1b",
 	"questionText":"Describe the pattern of marks for Information Systems over the friendship network",
 	"questionInputs":[
-		{"type":"TextBox","name":"freinds", "required":true}
+		{"type":"TextBox","name":"Pattern", "required":true}
 	],
 	
 	"showKey": true,

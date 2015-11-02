@@ -2,7 +2,7 @@
     "name":"22_TB3b_s_3bii",
 	"questionText":"Compare the distributions of Information Systems marks and Software Development marks.",
 	"questionInputs":[
-		{"type":"TextBox","name":"freinds", "required":true}
+		{"type":"TextBox","name":"Thoughts", "required":true}
 	],
 	
 	"showKey": true,

@@ -1,8 +1,8 @@
 {
     "name":"15_TB1a_c_1a",
-	"questionText":"This visualisation shows data from 2014.<br>Please spend as much time as you need considering the visualisation and tell us about any interesting observations you make relating to friendships and module marks.",
+	"questionText":"Describe the pattern of marks for Information Systems over the friendship network",
 	"questionInputs":[
-		{"type":"TextBox","name":"freinds", "required":true}
+		{"type":"TextBox","name":"Pattern", "required":true}
 	],
 	
 	"showKey": true,

@@ -1,9 +1,7 @@
 {
     "name":"18_TB2b_s_2b",
 	"questionText":"Select the students belonging to the group with very high marks in Information Systems",
-	"questionInputs":[
-		{"type":"TextBox","name":"freinds", "required":true}
-	],
+	"questionInputs":[],
 	
 	"showKey": true,
 		

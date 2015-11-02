@@ -1,9 +1,7 @@
 {
-    "name":"6_rain3_s_3b",
+    "name":"6_Train3_s_3b",
 	"questionText":"Select three nodes with very high marks in Information Systems",
-	"questionInputs":[
-		{"type":"TextBox","name":"freinds", "required":true}
-	],
+	"questionInputs":[],
 	
 	"showKey": true,
 		

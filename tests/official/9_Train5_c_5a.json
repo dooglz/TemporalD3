@@ -1,9 +1,7 @@
 {
     "name":"9_Train5_c_5a",
 	"questionText":"Select a student with a higher mark in Software Development than in Information Systems",
-	"questionInputs":[
-		{"type":"TextBox","name":"freinds", "required":true}
-	],
+	"questionInputs":[],
 	
 	"showKey": true,
 		

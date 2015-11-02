@@ -65,7 +65,8 @@ var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
 { name: "TB3ai", url: "data/official/TB3ai.json" },
 { name: "TB3aii", url: "data/official/TB3aii.json" },
 { name: "TB3b", url: "data/official/TB3b.json" },
-{ name: "TB4a", url: "data/official/TB4a.json" }
+{ name: "TB4a", url: "data/official/TB4a.json" },
+  { name: "TB4b", url: "data/official/TB4b.json" }
 ];
 var stockTests = ["tests/Training1a.json",
   "tests/Training3b.json",
@@ -729,12 +730,18 @@ function FinishExperiment() {
   if (expMode) {
     for (var index = 0; index < loadedExp.done.length; index++) {
       t = GetTest(loadedExp.done[index]);
+      if (!Exists(t)){
+        console.error("Can't find t!");
+      }
       results.tests.push({ name: t.name, responces: t.responce, start: t.startTime, end: t.endTime });
+      if (!Exists(t.responce)){t.responce = {};}
+      console.log(t,t.responce,JSON.stringify(t.responce));
       x += t.name + "<br>" + JSON.stringify(t.responce).replace(/},{/g, "<br>") + "<br> Time: " + MillisToTime(t.endTime - t.startTime) + "<br><br>";
     }
   } else {
     t = loadedTest;
     results.tests.push({ name: t.name, responces: t.responce, start: t.startTime, end: t.endTime });
+    if (!Exists(t.responce)){t.responce = {};}
     x += t.name + "<br>" + JSON.stringify(t.responce).replace(/},{/g, "<br>") + "<br> Time: " + MillisToTime(t.endTime - t.startTime) + "<br><br>";
   }
   HandleResults(results);
@@ -762,6 +769,7 @@ function GetTest(t) {
         return loadedTests[i];
       }
     }
+    console.error("Can't find Test: ",t);
   }
   return t;
 }

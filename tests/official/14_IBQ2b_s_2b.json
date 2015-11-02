@@ -2,7 +2,7 @@
     "name":"14_IBQ2b_s_2b",
 	"questionText":"This visualisation shows data from 2014.<br>Please spend as much time as you need considering the visualisation and tell us about any interesting observations you make relating to friendships and module marks.",
 	"questionInputs":[
-		{"type":"TextBox","name":"freinds", "required":true}
+		{"type":"TextBox","name":"Thoughts", "required":true}
 	],
 	
 	"showKey": true,
