@@ -1,0 +1,234 @@
+{
+	"edges": [{
+		"source": 0,
+		"target": 0
+	},
+	{
+		"source": 0,
+		"target": 6
+	},
+	{
+		"source": 1,
+		"target": 0
+	},
+	{
+		"source": 1,
+		"target": 3
+	},
+	{
+		"source": 1,
+		"target": 6
+	},
+	{
+		"source": 1,
+		"target": 7
+	},
+	{
+		"source": 2,
+		"target": 0
+	},
+	{
+		"source": 2,
+		"target": 3
+	},
+	{
+		"source": 3,
+		"target": 0
+	},
+	{
+		"source": 3,
+		"target": 1
+	},
+	{
+		"source": 3,
+		"target": 2
+	},
+	{
+		"source": 4,
+		"target": 0
+	},
+	{
+		"source": 4,
+		"target": 2
+	},
+	{
+		"source": 4,
+		"target": 4
+	},
+	{
+		"source": 5,
+		"target": 1
+	},
+	{
+		"source": 5,
+		"target": 4
+	},
+	{
+		"source": 5,
+		"target": 6
+	},
+	{
+		"source": 6,
+		"target": 3
+	},
+	{
+		"source": 6,
+		"target": 5
+	},
+	{
+		"source": 6,
+		"target": 7
+	},
+	{
+		"source": 7,
+		"target": 4
+	},
+	{
+		"source": 7,
+		"target": 7
+	}],
+	"nodes": [{
+		"id": 0,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-0",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 57.26,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 61.38,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 1,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-1",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 45.0,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 60.22,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 2,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-2",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 75.77,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 59.35,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 3,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-3",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 73.5,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 65.69,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 4,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-4",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 58.52,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 71.56,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 5,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-5",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 79.74,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 68.94,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 6,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-6",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 64.01,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 74.18,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 7,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-7",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 63.58,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 76.48,
+			"type": "numeric"
+		}]
+	}]
+}

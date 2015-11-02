@@ -1,0 +1,298 @@
+{
+	"edges": [{
+		"source": 0,
+		"target": 0
+	},
+	{
+		"source": 0,
+		"target": 5
+	},
+	{
+		"source": 0,
+		"target": 9
+	},
+	{
+		"source": 1,
+		"target": 0
+	},
+	{
+		"source": 1,
+		"target": 3
+	},
+	{
+		"source": 1,
+		"target": 8
+	},
+	{
+		"source": 2,
+		"target": 0
+	},
+	{
+		"source": 2,
+		"target": 3
+	},
+	{
+		"source": 2,
+		"target": 7
+	},
+	{
+		"source": 3,
+		"target": 0
+	},
+	{
+		"source": 3,
+		"target": 1
+	},
+	{
+		"source": 3,
+		"target": 2
+	},
+	{
+		"source": 3,
+		"target": 5
+	},
+	{
+		"source": 4,
+		"target": 0
+	},
+	{
+		"source": 4,
+		"target": 2
+	},
+	{
+		"source": 5,
+		"target": 0
+	},
+	{
+		"source": 5,
+		"target": 1
+	},
+	{
+		"source": 5,
+		"target": 6
+	},
+	{
+		"source": 6,
+		"target": 2
+	},
+	{
+		"source": 6,
+		"target": 3
+	},
+	{
+		"source": 6,
+		"target": 7
+	},
+	{
+		"source": 7,
+		"target": 3
+	},
+	{
+		"source": 7,
+		"target": 5
+	},
+	{
+		"source": 7,
+		"target": 6
+	},
+	{
+		"source": 8,
+		"target": 5
+	},
+	{
+		"source": 8,
+		"target": 6
+	},
+	{
+		"source": 8,
+		"target": 9
+	},
+	{
+		"source": 9,
+		"target": 5
+	},
+	{
+		"source": 9,
+		"target": 6
+	}],
+	"nodes": [{
+		"id": 0,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-0",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 74.03,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 62.74,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 1,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-1",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 68.77,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 55.93,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 2,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-2",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 55.00,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 55.00,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 3,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-3",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 65.00,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 65.00,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 4,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-4",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 60.00,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 60.00,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 5,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-5",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 70.14,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 61.66,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 6,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-6",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 49.06,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 65.51,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 7,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-7",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 62.83,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 70.26,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 8,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-8",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 71.50,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 71.50,
+			"type": "numeric"
+		}]
+	},
+	{
+		"id": 9,
+		"attributes": [{
+			"name": "name",
+			"value": "Student-9",
+			"type": "categorical"
+		},
+		{
+			"name": "Information Systems",
+			"value": 56.32,
+			"type": "numeric"
+		},
+		{
+			"name": "Software Development",
+			"value": 62.06,
+			"type": "numeric"
+		}]
+	}]
+}

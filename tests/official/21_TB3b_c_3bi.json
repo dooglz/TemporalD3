@@ -1,0 +1,40 @@
+{
+    "name":"21_TB3b_c_3bi",
+	"questionText":"Compare the distributions of Software Development marks and Information Systems marks.",
+	"questionInputs":[
+		{"type":"TextBox","name":"freinds", "required":true}
+	],
+	
+	"showKey": true,
+		
+	"settings":{
+		"name":"21_TB3b_c_3biSettings",
+		"interface":{
+		  "testMode":false,"displayMode":"Single","colourTheme":"Default"
+		  },
+		"slider":{
+		  "visible":false,"enabled":false,"position":5
+		  },
+		"control":{
+		  "method":"simple","data":"TB3b","dateRange":false,"animatedSlider":false
+		  },
+		"method":{
+		  "nodeChannels":[
+			{"name":"Gravity Point","inUse":false},
+			{"name":"Node Colour LA","inUse":false},
+			{"name":"Node Colour LB","inUse":false},
+			{"name":"Node Colour RA","inUse":false},
+			{"name":"Node Colour RB","inUse":false},
+			{"name":"Node Size LA","inUse":true,"dataParam" : "Information Systems"},
+			{"name":"Node Size LB","inUse":true,"dataParam" : "Software Development"},
+			{"name":"Node Size RA","inUse":false},
+			{"name":"Node Size RB","inUse":false}
+		  ],
+		"linkChannels":[
+			{"name":"Link Colour","inUse":false},
+			{"name":"Link Length","inUse":false},
+			{"name":"Link Width","inUse":false}
+		  ]
+		}
+	}
+}

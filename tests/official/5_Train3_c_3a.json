@@ -1,0 +1,40 @@
+{
+    "name":"5_Train3_c_3a",
+	"questionText":"Select three nodes with very high marks in Software Development",
+	"questionInputs":[
+		{"type":"TextBox","name":"freinds", "required":true}
+	],
+	
+	"showKey": true,
+		
+	"settings":{
+		"name":"5_Train3_c_3aSettings",
+		"interface":{
+		  "testMode":false,"displayMode":"Single","colourTheme":"Default"
+		  },
+		"slider":{
+		  "visible":false,"enabled":false,"position":5
+		  },
+		"control":{
+		  "method":"simple","data":"Train3","dateRange":false,"animatedSlider":false
+		  },
+		"method":{
+		  "nodeChannels":[
+			{"name":"Gravity Point","inUse":false},
+			{"name":"Node Colour LA","inUse":false},
+			{"name":"Node Colour LB","inUse":false},
+			{"name":"Node Colour RA","inUse":false},
+			{"name":"Node Colour RB","inUse":false},
+			{"name":"Node Size LA","inUse":true,"dataParam" : "Information Systems"},
+			{"name":"Node Size LB","inUse":true,"dataParam" : "Software Development"},
+			{"name":"Node Size RA","inUse":false},
+			{"name":"Node Size RB","inUse":false}
+		  ],
+		"linkChannels":[
+			{"name":"Link Colour","inUse":false},
+			{"name":"Link Length","inUse":false},
+			{"name":"Link Width","inUse":false}
+		  ]
+		}
+	}
+}

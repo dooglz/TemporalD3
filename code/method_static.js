@@ -159,8 +159,13 @@ this.svgTranslation = [this.width*0.5,this.height*0.5];
 
 Method_Static.prototype.Tick = function (e) {
   this.data.nodes.forEach($.proxy(function (o, i, array) {
+    if(!Exists(this.data.positions)){
+       console.error("Dataset has no node positions!", i,this.data);
+       this.data.positions = [];
+    }
     if( !Exists(this.data.positions[i])){
-      console.error("Uh oh", i,this.data.positions);
+      console.error("No position data for Node ", i);
+      this.data.positions[i] = {x:(Math.random() * 400.0)-200.0,y:(Math.random() * 400.0)-200.0};
     }
     o.x = this.data.positions[i].x;
     o.y = this.data.positions[i].y;
