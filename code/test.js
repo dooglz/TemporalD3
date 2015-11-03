@@ -195,7 +195,7 @@ function Reset() {
   $("#expSelector").selectpicker("val", "");
   $('#expModeToggle').bootstrapToggle('on');
   $("#testSelector").hide();
-  expMode = false;
+  expMode = true;
   //
   $("#testSelector").empty();
   for (i = 0; i < loadedTests.length; i++) {
