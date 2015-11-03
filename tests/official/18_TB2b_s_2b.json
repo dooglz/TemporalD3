@@ -5,7 +5,11 @@
 		
 	"enableNodeHighlight":true,
 	"showKey": true,
-		
+			
+	"CenterGraphHeadder" : "",
+	"LeftGraphHeadder" :"Information Systems",
+	"RightGraphHeadder":"Software Development",
+	
 	"settings":{
 		"name":"18_TB2b_s_2bSettings",
 		"interface":{

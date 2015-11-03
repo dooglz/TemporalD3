@@ -5,7 +5,11 @@
 		
 	"enableNodeHighlight":true,
 	"showKey": true,
-		
+			
+	"CenterGraphHeadder" : "",
+	"LeftGraphHeadder" :"Information Systems",
+	"RightGraphHeadder":"Software Development",
+	
 	"settings":{
 		"name":"6_Train3_s_3bSettings",
 		"interface":{

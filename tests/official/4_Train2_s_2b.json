@@ -8,6 +8,10 @@
 	"enableNodeHighlight":true,
 	"showKey": true,
 	"nodeText":[{"id":15,"text":" Student B"}],
+		
+	"CenterGraphHeadder" : "",
+	"LeftGraphHeadder" :"Information Systems",
+	"RightGraphHeadder":"Software Development",
 	
 	"settings":{
 		"name":"4_Train2_s_2bSettings",

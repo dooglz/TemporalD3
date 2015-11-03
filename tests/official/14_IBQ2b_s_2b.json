@@ -7,7 +7,11 @@
 		
 	"enableNodeHighlight":true,
 	"showKey": true,
-		
+			
+	"CenterGraphHeadder" : "",
+	"LeftGraphHeadder" :"Information Systems",
+	"RightGraphHeadder":"Software Development",
+	
 	"settings":{
 		"name":"14_IBQ2b_s_2bSettings",
 		"interface":{

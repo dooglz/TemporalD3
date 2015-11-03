@@ -7,7 +7,11 @@
 		
 	"enableNodeHighlight":true,
 	"showKey": true,
-		
+			
+	"CenterGraphHeadder" : "",
+	"LeftGraphHeadder" :"Information Systems",
+	"RightGraphHeadder":"Software Development",
+	
 	"settings":{
 		"name":"24_TB4b_s_4bSettings",
 		"interface":{

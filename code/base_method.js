@@ -1191,6 +1191,10 @@ Base_Method.prototype.SetLabel = function (id,str) {
     this.data.nodes[id].label = str;
   }
   selected_method.visNodes.selectAll("text").text(function(d) { return d.label });
+  
+  if (displayMode == 2) {
+    selected_method.visNodesR.selectAll("text").text(function(d) { return d.label });
+  }
 }
 
 Base_Method.prototype.GetHighlightedNodes = function () {

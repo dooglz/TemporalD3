@@ -4,7 +4,11 @@
 	"questionInputs":[
 		{"type":"TextBox","name":"Thoughts", "required":true}
 	],
-		
+	
+	"CenterGraphHeadder" : "",
+	"LeftGraphHeadder" :"Information Systems",
+	"RightGraphHeadder":"Software Development",
+	
 	"enableNodeHighlight":true,
 	"showKey": true,
 		
