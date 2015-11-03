@@ -663,22 +663,32 @@ function StartTest() {
 
 function FinishTest() {
   var t = loadedTest;
-  t.endTime = new Date();
-  console.info("finished test %o, time: %o", t.name, MillisToTime(t.endTime - t.startTime));
+
   // Grab repsonces
   t.responce = [];
   var qs = $("[id$=_q]", "#questionOptionsForm");
   var ql = $("label", "#questionOptionsForm");
   for (var i = 0; i < qs.length; i++) {
+    var res = EscapeHtml(qs.eq(i).val());
+    if(res === "" ){
+      console.warn("Nothing entered in responce ",ql.eq(i));
+      qs.eq(i).popover("show");
+      qs.eq(i).popover({trigger: "focus"}); 
+      return;
+    }
+
     t.responce.push({ input: ql.eq(i).html(), responce: EscapeHtml(qs.eq(i).val()) });
   }
+  t.endTime = new Date();
+  console.info("finished test %o, time: %o", t.name, MillisToTime(t.endTime - t.startTime));
+  
   //also grab selected nodes
   if (Exists(t.enableNodeHighlight) && t.enableNodeHighlight) {
     var h = selected_method.GetHighlightedNodes();
     var ids = [];
     for (var i = 0; i < h.length; i++) {
       if(Exists(h[i].index)){
-              ids.push(h[i].index);
+           ids.push(h[i].index);
       }else if(Exists(h[i].id)){
            ids.push(h[i].id);
       }else{

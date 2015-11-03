@@ -96,7 +96,9 @@
           <div class="form-group">
             <label for="{{id}}" class="col-sm-4 control-label">{{name}}</label>
             <div class="col-sm-3">
-              <input type="number" class="form-control" id="{{id}}" placeholder="Enter a number">
+              <input type="number" class="form-control" id="{{id}}" placeholder="Enter a number" 
+              data-toggle="popover" data-content="Please Enter something!"" data-trigger="manual"
+              onfocus='$("#"+this.id).popover("hide");'>
             </div>
           </div>
           {{/each}}
@@ -104,7 +106,9 @@
           <div class="form-group">
             <label for="{{id}}" class="col-sm-4 control-label">{{name}}</label>
             <div class="col-sm-6">
-              <textarea class="form-control" id="{{id}}" placeholder="textbox"rows="3"></textarea>
+              <textarea class="form-control" id="{{id}}" placeholder="textbox" rows="3" 
+              data-toggle="popover" data-content="Please Enter something!"" data-trigger="manual"
+              onfocus='$("#"+this.id).popover("hide");'></textarea>
             </div>
           </div>
           {{/each}}
