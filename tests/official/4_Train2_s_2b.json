@@ -7,7 +7,7 @@
 		
 	"enableNodeHighlight":true,
 	"showKey": true,
-	"nodeText":[{"id":15,"text":" Student B"}],
+	"nodeText":[{"id":15,"text":"<Student B"}],
 		
 	"CenterGraphHeadder" : "",
 	"LeftGraphHeadder" :"Information Systems",

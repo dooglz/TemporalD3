@@ -677,7 +677,13 @@ function FinishTest() {
     var h = selected_method.GetHighlightedNodes();
     var ids = [];
     for (var i = 0; i < h.length; i++) {
-      ids.push(h[i].index);
+      if(Exists(h[i].index)){
+              ids.push(h[i].index);
+      }else if(Exists(h[i].id)){
+           ids.push(h[i].id);
+      }else{
+        console.error("A node is highlighted, but it doesn't have an id/index",h[i]);
+      }
     }
     t.responce.push({ input: "hilightedNodes", responce: ids });
   }

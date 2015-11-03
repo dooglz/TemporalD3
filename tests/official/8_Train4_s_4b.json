@@ -5,7 +5,7 @@
 		{"type":"Better Subject:","name":"Marks", "required":true, "values":["Software Development","Information Systems"]}
 	],
 	
-	"nodeText":[{"id":18,"text":" Student B"}],
+	"nodeText":[{"id":18,"text":"<Student B"}],
 			
 	"enableNodeHighlight":true,
 	"showKey": true,
