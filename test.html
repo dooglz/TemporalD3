@@ -115,20 +115,15 @@
     <div class="row" style="text-align:center;" id="questionKeyDiv">
       <hr>
       <div class="col-sm-3"></div>
-      <div class="col-sm-3" id="questionNodeKey">
+      <div class="col-sm-6" id="questionNodeKey">
         <p>Node Legend</p>
-        {{#each node}}<p>
+        {{#each node}}
+        <div class="col-sm-6"><p>
         <span id="{{id}}_key"><b>●{{nicename}}●</b></span>
         <br>{{attribute}}
-        </p>{{/each}}
+        </p></div>{{/each}}
       </div>
-      <div class="col-sm-3" id="questionLinkKey">
-        <p>Link Legend</p>
-        {{#each link}}<p>
-        <span id="{{id}}_key"><b>●{{nicename}}●</b></span>
-        <br>{{attribute}}
-        </p>{{/each}}
-      </div>
+
     </div>
     <hr>
     <div class="row" style="text-align:center;" id="questionButtons">
