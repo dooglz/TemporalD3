@@ -2,7 +2,7 @@
     "name":"8_Train4_s_4b",
 	"questionText":"In which module does Student B gain better marks, <span class='sdev'>Software Development</span> or <span class='infsys'>Information Systems</span>?",
 	"questionInputs":[
-		{"type":"Better Subject:","name":"Marks", "required":true, "values":["Software Development","Information Systems"]}
+		{"type":"Dropdown","name":"Better Subject:", "required":true, "values":["Software Development","Information Systems"]}
 	],
 	
 	"nodeText":[{"id":18,"text":"<Student B"}],
