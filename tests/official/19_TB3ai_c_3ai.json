@@ -1,7 +1,9 @@
 {
     "name":"19_TB3ai_c_3ai",
-	"questionText":"Select the students belonging to the group with very high marks in Software Development",
-	"questionInputs":[],
+	"questionText":"Compare the distributions of <span class='sdev'>Software Development</span> marks and <span class='infsys'>Information Systems</span> marks.",
+	"questionInputs":[
+		{"type":"TextBox","name":"Thoughts", "required":true}
+	],
 		
 	"enableNodeHighlight":true,
 	"showKey": true,

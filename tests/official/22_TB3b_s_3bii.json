@@ -1,6 +1,6 @@
 {
     "name":"22_TB3b_s_3bii",
-	"questionText":"Compare the distributions of Information Systems marks and Software Development marks.",
+	"questionText":"Compare the distributions of <span class='infsys'>Information Systems</span> marks and <span class='sdev'>Software Development</span> marks.",
 	"questionInputs":[
 		{"type":"TextBox","name":"Thoughts", "required":true}
 	],

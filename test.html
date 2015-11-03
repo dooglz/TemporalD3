@@ -66,8 +66,7 @@
         </div>
         <div class="form-group">
           <label for="expModeToggle">Experiment Mode: </label>
-          <input id="expModeToggle" type="checkbox" data-toggle="toggle" data-width="150" data-size="normal" data-onstyle="info" data-on="Experiment"
-          data-off="Single Test">
+          <input id="expModeToggle" type="checkbox" data-toggle="toggle" data-width="150" data-size="normal" data-onstyle="info" data-on="Experiment"data-off="Single Test">
         </div>
         <div class="form-group" id="testSelectorDiv">
           <label for="testSelector">Select a Test</label>
@@ -108,6 +107,14 @@
               <textarea class="form-control" id="{{id}}" placeholder="textbox"rows="3"></textarea>
             </div>
           </div>
+          {{/each}}
+          {{#each drop}}
+            <label for="{{id}}" class="col-sm-4 control-label">{{name}}</label>
+            <select id="{{id}}">
+              {{#each values}}
+              <option>{{this}}</option>
+              {{/each}}
+            </select>
           {{/each}}
         </form>
         </div>

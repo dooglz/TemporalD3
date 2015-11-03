@@ -1,9 +1,7 @@
 {
     "name":"17_TB2a_c_2a",
-	"questionText":"Describe the pattern of marks for Software Development over the friendship network",
-	"questionInputs":[
-		{"type":"TextBox","name":"Pattern", "required":true}
-	],
+	"questionText":"Select the students belonging to the group with very high marks in <span class='infsys'>Information Systems</span>",
+	"questionInputs":[],
 		
 	"enableNodeHighlight":true,
 	"showKey": true,

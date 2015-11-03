@@ -115,7 +115,11 @@ var stockTests = ["tests/Training1a.json",
   "tests/official/8_Train4_s_4b.json",
   "tests/official/9_Train5_c_5a.json"
 ];
-var stockExperiments = ["experiments/mainA.json", "experiments/mainb.json","experiments/finalA.json","experiments/finalB.json"];
+var stockExperiments = [
+  //"experiments/mainA.json", 
+  //"experiments/mainb.json",
+  "experiments/finalA.json",
+  "experiments/finalB.json"];
 
 var selectedTest;
 var selectedExperiment;
@@ -189,8 +193,8 @@ function Reset() {
   $("#infomodalError").html("");
   $("#testSelector").selectpicker("val", "");
   $("#expSelector").selectpicker("val", "");
-  $('#expModeToggle').bootstrapToggle('off');
-  $("#expSelectorDiv").hide();
+  $('#expModeToggle').bootstrapToggle('on');
+  $("#testSelector").hide();
   expMode = false;
   //
   $("#testSelector").empty();
@@ -537,7 +541,7 @@ function LoadTest(t) {
   var qdiv = $("#questionOptionsForm");
   qdiv.empty();
   if (Exists(t.questionInputs) && t.questionInputs.length > 0) {
-    var qq = { num: [], text: [] };
+    var qq = { num: [], text: [], drop: []  };
     for (var index = 0; index < t.questionInputs.length; index++) {
       var q = t.questionInputs[index];
       if (q.type == "TextBox") {
@@ -546,6 +550,9 @@ function LoadTest(t) {
       } else if (q.type == "NumberBox") {
         q.id = (index + "_test_NumberBox_q");
         qq.num.push(q);
+      } else if (q.type == "Dropdown") {
+        q.id = (index + "_test_Dropdown_q");
+        qq.drop.push(q);
       } else {
         console.error("Test %o, has unrecognised Input type: %o", t.name, q.type);
       }

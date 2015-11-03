@@ -1,6 +1,6 @@
 {
     "name":"18_TB2b_s_2b",
-	"questionText":"Select the students belonging to the group with very high marks in Information Systems",
+	"questionText":"Select the students belonging to the group with very high marks in <span class='sdev'>Software Development</span>",
 	"questionInputs":[],
 		
 	"enableNodeHighlight":true,

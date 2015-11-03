@@ -1,9 +1,7 @@
 {
     "name":"10_Train5_s_5b",
-	"questionText":"Select a student with a lower mark in Information Systems than in Software Development",
-	"questionInputs":[
-		{"type":"TextBox","name":"freinds", "required":true}
-	],
+	"questionText":"Select a student with a lower mark in <span class='infsys'>Information Systems</span> than in <span class='sdev'>Software Development</span>",
+	"questionInputs":[],
 	
 	"enableNodeHighlight":true,
 	"showKey": true,

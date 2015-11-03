@@ -1,6 +1,6 @@
 {
     "name":"15_TB1a_c_1a",
-	"questionText":"Describe the pattern of marks for Information Systems over the friendship network",
+	"questionText":"Describe the pattern of marks for <span class='infsys'>Information Systems</span> over the friendship network",
 	"questionInputs":[
 		{"type":"TextBox","name":"Pattern", "required":true}
 	],
