@@ -673,7 +673,6 @@ function FinishTest() {
     if(res === "" ){
       console.warn("Nothing entered in responce ",ql.eq(i));
       qs.eq(i).popover("show");
-      qs.eq(i).popover({trigger: "focus"}); 
       return;
     }
 
