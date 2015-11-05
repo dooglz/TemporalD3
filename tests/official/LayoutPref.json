@@ -1,0 +1,9 @@
+{
+  "name":"LayoutPref",
+	"questionText":"Please comment on your experience of using the two different visual techniques<br>(Split view with two graphs vs single graph combined view).<br>Did you prefer one visualisation over the other? If so, please give your reasons.",
+	"questionInputs":[
+		{"type":"TextBox","name":"Thoughts", "required":true}
+	],
+	
+	"TextOnly" : true
+}

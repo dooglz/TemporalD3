@@ -1,5 +1,5 @@
 {
-    "name":"21_TB3b_c_3bi",
+  "name":"21_TB3b_c_3bi",
 	"questionText":"Compare the distributions of <span class='sdev'>Software Development</span> marks and <span class='infsys'>Information Systems</span> marks.",
 	"questionInputs":[
 		{"type":"TextBox","name":"Thoughts", "required":true}

@@ -34,62 +34,26 @@ var m_static;
 var m_simple;
 
 var stockData = [{ name: "Les Miserables", url: "data/miserables.json" },
-  { name: "IBE1ISB-60-3-1", url: "data/official/IBE1ISB-60-3-1.json" },
-  { name: "IBE1SDB-60-3-1", url: "data/official/IBE1SDB-60-3-1.json" },
-  { name: "IBE2CentralFav-120-5-1", url: "data/official/IBE2CentralFav-120-5-1.json" },
-  { name: "IBE2CentralUnfav-120-5-1", url: "data/official/IBE2CentralUnfav-120-5-1.json" },
-  { name: "T1SNP-15-3-2", url: "data/official/T1SNP-15-3-2.json" },
-  { name: "T2SNP-45-3-1", url: "data/official/T2SNP-45-3-1.json" },
-  { name: "T3SNP-55-3-1", url: "data/official/T3SNP-55-3-1.json" },
-  { name: "T4SNP-155-5-1", url: "data/official/T4SNP-155-5-1.json" },
-  { name: "T5SNP-10-1-1", url: "data/official/T5SNP-10-1-1.json" },
-  { name: "TBQ1ISCF-120-5-1", url: "data/official/TBQ1ISCF-120-5-1.json" },
-  { name: "TBQ1SDCF-150-6-1", url: "data/official/TBQ1SDCF-150-6-1.json" },
-  { name: "TBQ2ISFC-90-4-1", url: "data/official/TBQ2ISFC-90-4-1.json" },
-  { name: "TBQ2SDFC-90-4-1", url: "data/official/TBQ2SDFC-90-4-1.json" },
-  { name: "TBQ3TwistCent-80-5-1", url: "data/official/TBQ3TwistCent-80-5-1.json" },
-  { name: "TBQ4Inv70-4-1", url: "data/official/TBQ4Inv70-4-1.json" },
-{ name: "Train1", url: "data/official/Train1.json" },
-{ name: "Train2", url: "data/official/Train2.json" },
-{ name: "Train3", url: "data/official/Train3.json" },
-{ name: "Train4", url: "data/official/Train4.json" },
-{ name: "Train5", url: "data/official/Train5.json" },
-{ name: "IBQ1a", url: "data/official/IBQ1a.json" },
-{ name: "IBQ1b", url: "data/official/IBQ1b.json" },
-{ name: "IBQ2a", url: "data/official/IBQ2a.json" },
-{ name: "IBQ2b", url: "data/official/IBQ2b.json" },
-{ name: "TB1a", url: "data/official/TB1a.json" },
-{ name: "TB1b", url: "data/official/TB1b.json" },
-{ name: "TB2a", url: "data/official/TB2a.json" },
-{ name: "TB2b", url: "data/official/TB2b.json" },
-{ name: "TB3ai", url: "data/official/TB3ai.json" },
-{ name: "TB3aii", url: "data/official/TB3aii.json" },
-{ name: "TB3b", url: "data/official/TB3b.json" },
-{ name: "TB4a", url: "data/official/TB4a.json" },
+  { name: "Train1", url: "data/official/Train1.json" },
+  { name: "Train2", url: "data/official/Train2.json" },
+  { name: "Train3", url: "data/official/Train3.json" },
+  { name: "Train4", url: "data/official/Train4.json" },
+  { name: "Train5", url: "data/official/Train5.json" },
+  { name: "IBQ1a", url: "data/official/IBQ1a.json" },
+  { name: "IBQ1b", url: "data/official/IBQ1b.json" },
+  { name: "IBQ2a", url: "data/official/IBQ2a.json" },
+  { name: "IBQ2b", url: "data/official/IBQ2b.json" },
+  { name: "TB1a", url: "data/official/TB1a.json" },
+  { name: "TB1b", url: "data/official/TB1b.json" },
+  { name: "TB2a", url: "data/official/TB2a.json" },
+  { name: "TB2b", url: "data/official/TB2b.json" },
+  { name: "TB3ai", url: "data/official/TB3ai.json" },
+  { name: "TB3aii", url: "data/official/TB3aii.json" },
+  { name: "TB3b", url: "data/official/TB3b.json" },
+  { name: "TB4a", url: "data/official/TB4a.json" },
   { name: "TB4b", url: "data/official/TB4b.json" }
 ];
-var stockTests = ["tests/Training1a.json",
-  "tests/Training3b.json",
-  "tests/Training2a.json",
-  "tests/Training1b.json",
-  "tests/Training3a.json",
-  "tests/Training2b.json",
-  "tests/Insight1a.json",
-  "tests/Insight3b.json",
-  "tests/Insight2a.json",
-  "tests/Insight4b.json",
-  "tests/Insight3a.json",
-  "tests/Insight2b.json",
-  "tests/Insight4a.json",
-  "tests/Insight1b.json",
-  "tests/Task1a.json",
-  "tests/Task3a.json",
-  "tests/Task2a.json",
-  "tests/Task4a.json",
-  "tests/Task3a.json",
-  "tests/Task2a.json",
-  "tests/Task4a.json",
-  "tests/Task1b.json",
+var stockTests = [
   "tests/official/10_Train5_s_5b.json",
   "tests/official/11_IBQ1a_c_1a.json",
   "tests/official/12_IBQ1b_s_1b.json",
@@ -113,11 +77,13 @@ var stockTests = ["tests/Training1a.json",
   "tests/official/6_Train3_s_3b.json",
   "tests/official/7_Train4_c_4a.json",
   "tests/official/8_Train4_s_4b.json",
-  "tests/official/9_Train5_c_5a.json"
+  "tests/official/9_Train5_c_5a.json",
+  "tests/official/IBQSetup.json",
+  "tests/official/LayoutPref.json"
 ];
 var stockExperiments = [
-  //"experiments/mainA.json", 
-  //"experiments/mainb.json",
+//"experiments/mainA.json", 
+//"experiments/mainb.json",
   "experiments/finalA.json",
   "experiments/finalB.json"];
 
@@ -149,7 +115,7 @@ function Load() {
     loadcounter++;
     d3.json(stockTests[i], function (error, newData) {
       if (error) {
-        console.error("error loading test: ", error);
+        console.error("error loading test: ",i,stockTests[i], error);
       } else {
         loadedTests.push(newData);
       }
@@ -491,7 +457,7 @@ function ChannelChange(atype, attribute, newChannel) {
     }, this);
     return;
   } else if (!Exists(attribute)) {
-    console.log("wiping "+atype+" channels");
+    console.log("wiping " + atype + " channels");
     (atype == "node" ? selected_method.nodeChannels : selected_method.linkChannels).forEach(function (c) {
       c.inUse = false;
       c.dataParam = "";
@@ -532,7 +498,9 @@ function LoadTest(t) {
   }
   console.log("Loading test %o", t.name);
 
-  LoadSettings(t.settings);
+  if(Exists(t.settings)){
+    LoadSettings(t.settings);
+  }
   //Hide graph
   $("svg").attr('visibility', 'hidden');
   //load the question text
@@ -541,7 +509,7 @@ function LoadTest(t) {
   var qdiv = $("#questionOptionsForm");
   qdiv.empty();
   if (Exists(t.questionInputs) && t.questionInputs.length > 0) {
-    var qq = { num: [], text: [], drop: []  };
+    var qq = { num: [], text: [], drop: [] };
     for (var index = 0; index < t.questionInputs.length; index++) {
       var q = t.questionInputs[index];
       if (q.type == "TextBox") {
@@ -561,90 +529,96 @@ function LoadTest(t) {
     qdiv.html(rendered);
     $("[id$=_q]", "#questionOptionsForm").attr("disabled", true);
   }
-  //load legened
-  if (Exists(t.showKey) && t.showKey == true) {
-    var ass = selected_method.GetChannelAssignments();
-    $("#questionKeyDiv").html(questionLegendTemplate(ass));
-    //woooo
-    ass.node.forEach(function (c) {
-      var colour;
-      switch (c.name) {
-        case "Node Size LA":
-          colour = selected_method.ColorTheme.LAnodeFillBaseColour;
-          break;
-        case "Node Size LB":
-          colour = selected_method.ColorTheme.LBnodeFillBaseColour;
-          break;
-        case "Node Size RA":
-          colour = selected_method.ColorTheme.RAnodeFillBaseColour;
-          break;
-        case "Node Size RB":
-          colour = selected_method.ColorTheme.RBnodeFillBaseColour;
-          break;
-        default:
-          colour = 'black';
-          break;
+  
+  if(!Exists(t.TextOnly) || !t.TextOnly){
+    //load legened
+    if (Exists(t.showKey) && t.showKey == true) {
+      var ass = selected_method.GetChannelAssignments();
+      $("#questionKeyDiv").html(questionLegendTemplate(ass));
+      //woooo
+      ass.node.forEach(function (c) {
+        var colour;
+        switch (c.name) {
+          case "Node Size LA":
+            colour = selected_method.ColorTheme.LAnodeFillBaseColour;
+            break;
+          case "Node Size LB":
+            colour = selected_method.ColorTheme.LBnodeFillBaseColour;
+            break;
+          case "Node Size RA":
+            colour = selected_method.ColorTheme.RAnodeFillBaseColour;
+            break;
+          case "Node Size RB":
+            colour = selected_method.ColorTheme.RBnodeFillBaseColour;
+            break;
+          default:
+            colour = 'black';
+            break;
+        }
+        //  selected_method.NodeColour(side, )
+        $("#" + c.id + "_key").css('color', colour);
+      }, this);
+      // 
+    } else {
+      $("#questionKeyDiv").html("");
+    }
+    //show headders
+    if (Exists(t.CenterGraphHeadder) && t.CenterGraphHeadder != "") {
+      $('#CenterGraphHeadder').html(t.CenterGraphHeadder);
+    } else {
+      $('#CenterGraphHeadder').html("");
+    }
+    if (Exists(t.LeftGraphHeadder) && t.LeftGraphHeadder != "") {
+      $('#LeftGraphHeadder').html(t.LeftGraphHeadder);
+    } else {
+      $('#LeftGraphHeadder').html("");
+    }
+    if (Exists(t.RightGraphHeadder) && t.RightGraphHeadder != "") {
+      $('#RightGraphHeadder').html(t.RightGraphHeadder);
+    } else {
+      $('#RightGraphHeadder').html("");
+    }
+    
+    //enable/disable highlighting
+    if (Exists(t.enableNodeHighlight) && t.enableNodeHighlight) {
+      console.log("Enabeling Highlighting");
+      //enable highlighting
+      selected_method.EnableHighlighting(true);
+    } else {
+      console.log("disable Highlighting");
+      //disable higlighting
+      selected_method.EnableHighlighting(false);
+    }
+    //highlight selcted nodes if there are any
+    selected_method.Highlight();
+    if (Exists(t.highlightedNodes) && t.highlightedNodes.length > 0) {
+      console.log("Highlighting:", t.highlightedNodes);
+      selected_method.Highlight(t.highlightedNodes);
+    }
+    
+    //wipe all labels
+    selected_method.SetLabel();
+    if (Exists(t.nodeText) && t.nodeText.length != 0) {
+      for (var i = 0; i < t.nodeText.length; i++) {
+        selected_method.SetLabel(t.nodeText[i].id, t.nodeText[i].text)
       }
-      //  selected_method.NodeColour(side, )
-      $("#" + c.id + "_key").css('color', colour);
-    }, this);
-    // 
-  } else {
+    }
+   $(".sbncontent").css("border-width",2);
+  }else{
+   $(".sbncontent").css("border-width",0);
     $("#questionKeyDiv").html("");
   }
-  //show headders
-  if (Exists(t.CenterGraphHeadder) && t.CenterGraphHeadder != "") {
-    $('#CenterGraphHeadder').html(t.CenterGraphHeadder);
-  } else {
-    $('#CenterGraphHeadder').html("");
-  }
-  if (Exists(t.LeftGraphHeadder) && t.LeftGraphHeadder != "") {
-    $('#LeftGraphHeadder').html(t.LeftGraphHeadder);
-  } else {
-    $('#LeftGraphHeadder').html("");
-  }
-  if (Exists(t.RightGraphHeadder) && t.RightGraphHeadder != "") {
-    $('#RightGraphHeadder').html(t.RightGraphHeadder);
-  } else {
-    $('#RightGraphHeadder').html("");
-  }
-  
-  //enable/disable highlighting
-  if (Exists(t.enableNodeHighlight) && t.enableNodeHighlight) {
-    console.log("Enabeling Highlighting");
-    //enable highlighting
-    selected_method.EnableHighlighting(true);
-  } else {
-    console.log("disable Highlighting");
-    //disable higlighting
-    selected_method.EnableHighlighting(false);
-  }
-  //highlight selcted nodes if there are any
-  selected_method.Highlight();
-  if (Exists(t.highlightedNodes) && t.highlightedNodes.length > 0) {
-    console.log("Highlighting:", t.highlightedNodes);
-    selected_method.Highlight(t.highlightedNodes);
-  }
-  
-    //wipe all labels
-  selected_method.SetLabel();
-  if (Exists(t.nodeText) && t.nodeText.length != 0) {
-    for (var i = 0; i < t.nodeText.length; i++) {
-      selected_method.SetLabel(t.nodeText[i].id,t.nodeText[i].text)
-    }
-  }
-  
   //enable Ready btn
   $("#testReadyBtn").attr("disabled", false);
   $("#testSubmitBtn").attr("disabled", true);
   testLoaded = true;
   loadedTest = t;
   var t = "";
-  if(expMode){
-    t = ", "+loadedExp.currentPos+" of "+loadedExp.order.length;
+  if (expMode) {
+    t = ", " + loadedExp.currentPos + " of " + loadedExp.order.length;
   }
-  $("#questionStatus").html("Test: "+loadedTest.name +t);
-  CheckforStart();  
+  $("#questionStatus").html("Test: " + loadedTest.name + t);
+  CheckforStart();
 }
 
 function BeginExp() {
@@ -654,9 +628,14 @@ function BeginExp() {
   Resize();
 }
 function StartTest() {
+  var t = loadedTest;
+  if(Exists(t.TextOnly) && t.TextOnly){
+   $("svg").attr('visibility', 'hidden');
+  }else{
+     $("svg").attr('visibility', 'visible');
+  }
   $("#testReadyBtn").attr("disabled", true);
   $("#testSubmitBtn").attr("disabled", false);
-  $("svg").attr('visibility', 'visible');
   $("[id$=_q]", "#questionOptionsForm").attr("disabled", false);
   loadedTest.startTime = new Date();
 }
@@ -670,8 +649,8 @@ function FinishTest() {
   var ql = $("label", "#questionOptionsForm");
   for (var i = 0; i < qs.length; i++) {
     var res = EscapeHtml(qs.eq(i).val());
-    if(res === "" ){
-      console.warn("Nothing entered in responce ",ql.eq(i));
+    if (res === "") {
+      console.warn("Nothing entered in responce ", ql.eq(i));
       qs.eq(i).popover("show");
       return;
     }
@@ -686,12 +665,12 @@ function FinishTest() {
     var h = selected_method.GetHighlightedNodes();
     var ids = [];
     for (var i = 0; i < h.length; i++) {
-      if(Exists(h[i].index)){
-           ids.push(h[i].index);
-      }else if(Exists(h[i].id)){
-           ids.push(h[i].id);
-      }else{
-        console.error("A node is highlighted, but it doesn't have an id/index",h[i]);
+      if (Exists(h[i].index)) {
+        ids.push(h[i].index);
+      } else if (Exists(h[i].id)) {
+        ids.push(h[i].id);
+      } else {
+        console.error("A node is highlighted, but it doesn't have an id/index", h[i]);
       }
     }
     t.responce.push({ input: "hilightedNodes", responce: ids });
@@ -762,18 +741,18 @@ function FinishExperiment() {
   if (expMode) {
     for (var index = 0; index < loadedExp.done.length; index++) {
       t = GetTest(loadedExp.done[index]);
-      if (!Exists(t)){
+      if (!Exists(t)) {
         console.error("Can't find t!");
       }
       results.tests.push({ name: t.name, responces: t.responce, start: t.startTime, end: t.endTime });
-      if (!Exists(t.responce)){t.responce = {};}
-      console.log(t,t.responce,JSON.stringify(t.responce));
+      if (!Exists(t.responce)) { t.responce = {}; }
+      console.log(t, t.responce, JSON.stringify(t.responce));
       x += t.name + "<br>" + JSON.stringify(t.responce).replace(/},{/g, "<br>") + "<br> Time: " + MillisToTime(t.endTime - t.startTime) + "<br><br>";
     }
   } else {
     t = loadedTest;
     results.tests.push({ name: t.name, responces: t.responce, start: t.startTime, end: t.endTime });
-    if (!Exists(t.responce)){t.responce = {};}
+    if (!Exists(t.responce)) { t.responce = {}; }
     x += t.name + "<br>" + JSON.stringify(t.responce).replace(/},{/g, "<br>") + "<br> Time: " + MillisToTime(t.endTime - t.startTime) + "<br><br>";
   }
   HandleResults(results);
@@ -801,7 +780,7 @@ function GetTest(t) {
         return loadedTests[i];
       }
     }
-    console.error("Can't find Test: ",t);
+    console.error("Can't find Test: ", t);
   }
   return t;
 }
