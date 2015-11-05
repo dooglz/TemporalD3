@@ -604,9 +604,16 @@ function LoadTest(t) {
       }
     }
    $(".sbncontent").css("border-width",2);
+   $("svg").show();
   }else{
-   $(".sbncontent").css("border-width",0);
+    SetDisplayMode(1);
+    $(".sbncontent").css("border-width",0);
     $("#questionKeyDiv").html("");
+    $("#coolImg").remove();
+    $("svg").hide();
+    if(Exists(t.Image) && t.Image != ""){
+      $("#chart").append('<img src="'+t.Image+'" id="coolImg" style="width:95%; max-height:648px">');
+    }
   }
   //enable Ready btn
   $("#testReadyBtn").attr("disabled", false);
@@ -639,7 +646,7 @@ function StartTest() {
   $("[id$=_q]", "#questionOptionsForm").attr("disabled", false);
   loadedTest.startTime = new Date();
 }
-
+var speedrun = false;
 function FinishTest() {
   var t = loadedTest;
 
@@ -649,7 +656,7 @@ function FinishTest() {
   var ql = $("label", "#questionOptionsForm");
   for (var i = 0; i < qs.length; i++) {
     var res = EscapeHtml(qs.eq(i).val());
-    if (res === "") {
+    if (res === "" && !speedrun) {
       console.warn("Nothing entered in responce ", ql.eq(i));
       qs.eq(i).popover("show");
       return;

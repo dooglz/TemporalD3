@@ -5,5 +5,6 @@
 		{"type":"TextBox","name":"Thoughts", "required":true}
 	],
 	
-	"TextOnly" : true
+	"TextOnly" : true,
+	"Image" : "compare.png"
 }
