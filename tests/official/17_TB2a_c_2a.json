@@ -1,6 +1,6 @@
 {
     "name":"17_TB2a_c_2a",
-	"questionText":"Select the students belonging to the group with very high marks in <span class='infsys'>Information Systems</span>",
+	"questionText":"Select the students belonging to the group with very high marks in <span class='infsys'>Information Systems</span><br>(click on a node to select it)",
 	"questionInputs":[],
 		
 	"enableNodeHighlight":true,

@@ -1,6 +1,6 @@
 {
     "name":"9_Train5_c_5a",
-	"questionText":"Select a student with a higher mark in <span class='sdev'>Software Development</span> than in <span class='infsys'>Information Systems</span>",
+	"questionText":"Select a student with a higher mark in <span class='sdev'>Software Development</span> than in <span class='infsys'>Information Systems</span><br>(click on a node to select it)",
 	"questionInputs":[],
 		
 	"enableNodeHighlight":true,

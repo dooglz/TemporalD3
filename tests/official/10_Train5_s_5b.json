@@ -1,6 +1,6 @@
 {
-    "name":"10_Train5_s_5b",
-	"questionText":"Select a student with a lower mark in <span class='infsys'>Information Systems</span> than in <span class='sdev'>Software Development</span>",
+   "name":"10_Train5_s_5b",
+	"questionText":"Select a student with a lower mark in <span class='infsys'>Information Systems</span> than in <span class='sdev'>Software Development</span><br>(click on a node to select it)",
 	"questionInputs":[],
 	
 	"enableNodeHighlight":true,

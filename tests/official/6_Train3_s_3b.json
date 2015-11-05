@@ -1,6 +1,6 @@
 {
     "name":"6_Train3_s_3b",
-	"questionText":"Select three nodes with very high marks in <span class='infsys'>Information Systems</span>",
+	"questionText":"Select three nodes with very high marks in <span class='infsys'>Information Systems</span><br>(click on a node to select it)",
 	"questionInputs":[],
 		
 	"enableNodeHighlight":true,
