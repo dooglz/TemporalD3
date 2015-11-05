@@ -49,6 +49,7 @@
   </div>
   <!-- option collumns -->
   <div class="container superwide" id="testSetupDiv">
+
     <div class="col-sm-3 text-center"></div>
     <div class="col-sm-6 text-center">
       <form>
@@ -87,6 +88,18 @@
     </div>
   </div>
   <div class="container superwide" id="questionDiv">
+     <div class="row" style="text-align:center;" id="questionKeyDiv">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-6" id="questionNodeKey">
+        <p>Node Legend</p>
+        {{#each node}}
+        <div class="col-sm-6"><p>
+        <span id="{{id}}_key"><b>●{{nicename}}●</b></span>
+        <br>{{attribute}}
+        </p></div>{{/each}}
+      </div>
+    </div>
+          <hr>
     <h4>
       <div class="row" style="text-align:center;" id="questionText">How round are the Nodes?</div>
       <hr>
@@ -123,19 +136,6 @@
         </form>
         </div>
       </h4>
-    <div class="row" style="text-align:center;" id="questionKeyDiv">
-      <hr>
-      <div class="col-sm-3"></div>
-      <div class="col-sm-6" id="questionNodeKey">
-        <p>Node Legend</p>
-        {{#each node}}
-        <div class="col-sm-6"><p>
-        <span id="{{id}}_key"><b>●{{nicename}}●</b></span>
-        <br>{{attribute}}
-        </p></div>{{/each}}
-      </div>
-
-    </div>
     <hr>
     <div class="row" style="text-align:center;" id="questionButtons">
       <div class="col-sm-2"></div>
