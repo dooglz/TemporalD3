@@ -2,7 +2,7 @@
     "name":"2_Train1_s_1b",
 	"questionText":"How many friends does Student B have?",
 	"questionInputs":[
-		{"type":"NumberBox","name":"Freinds", "required":true}
+		{"type":"NumberBox","name":"Friends", "required":true}
 	],
 		
 	"enableNodeHighlight":true,
