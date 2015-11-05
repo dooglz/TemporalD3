@@ -2,7 +2,7 @@
     "name":"3_Train2_c_2a",
 	"questionText":"Does Student A have low, average, or high marks in <span class='sdev'>Software Development</span>?",
 	"questionInputs":[
-		{"type":"Dropdown","name":"Marks", "required":true, "values":["Low","Average","High"]}
+		{"type":"Dropdown","name":"Marks", "required":true, "values":["Don't Know","Low","Average","High"]}
 	],
 		
 	"enableNodeHighlight":true,
