@@ -1,0 +1,130 @@
+<input type="file" id="files" name="files[]" multiple />
+<input type="button" id="cc" name="crunch" value="crunch"onclick="saveTextAsFile(ToCSV(Crunch()))"/>
+<output id="list"></output>
+
+<script>
+  function IsJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+};
+
+var files;
+var loadedfiles = [];
+function handleFileSelect(evt) {
+files = evt.target.files; // FileList object
+
+// files is a FileList of File objects. List some properties.
+var output = [];
+for (var i = 0, f; f = files[i]; i++) {
+    output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                f.size, ' bytes, last modified: ',
+                f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
+                '</li>');
+        Load(f);
+  }
+  document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+}
+
+document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+function Load(f) {
+var reader = new FileReader();
+  // Closure to capture the file information.
+  reader.onload = (function(theFile) {
+    return function(e) {
+      // Render thumbnail.
+      console.log(theFile);
+      console.log(e);
+      
+      if (IsJson(e.target.result)) {
+        newData = JSON.parse(e.target.result);
+        loadedfiles.push(newData);
+        console.log(newData);
+      } else {
+        console.error("Error reading Json file");
+      }
+      
+    };
+  })(f);
+
+  // Read in the image file as a data URL.
+  reader.readAsText(f);
+}
+
+function Crunch() {
+  console.log("Crunch!");
+  var o = {id:[],input1:[],input2:[],tests:{}};
+  for (var i = 0, f; f = loadedfiles[i]; i++) {
+    o.id.push(f.id);
+    o.input1.push(f.input1);
+    o.input2.push(f.input2);
+    for (var j = 0, t; t = f.tests[j]; j++) {
+      if(o.tests[t.name] === undefined){
+        o.tests[t.name] = [];
+      }
+      var ot = {time:(new Date(t.end) - new Date(t.start))};
+      if(t.responces !== undefined){
+        for (var k = 0, r; r = t.responces[k]; k++) {
+          ot[r.input] = r.responce;
+        }
+      }
+      o.tests[t.name].push(ot);
+    }
+  }
+  return o;
+}
+
+function ToCSV(o) {
+  console.log("ToCSV!");
+  var testnames = Object.keys(o.tests);
+  var s = "id,input1,input2"+ testnames.toString()+"\r\n";
+  //headdings
+  for (var i = 0; i < o.id.length; i++) {
+    var r = "";
+    r += o.id[i]+","+o.input1[i]+","+o.input2[i];
+    
+    for (var j = 0; j < testnames.length; j++) {
+      //console.log(o.tests[testnames[j]][i]);
+      r += ","+JSON.stringify(o.tests[testnames[j]][i]).replace(/,/g, '_');
+    }
+    
+    r+="\r\n";
+    s+=r;
+  }
+  return s;
+}
+
+
+function saveTextAsFile(textToWrite)
+{
+    var textFileAsBlob = new Blob([textToWrite], {type:'text/plain'});
+    var fileNameToSaveAs = "data.csv";
+
+    var downloadLink = document.createElement("a");
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.innerHTML = "Download File";
+    if (window.webkitURL != null)
+    {
+        // Chrome allows the link to be clicked
+        // without actually adding it to the DOM.
+        downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+    }
+    else
+    {
+        // Firefox requires the link to be added to the DOM
+        // before it can be clicked.
+        downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+        downloadLink.onclick = destroyClickedElement;
+        downloadLink.style.display = "none";
+        document.body.appendChild(downloadLink);
+    }
+
+    downloadLink.click();
+}
+
+
+</script>
