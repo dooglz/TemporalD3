@@ -1,6 +1,6 @@
 {
   "name":"LayoutPref",
-	"questionText":"Please comment on your experience of using the two different visual techniques<br>(Split view with two graphs vs single graph combined view).<br>Did you prefer one visualisation over the other? If so, please give your reasons.",
+	"questionText":"Please comment on your experience of using the two different visual techniques (split view vs combined view).<br>Which of the two interfaces did you prefer over all? (please give your reasons)<br>Which of the two interfaces was easier to use?  (please give your reasons)<br>Did the different techniques help you make different types of discoveries about the data?<br>Do you have any other comments about your experience of using the two visual techniques?<br>",
 	"questionInputs":[
 		{"type":"TextBox","name":"Thoughts", "required":true}
 	],

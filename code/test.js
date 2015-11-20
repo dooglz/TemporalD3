@@ -85,7 +85,9 @@ var stockExperiments = [
 //"experiments/mainA.json", 
 //"experiments/mainb.json",
   "experiments/finalA.json",
-  "experiments/finalB.json"];
+  "experiments/finalB.json",
+    "experiments/finalC.json",
+  "experiments/finalD.json"];
 
 var selectedTest;
 var selectedExperiment;
