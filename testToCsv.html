@@ -88,8 +88,19 @@ function ToCSV(o) {
     r += o.id[i]+","+o.input1[i]+","+o.input2[i];
     
     for (var j = 0; j < testnames.length; j++) {
-      //console.log(o.tests[testnames[j]][i]);
-      r += ","+JSON.stringify(o.tests[testnames[j]][i]).replace(/,/g, '_');
+    //  console.log(o.tests[testnames[j]][i]);
+      if(o.tests[testnames[j]][i] === undefined){
+        //console.error("o.tests[ testnames["+j+"] ] ["+i+"] Is null!");
+        //console.log(o.tests);
+       // console.log(testnames);
+        //console.log(testnames[j]);
+      //  console.log(o.tests[testnames[j]]);
+        
+        console.error("Question "+testnames[j]+ " ("+j+") Is Missing values! "+i);
+         r += ",MISSING_VAL";
+      }else{
+        r += ","+JSON.stringify(o.tests[testnames[j]][i]).replace(/,/g, '_');
+      }
     }
     
     r+="\r\n";
